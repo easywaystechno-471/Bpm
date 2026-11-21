@@ -3,310 +3,404 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>BMS - Beauty & Parlor Management System</title>
+  <title>BPM — Beauty Parlour Management</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 
-  <!-- Firebase Compat SDK -->
+  <!-- Firebase Realtime Database Compat SDK -->
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 
   <style>
     :root {
-      --bg-top: #fdf2f8;
-      --bg-bottom: #fffbfe;
-      --bg-card: #ffffff;
-      --primary: #be185d;
-      --primary-dark: #9d174d;
-      --accent-plum: #6b21a8;
-      --text-main: #1e1b2e;
-      --text-muted: #5b556b;
-      --border: #fbcfe8;
-      --success-bg: #dcfce7;
-      --success-text: #15803d;
-      --warn-bg: #fef9c3;
-      --warn-text: #854d0e;
-      --danger-bg: #fee2e2;
-      --danger-text: #b91c1c;
+      --bg: #fdf7fa;
+      --surface: #ffffff;
+      --surface-soft: #fff2f8;
+      --ink: #24131c;
+      --muted: #6e5563;
+      --line: #f0d7e4;
+      --rose: #c2185b;
+      --rose-dark: #880e4f;
+      --accent-grad: linear-gradient(135deg, #d81b60 0%, #7b1fa2 100%);
+      --ok: #15803d;
+      --ok-bg: #dcfce7;
+      --warn: #b45309;
+      --warn-bg: #fef3c7;
+      --bad: #b91c1c;
+      --bad-bg: #fee2e2;
+      --radius: 16px;
+      --shadow: 0 8px 24px rgba(136, 14, 79, 0.08);
     }
 
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
     }
 
     body {
+      background: var(--bg);
+      color: var(--ink);
       min-height: 100vh;
-      background: linear-gradient(180deg, var(--bg-top) 0%, var(--bg-bottom) 100%);
-      color: var(--text-main);
-      padding-bottom: 92px;
+      padding-top: 4px;
+      padding-bottom: 88px;
     }
 
-    .topbar {
-      position: sticky;
-      top: 0;
-      z-index: 30;
-      background: rgba(255, 255, 255, 0.97);
-      backdrop-filter: blur(8px);
-      border-bottom: 1px solid var(--border);
-      padding: 10px 12px;
+    .container {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 12px 14px 14px;
+    }
+
+    .parlor-banner {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 12px 14px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 8px;
+      gap: 10px;
+      box-shadow: var(--shadow);
+      margin-bottom: 14px;
     }
 
-    .topbar-left {
+    .parlor-meta {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 11px;
       min-width: 0;
     }
 
-    .logo-box {
-      width: 44px;
-      height: 44px;
-      border-radius: 12px;
-      border: 1.5px solid var(--border);
-      background: #fdf2f8;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-      flex-shrink: 0;
-      cursor: pointer;
-    }
-
-    .logo-box img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-
-    .brand-title {
-      font-size: 15px;
+    .parlor-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 13px;
+      background: var(--accent-grad);
+      color: #fff;
+      display: grid;
+      place-items: center;
       font-weight: 800;
-      color: var(--primary-dark);
+      font-size: 13px;
+      flex-shrink: 0;
+    }
+
+    .parlor-name {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--rose-dark);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
 
-    .brand-sub {
-      font-size: 11px;
-      color: var(--text-muted);
+    .parlor-sub {
+      font-size: 12px;
+      color: var(--muted);
       margin-top: 2px;
     }
 
     .sync-pill {
-      padding: 5px 10px;
+      padding: 6px 11px;
       border-radius: 999px;
-      font-size: 11px;
+      font-size: 12px;
       font-weight: 700;
-      background: var(--warn-bg);
-      color: var(--warn-text);
+      background: var(--ok-bg);
+      color: var(--ok);
       white-space: nowrap;
+      flex-shrink: 0;
     }
 
-    .sync-pill.live {
-      background: var(--success-bg);
-      color: var(--success-text);
+    .sync-pill.syncing {
+      background: var(--warn-bg);
+      color: var(--warn);
     }
 
-    .container {
-      max-width: 820px;
-      margin: 0 auto;
-      padding: 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
+    .sync-pill.offline {
+      background: var(--bad-bg);
+      color: var(--bad);
     }
 
     .card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 14px;
-      box-shadow: 0 4px 14px rgba(190, 24, 93, 0.06);
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 15px;
+      margin-bottom: 14px;
+      box-shadow: var(--shadow);
     }
 
-    .card-header {
+    .card-rose {
+      background: #fff6fa;
+      border: 1px solid #f7d6e6;
+      border-radius: var(--radius);
+      padding: 14px;
+      margin-bottom: 14px;
+    }
+
+    .section-title {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--ink);
+      margin-bottom: 10px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 10px;
       gap: 8px;
-      flex-wrap: wrap;
     }
 
-    .card-title {
-      font-size: 15px;
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 11px;
       font-weight: 700;
-      color: var(--text-main);
     }
 
-    .grid-2 {
+    .badge-trial {
+      background: #fce7f3;
+      color: var(--rose-dark);
+    }
+
+    .badge-active {
+      background: var(--ok-bg);
+      color: var(--ok);
+    }
+
+    .badge-expired {
+      background: var(--bad-bg);
+      color: var(--bad);
+    }
+
+    .income-row {
+      background: #fff2f8;
+      border: 1px solid #f6d5e5;
+      border-radius: 12px;
+      padding: 12px 14px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: transform 0.12s ease;
+    }
+
+    .income-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .income-row:active {
+      transform: scale(0.99);
+    }
+
+    .income-label {
+      font-size: 13px;
+      color: #4a3540;
+      font-weight: 600;
+    }
+
+    .income-val {
+      font-size: 17px;
+      font-weight: 800;
+      margin-top: 4px;
+    }
+
+    .dots-rose {
+      color: var(--rose);
+      letter-spacing: 2px;
+    }
+
+    .dots-green {
+      color: var(--ok);
+      letter-spacing: 2px;
+    }
+
+    .stat-grid {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: 1fr 1fr;
       gap: 10px;
     }
 
-    .grid-3 {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-    }
-
-    @media (max-width: 580px) {
-      .grid-2, .grid-3 {
-        grid-template-columns: 1fr;
-      }
-    }
-
     .stat-box {
-      background: #fdf2f8;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 10px;
+      background: #fff2f8;
+      border: 1px solid #f6d5e5;
+      border-radius: 12px;
+      padding: 12px 14px;
     }
 
-    .stat-label {
-      font-size: 11px;
-      color: var(--text-muted);
-    }
-
-    .stat-val {
-      font-size: 16px;
+    .stat-num {
+      font-size: 20px;
       font-weight: 800;
-      color: var(--primary-dark);
-      margin-top: 2px;
+      color: var(--rose-dark);
+      margin-top: 4px;
     }
 
-    .form-group {
-      margin-bottom: 10px;
-    }
-
-    label {
-      display: block;
-      font-size: 12px;
-      font-weight: 600;
-      margin-bottom: 4px;
-      color: var(--text-main);
-    }
-
-    input, select, textarea {
-      width: 100%;
-      padding: 10px 12px;
-      border: 1px solid #d8b4fe;
-      border-radius: 10px;
-      font-size: 14px;
-      background: #fff;
-      color: var(--text-main);
-    }
-
-    input:focus, select:focus, textarea:focus {
-      outline: none;
-      border-color: var(--primary);
-    }
-
-    .soft-box {
-      background: #faf5ff;
-      border: 1px dashed #d8b4fe;
-      border-radius: 10px;
-      padding: 10px;
+    .trial-strip {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      background: linear-gradient(120deg, #fff0f6 0%, #f9e8ff 100%);
+      border: 1px solid #f2c9de;
+      border-radius: 14px;
+      padding: 12px 14px;
       margin-bottom: 12px;
     }
 
-    .soft-title {
+    .plan-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .plan-card {
+      border: 1.5px solid #ecc6da;
+      background: #fff;
+      border-radius: 14px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .plan-card.popular {
+      border-color: var(--rose);
+      background: #fff8fb;
+    }
+
+    .plan-price {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--rose-dark);
+    }
+
+    .plan-meta {
       font-size: 12px;
-      font-weight: 700;
-      color: var(--accent-plum);
-      margin-bottom: 8px;
+      color: var(--muted);
+    }
+
+    .ref-code-box {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      background: var(--surface-soft);
+      border: 1.5px dashed var(--rose);
+      border-radius: 12px;
+      padding: 10px 12px;
+      margin: 10px 0;
+    }
+
+    .ref-code-text {
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      color: var(--rose-dark);
+      user-select: all;
     }
 
     .btn {
-      width: 100%;
-      padding: 10px 14px;
       border: none;
-      border-radius: 10px;
-      font-size: 14px;
+      border-radius: 11px;
+      padding: 10px 14px;
+      font-size: 13px;
       font-weight: 700;
       cursor: pointer;
-      background: var(--primary);
-      color: #fff;
-      text-decoration: none;
       display: inline-flex;
       align-items: center;
       justify-content: center;
+      gap: 6px;
+      transition: opacity 0.15s ease;
     }
 
-    .btn:hover {
-      background: var(--primary-dark);
+    .btn:active {
+      opacity: 0.85;
     }
 
-    .btn-plum {
-      background: var(--accent-plum);
+    .btn-primary {
+      background: var(--accent-grad);
       color: #fff;
     }
 
-    .btn-green {
-      background: #15803d;
+    .btn-whatsapp {
+      background: #16a34a;
       color: #fff;
     }
 
-    .btn-secondary {
+    .btn-soft {
       background: #fce7f3;
-      color: var(--primary-dark);
+      color: var(--rose-dark);
     }
 
-    .btn-danger {
-      background: var(--danger-bg);
-      color: var(--danger-text);
+    .btn-outline {
+      background: #fff;
+      color: var(--ink);
+      border: 1px solid #dfc0d0;
     }
 
-    .btn-small {
-      width: auto;
-      padding: 6px 10px;
+    .btn-sm {
+      padding: 7px 11px;
       font-size: 12px;
+      border-radius: 9px;
+    }
+
+    .btn-block {
+      width: 100%;
+    }
+
+    .row-btns {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .field {
+      margin-bottom: 10px;
+    }
+
+    .field label {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    .input, select, textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 11px;
+      border: 1px solid #e2c5d4;
+      background: #fff;
+      color: var(--ink);
+      font-size: 14px;
     }
 
     .list-item {
-      border: 1px solid #f3e8ff;
+      border: 1px solid #f2d9e6;
+      background: #fff;
       border-radius: 12px;
-      padding: 12px;
-      margin-top: 8px;
-      background: #ffffff;
+      padding: 11px 12px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
     }
 
-    .list-item.alert-due {
-      border-color: #fda4af;
-      background: #fff1f2;
-    }
-
-    .list-item.alert-soon {
-      border-color: #fde047;
-      background: #fefce8;
-    }
-
-    .list-title {
+    .item-title {
       font-size: 14px;
       font-weight: 700;
     }
 
-    .list-sub {
+    .item-sub {
       font-size: 12px;
-      color: var(--text-muted);
-      margin-top: 3px;
-      line-height: 1.45;
-    }
-
-    .section {
-      display: none;
-    }
-
-    .section.active {
-      display: block;
+      color: var(--muted);
+      margin-top: 2px;
     }
 
     .bottom-nav {
@@ -314,2124 +408,1198 @@
       bottom: 0;
       left: 0;
       right: 0;
-      background: #ffffff;
-      border-top: 1px solid var(--border);
+      z-index: 30;
+      background: #fff;
+      border-top: 1px solid var(--line);
       display: grid;
       grid-template-columns: repeat(6, 1fr);
-      z-index: 30;
+      padding: 6px 4px;
+      box-shadow: 0 -4px 16px rgba(36, 19, 28, 0.08);
     }
 
     .nav-btn {
-      padding: 8px 2px;
-      border: none;
       background: transparent;
+      border: none;
+      color: var(--muted);
       font-size: 10px;
       font-weight: 700;
-      color: var(--text-muted);
+      padding: 5px 2px;
+      border-radius: 10px;
       cursor: pointer;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 2px;
-      position: relative;
+      gap: 3px;
     }
 
     .nav-btn.active {
-      color: var(--primary-dark);
-      background: #fdf2f8;
+      background: #fff0f6;
+      color: var(--rose-dark);
     }
 
-    .nav-badge {
-      position: absolute;
-      top: 4px;
-      right: 12px;
-      background: #e11d48;
-      color: #fff;
-      font-size: 9px;
-      font-weight: 800;
-      padding: 1px 5px;
-      border-radius: 999px;
+    .nav-ico {
+      font-size: 16px;
+      line-height: 1;
     }
 
-    .pill {
-      display: inline-block;
-      padding: 4px 10px;
-      border-radius: 999px;
-      font-size: 11px;
-      font-weight: 700;
-      background: #fce7f3;
-      color: var(--primary-dark);
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      background: rgba(23, 12, 18, 0.58);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
     }
 
-    .pill.green {
-      background: var(--success-bg);
-      color: var(--success-text);
-    }
-
-    .pill.plum {
-      background: #f3e8ff;
-      color: var(--accent-plum);
-    }
-
-    .chip-row {
+    .modal-backdrop.open {
       display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
-      margin: 8px 0;
     }
 
-    .chip-btn {
-      padding: 6px 12px;
-      border-radius: 999px;
-      border: 1px solid #f9a8d4;
+    .modal-box {
+      width: 100%;
+      max-width: 440px;
       background: #fff;
-      color: var(--primary-dark);
-      font-size: 12px;
-      font-weight: 700;
-      cursor: pointer;
+      border-radius: 18px;
+      padding: 18px;
+      max-height: 88vh;
+      overflow-y: auto;
+      box-shadow: 0 18px 44px rgba(0, 0, 0, 0.25);
     }
 
-    .chip-btn.active {
-      background: var(--primary);
-      color: #fff;
-      border-color: var(--primary);
-    }
-
-    .status-note {
-      font-size: 12px;
-      color: var(--text-muted);
-      margin-top: 8px;
-      line-height: 1.45;
-    }
-
-    .thumb-img {
-      width: 56px;
-      height: 56px;
-      border-radius: 10px;
-      object-fit: cover;
-      border: 1px solid var(--border);
-    }
-
-    .check-inline {
+    .modal-head {
       display: flex;
       align-items: center;
-      gap: 8px;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .close-x {
+      background: #f6e7ef;
+      border: none;
+      width: 30px;
+      height: 30px;
+      border-radius: 999px;
+      font-weight: 800;
       cursor: pointer;
     }
 
-    .check-inline input[type="checkbox"] {
-      width: 18px;
-      height: 18px;
-      accent-color: var(--primary);
+    .toast {
+      position: fixed;
+      bottom: 78px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #1b1217;
+      color: #fff;
+      padding: 9px 16px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      z-index: 60;
+      display: none;
+      white-space: nowrap;
+      max-width: 92vw;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .toast.show {
+      display: block;
+    }
+
+    .hidden {
+      display: none !important;
     }
   </style>
 </head>
 <body>
-  <!-- TOP HEADER -->
-  <header class="topbar">
-    <div class="topbar-left">
-      <div class="logo-box" title="Parlor Logo" onclick="switchToTab('tab-staff')">
-        <img id="headerLogoImg" src="" alt="Logo" style="display:none;" />
-        <span id="headerLogoText" style="font-size:12px; font-weight:800; color:#be185d;">BMS</span>
-      </div>
-      <div style="min-width:0;">
-        <div class="brand-title" id="topParlorTitle">BMS - Parlor Management</div>
-        <div class="brand-sub" id="topParlorSub">Beauty · Salon · Cloud Sync</div>
-      </div>
-    </div>
-    <div id="syncBadge" class="sync-pill">Cloud: Connecting...</div>
-  </header>
-
   <main class="container">
-    <!-- =====================================================
-         STAGE 1: APP PIN LOCK / SETUP
-         ===================================================== -->
-    <section id="appPinSection">
-      <div id="setAppPinCard" class="card" style="display:none;">
-        <div class="card-header">
-          <div class="card-title">Set App PIN (2 बार में सेट करें)</div>
-          <span class="pill">App Lock</span>
-        </div>
-        <div class="status-note" style="color:#b91c1c; font-weight:700; margin-bottom:10px;">
-          चेतावनी: App PIN भूलें नहीं! आगे से BMS App इसी PIN से खुलेगा।
-        </div>
-        <form onsubmit="onSetAppPin(event)">
-          <div class="grid-2">
-            <div class="form-group">
-              <label for="bmsPin1">Set App PIN (1st Time) *</label>
-              <input id="bmsPin1" type="password" inputmode="numeric" minlength="4" maxlength="8" placeholder="4-8 अंकों का PIN" required />
-            </div>
-            <div class="form-group">
-              <label for="bmsPin2">Confirm App PIN (2nd Time) *</label>
-              <input id="bmsPin2" type="password" inputmode="numeric" minlength="4" maxlength="8" placeholder="PIN दोबारा डालें" required />
-            </div>
-          </div>
-          <button class="btn" type="submit">PIN सेव करें और आगे बढ़ें</button>
-        </form>
-        <div class="status-note" id="setPinMsg" style="color:#b91c1c;"></div>
-      </div>
-
-      <div id="unlockAppPinCard" class="card" style="display:none;">
-        <div class="card-header">
-          <div class="card-title">App PIN डालकर BMS खोलें</div>
-          <span class="pill green">Locked</span>
-        </div>
-        <form onsubmit="onUnlockAppPin(event)">
-          <div class="form-group">
-            <label for="bmsUnlockInput">App PIN *</label>
-            <input id="bmsUnlockInput" type="password" inputmode="numeric" placeholder="अपना App PIN डालें" required />
-          </div>
-          <button class="btn" type="submit">Unlock BMS</button>
-        </form>
-        <div class="status-note" id="unlockPinMsg" style="color:#b91c1c;"></div>
-
-        <div style="margin-top:10px;">
-          <button class="btn btn-secondary btn-small" type="button" onclick="toggleOtpResetBox()">PIN भूल गए? (OTP Reset)</button>
-        </div>
-        <div id="otpResetBox" class="soft-box" style="display:none; margin-top:10px;">
-          <div class="soft-title">OTP से नया App PIN सेट करें</div>
-          <div class="grid-2">
-            <div class="form-group">
-              <label for="otpMobInp">Registered Mobile (10 अंक)</label>
-              <input id="otpMobInp" type="tel" maxlength="10" placeholder="98XXXXXXXX" />
-            </div>
-            <div class="form-group" style="display:flex; align-items:flex-end;">
-              <button class="btn btn-secondary" type="button" onclick="sendResetOtp()">OTP भेजें</button>
-            </div>
-          </div>
-          <div class="grid-2">
-            <div class="form-group">
-              <label for="otpValInp">6-Digit OTP</label>
-              <input id="otpValInp" type="text" maxlength="6" placeholder="OTP डालें" />
-            </div>
-            <div class="form-group">
-              <label for="otpNewPinInp">New App PIN</label>
-              <input id="otpNewPinInp" type="password" inputmode="numeric" minlength="4" maxlength="8" placeholder="नया PIN" />
-            </div>
-          </div>
-          <button class="btn btn-green btn-small" type="button" onclick="confirmOtpResetPin()">Verify & Save New PIN</button>
-          <div class="status-note" id="otpMsg"></div>
+    <!-- Active Parlor Status Strip -->
+    <section class="parlor-banner">
+      <div class="parlor-meta">
+        <div class="parlor-avatar" id="parlorAvatar">BPM</div>
+        <div style="min-width:0;">
+          <div class="parlor-name" id="parlorTitle">Payal beauty parlour</div>
+          <div class="parlor-sub" id="parlorSub">Joura · User: Payal (ADMIN)</div>
         </div>
       </div>
+      <div class="sync-pill" id="syncBadge">Cloud Synced ✓</div>
     </section>
 
-    <!-- =====================================================
-         STAGE 2: PARLOR PORTAL GATE
-         ===================================================== -->
-    <section id="portalGateSection" style="display:none;">
-      <div id="gate-first-screen" class="card">
-        <div class="card-header">
-          <div class="card-title">Parlor Portal (First Screen)</div>
-          <span class="pill plum">BMS Cloud Sync</span>
+    <!-- TAB 1: HOME -->
+    <section id="tab-home" class="tab-view">
+      <!-- User & Quick Session Card -->
+      <div class="card">
+        <div class="item-title" id="sessionUserLine">👑 Payal · ID: Payal01 (ADMIN)</div>
+        <div class="item-sub" id="sessionParlorLine" style="margin-bottom:10px;">Parlor: Payal beauty parlour (PAYAL01)</div>
+        <div class="row-btns">
+          <button class="btn btn-soft btn-sm" onclick="lockAppSession()">Lock PIN</button>
+          <button class="btn btn-soft btn-sm" onclick="manualCloudSync()">Cloud Sync</button>
+          <button class="btn btn-soft btn-sm" onclick="openParlorModal()">Switch / Logout</button>
         </div>
-        <div class="status-note" style="margin-bottom:12px;">
-          नया Parlor / Salon रजिस्टर करें या पहले से रजिस्टर्ड Parlor में लॉगिन करें।
-        </div>
-        <div class="grid-2">
-          <button class="btn" type="button" onclick="openGateView('register')">Register New Parlor</button>
-          <button class="btn btn-secondary" type="button" onclick="openGateView('parlor-login')">Login in Registered Parlor</button>
-        </div>
-        <div class="status-note" id="gateMsg" style="color:#15803d; font-weight:700;"></div>
+        <div class="item-sub" id="cloudLiveSubline" style="margin-top:8px;">Cloud Live ✓ (PAYAL01)</div>
       </div>
 
-      <div id="gate-register-view" class="card" style="display:none;">
-        <div class="card-header">
-          <div class="card-title">Register New Parlor / Salon</div>
-          <button class="btn btn-secondary btn-small" type="button" onclick="openGateView('first')">First Screen</button>
-        </div>
-        <form id="registerParlorForm" onsubmit="onRegisterParlor(event)">
-          <div class="grid-2">
-            <div class="form-group">
-              <label for="regParlorName">Parlor का नाम *</label>
-              <input id="regParlorName" type="text" placeholder="जैसे: Glow & Grace Beauty Parlor" required />
-            </div>
-            <div class="form-group">
-              <label for="regParlorId">Parlor ID (अपनी मर्ज़ी से) *</label>
-              <input id="regParlorId" type="text" placeholder="जैसे: GLOW_PARLOR_01" required />
-            </div>
-          </div>
-          <div class="grid-2">
-            <div class="form-group">
-              <label for="regParlorPass1">Set Parlor Password (1st Time) *</label>
-              <input id="regParlorPass1" type="password" placeholder="Parlor Password" required />
-            </div>
-            <div class="form-group">
-              <label for="regParlorPass2">Confirm Parlor Password (2nd Time) *</label>
-              <input id="regParlorPass2" type="password" placeholder="Password दोबारा डालें" required />
-            </div>
-          </div>
-          <div class="grid-3">
-            <div class="form-group">
-              <label for="regParlorCity">City / Tehsil *</label>
-              <input id="regParlorCity" type="text" placeholder="शहर / तहसील" required />
-            </div>
-            <div class="form-group">
-              <label for="regParlorPin">Pincode (6 अंक) *</label>
-              <input id="regParlorPin" type="text" maxlength="6" placeholder="476221" required />
-            </div>
-            <div class="form-group">
-              <label for="regParlorMob">Parlor Mobile (10 अंक) *</label>
-              <input id="regParlorMob" type="tel" maxlength="10" placeholder="98XXXXXXXX" required />
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="regParlorAddr">पूरा पता (Address) *</label>
-            <input id="regParlorAddr" type="text" placeholder="पूरा पता लिखें" required />
-          </div>
-
-          <div class="soft-box">
-            <div class="soft-title">Parlor Logo (Optional)</div>
-            <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
-              <input id="regParlorLogoInp" type="file" accept="image/*" style="max-width:260px;" onchange="onSelectLogoFile(event, 'reg')" />
-              <img id="regParlorLogoPrev" class="thumb-img" src="" alt="Logo" style="display:none;" />
-            </div>
-          </div>
-
-          <div class="soft-box">
-            <div class="soft-title">First / Main Admin विवरण व PIN (2 बार में सेट करें)</div>
-            <div class="grid-3">
-              <div class="form-group">
-                <label for="regOwnerName">First Admin Name *</label>
-                <input id="regOwnerName" type="text" placeholder="Admin Name" required />
-              </div>
-              <div class="form-group">
-                <label for="regOwnerId">Admin ID *</label>
-                <input id="regOwnerId" type="text" value="ADMIN" required />
-              </div>
-              <div class="form-group">
-                <label for="regOwnerMob">Admin Mobile (10 अंक) *</label>
-                <input id="regOwnerMob" type="tel" maxlength="10" placeholder="98XXXXXXXX" required />
-              </div>
-            </div>
-            <div class="grid-2" style="margin-bottom:0;">
-              <div class="form-group" style="margin-bottom:0;">
-                <label for="regOwnerPin1">Set Admin PIN (1st Time) *</label>
-                <input id="regOwnerPin1" type="password" placeholder="Admin PIN" required />
-              </div>
-              <div class="form-group" style="margin-bottom:0;">
-                <label for="regOwnerPin2">Confirm Admin PIN (2nd Time) *</label>
-                <input id="regOwnerPin2" type="password" placeholder="Admin PIN दोबारा" required />
-              </div>
-            </div>
-          </div>
-
-          <button class="btn" type="submit">Save & First Screen पर जाएं</button>
-        </form>
-        <div class="status-note" id="regParlorMsg" style="color:#b91c1c;"></div>
-      </div>
-
-      <div id="gate-parlor-login-view" class="card" style="display:none;">
-        <div class="card-header">
-          <div class="card-title">Login in Registered Parlor</div>
-          <button class="btn btn-secondary btn-small" type="button" onclick="openGateView('first')">First Screen</button>
-        </div>
-        <form onsubmit="onParlorLogin(event)">
-          <div class="form-group">
-            <label for="loginParlorId">Parlor ID *</label>
-            <input id="loginParlorId" type="text" placeholder="Parlor ID डालें" required />
-          </div>
-          <div class="form-group">
-            <label for="loginParlorPass">Parlor Password *</label>
-            <input id="loginParlorPass" type="password" placeholder="Parlor Password डालें" required />
-          </div>
-          <button class="btn" type="submit">आगे बढ़ें (User Login)</button>
-        </form>
-        <div class="status-note" id="parlorLoginMsg" style="color:#b91c1c;"></div>
-      </div>
-
-      <div id="gate-user-login-view" class="card" style="display:none;">
-        <div class="card-header">
-          <div class="card-title">User Login (<span id="verifiedParlorTitle">-</span>)</div>
-          <button class="btn btn-secondary btn-small" type="button" onclick="openGateView('first')">First Screen</button>
-        </div>
-        <form onsubmit="onUserLogin(event)">
-          <div class="grid-2">
-            <div class="form-group">
-              <label for="loginUserId">User ID (ADMIN या Staff ID) *</label>
-              <input id="loginUserId" type="text" placeholder="जैसे: ADMIN या STF01" required />
-            </div>
-            <div class="form-group">
-              <label for="loginUserPass">Password / PIN *</label>
-              <input id="loginUserPass" type="password" placeholder="Password या PIN" required />
-            </div>
-          </div>
-          <button class="btn" type="submit">Login करें</button>
-        </form>
-        <div class="status-note" id="userLoginMsg" style="color:#b91c1c;"></div>
-      </div>
-    </section>
-
-    <!-- =====================================================
-         STAGE 3: MAIN BMS WORKSPACE
-         ===================================================== -->
-    <section id="workspaceSection" style="display:none;">
-      <section class="card">
-        <div class="card-header" style="margin-bottom:4px;">
+      <!-- Trial & Subscription Status -->
+      <div class="card">
+        <div class="trial-strip">
           <div>
-            <div class="list-title" id="sessionUserLine">👑 Admin · ADMIN</div>
-            <div class="list-sub" id="sessionParlorLine">Parlor: -</div>
-          </div>
-          <div style="display:flex; gap:6px; flex-wrap:wrap;">
-            <button class="btn btn-secondary btn-small" type="button" onclick="lockAppPin()">Lock PIN</button>
-            <button class="btn btn-secondary btn-small" type="button" onclick="queueFastSync(0)">Cloud Sync</button>
-            <button class="btn btn-danger btn-small" type="button" onclick="logoutUser()">Logout</button>
-          </div>
-        </div>
-        <div class="status-note" id="syncStatusText" style="margin-top:4px;">Ready</div>
-      </section>
-
-      <!-- TAB 1: DASHBOARD + PIN-PROTECTED INCOME (DAILY/MONTHLY/QUARTERLY/ANNUALLY/ALL-TIME) -->
-      <section id="tab-dashboard" class="section active">
-        <div class="card">
-          <div class="card-header">
-            <div class="card-title">💰 Parlor Income (PIN Protected)</div>
-            <button class="btn btn-secondary btn-small" id="incomeLockToggleBtn" type="button" onclick="handleIncomeLockToggle()">🔒 PIN से Income देखें</button>
-          </div>
-
-          <div id="incomePinPromptBox" class="soft-box" style="display:none;">
-            <div class="soft-title">Income देखने के लिए First Admin PIN डालें</div>
-            <div style="display:flex; gap:8px; flex-wrap:wrap;">
-              <input id="incomeUnlockPinInput" type="password" placeholder="Admin PIN" style="flex:1; min-width:140px;" />
-              <button class="btn btn-small" type="button" onclick="unlockIncomeReport()">Unlock</button>
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+              <strong id="planNameLabel">30-Day Free Trial</strong>
+              <span class="badge badge-trial" id="daysLeftBadge">30 Days Left</span>
             </div>
-            <div class="status-note" id="incomePinErrMsg" style="color:#b91c1c;"></div>
+            <div class="item-sub" id="validityDateText">Validity status loading...</div>
           </div>
-
-          <div class="grid-3">
-            <div class="stat-box">
-              <div class="stat-label">Daily Income</div>
-              <div class="stat-val" id="incDailyVal">••••</div>
-            </div>
-            <div class="stat-box">
-              <div class="stat-label">Monthly Income</div>
-              <div class="stat-val" id="incMonthlyVal">••••</div>
-            </div>
-            <div class="stat-box">
-              <div class="stat-label">Quarterly Income</div>
-              <div class="stat-val" id="incQuarterlyVal">••••</div>
-            </div>
-          </div>
-
-          <div class="grid-2" style="margin-top:8px;">
-            <div class="stat-box">
-              <div class="stat-label">Annually Income</div>
-              <div class="stat-val" id="incAnnualVal">••••</div>
-            </div>
-            <div class="stat-box">
-              <div class="stat-label">Ab Tak Ki Poori Income (All-Time)</div>
-              <div class="stat-val" id="incAllTimeVal" style="color:#15803d;">••••</div>
-            </div>
-          </div>
-          <div class="status-note" id="incomePermissionHint"></div>
+          <button class="btn btn-primary btn-sm" onclick="openPlansModal()">Upgrade Plan</button>
         </div>
 
-        <div class="card">
-          <div class="grid-2">
-            <div class="stat-box">
-              <div class="stat-label">Total Consumers</div>
-              <div class="stat-val" id="statConsumers">0</div>
+        <div class="section-title">
+          <span>Subscription Plans</span>
+          <span class="badge badge-active">+15d Referral Bonus</span>
+        </div>
+        <div class="plan-grid">
+          <div class="plan-card">
+            <div>
+              <div class="item-title">Monthly Plan</div>
+              <div class="plan-price">₹99</div>
+              <div class="plan-meta">30 Days Full Access</div>
             </div>
-            <div class="stat-box">
-              <div class="stat-label">Total Services Done</div>
-              <div class="stat-val" id="statServices">0</div>
+            <button class="btn btn-soft btn-sm btn-block" onclick="openPlansModal('monthly')">Select ₹99</button>
+          </div>
+          <div class="plan-card">
+            <div>
+              <div class="item-title">Quarterly Plan</div>
+              <div class="plan-price">₹199</div>
+              <div class="plan-meta">90 Days Full Access</div>
             </div>
+            <button class="btn btn-soft btn-sm btn-block" onclick="openPlansModal('quarterly')">Select ₹199</button>
+          </div>
+          <div class="plan-card popular">
+            <div>
+              <div class="item-title">Half-Yearly Plan</div>
+              <div class="plan-price">₹399</div>
+              <div class="plan-meta">180 Days Full Access</div>
+            </div>
+            <button class="btn btn-soft btn-sm btn-block" onclick="openPlansModal('halfyearly')">Select ₹399</button>
+          </div>
+          <div class="plan-card">
+            <div>
+              <div class="item-title">Yearly Plan</div>
+              <div class="plan-price">₹499</div>
+              <div class="plan-meta">365 Days Full Access</div>
+            </div>
+            <button class="btn btn-primary btn-sm btn-block" onclick="openPlansModal('yearly')">Select ₹499</button>
           </div>
         </div>
+      </div>
 
-        <div class="card">
-          <div class="card-header">
-            <div class="card-title">📅 Today & Upcoming Appointments</div>
-            <span class="pill" id="upcomingCountBadge">0</span>
-          </div>
-          <div id="dashboardAppointmentsBox">
-            <div class="status-note">अभी कोई आगामी Appointment सेट नहीं है।</div>
-          </div>
+      <!-- Refer & Earn (Auto Referral Code + WhatsApp APK Share) -->
+      <div class="card">
+        <div class="section-title">
+          <span>Refer & Earn</span>
+          <span class="badge badge-trial">+15 Days Bonus</span>
         </div>
-      </section>
+        <p class="item-sub">
+          Apna Auto Referral Code share karein. WhatsApp link par tap karte hi <strong>app-release.apk</strong> download/install ka option aayega, aur naya parlor register hone par <strong>+15 Days</strong> bonus milega.
+        </p>
 
-      <!-- TAB 2: CONSUMERS -->
-      <section id="tab-consumers" class="section">
-        <div class="card">
-          <div class="card-title" style="margin-bottom:10px;">Consumer Entry (कस्टमर का विवरण सेव करें)</div>
-          <form onsubmit="onSaveConsumer(event)">
-            <div class="grid-2">
-              <div class="form-group">
-                <label for="conName">Consumer Name *</label>
-                <input id="conName" type="text" placeholder="कस्टमर का पूरा नाम" required />
-              </div>
-              <div class="form-group">
-                <label for="conMobile">Mobile Number (10 अंक) *</label>
-                <input id="conMobile" type="tel" maxlength="10" placeholder="98XXXXXXXX" required />
-              </div>
-            </div>
-            <div class="grid-2">
-              <div class="form-group">
-                <label for="conInterest">Interest / Preferred Category *</label>
-                <select id="conInterest" required>
-                  <option value="Facial & Skin Care">Facial & Skin Care</option>
-                  <option value="Hair Care & Styling">Hair Care & Styling</option>
-                  <option value="Bridal & Party Makeup">Bridal & Party Makeup</option>
-                  <option value="Spa & Body Care">Spa & Body Care</option>
-                  <option value="Nail Art & Mehendi">Nail Art & Mehendi</option>
-                  <option value="All Parlor Services">All Parlor Services</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label for="conNotes">Skin/Hair Type या Special Note</label>
-                <input id="conNotes" type="text" placeholder="जैसे: Dry Skin / Keratin / VIP" />
-              </div>
-            </div>
-            <button class="btn" type="submit">Save Consumer & Cloud Sync</button>
-          </form>
-          <div class="status-note" id="consumerMsg"></div>
+        <div class="ref-code-box">
+          <div>
+            <div class="item-sub">Your Auto Referral Code</div>
+            <div class="ref-code-text" id="myReferralCode">BPM-PAYAL-1001</div>
+          </div>
+          <button class="btn btn-soft btn-sm" onclick="copyReferralCode()">Copy Code</button>
         </div>
 
-        <div class="card">
-          <div class="card-title">Saved Consumers & History</div>
-          <div class="form-group" style="margin-top:8px;">
-            <input id="consumerSearchInp" type="text" placeholder="🔍 Name, Mobile या Interest से खोजें" oninput="renderConsumersList()" />
-          </div>
-          <div class="chip-row">
-            <button class="chip-btn active" type="button" onclick="setConsumerInterestFilter('ALL', this)">All</button>
-            <button class="chip-btn" type="button" onclick="setConsumerInterestFilter('Facial & Skin Care', this)">Facial/Skin</button>
-            <button class="chip-btn" type="button" onclick="setConsumerInterestFilter('Hair Care & Styling', this)">Hair</button>
-            <button class="chip-btn" type="button" onclick="setConsumerInterestFilter('Bridal & Party Makeup', this)">Bridal/Makeup</button>
-            <button class="chip-btn" type="button" onclick="setConsumerInterestFilter('Spa & Body Care', this)">Spa</button>
-          </div>
-          <div id="consumersListBox"></div>
+        <div class="row-btns">
+          <button class="btn btn-whatsapp" style="flex:1;" onclick="shareReferralOnWhatsApp()">
+            WhatsApp Refer (APK Link)
+          </button>
+          <button class="btn btn-outline btn-sm" onclick="copyApkLink()">Copy APK Link</button>
         </div>
-      </section>
+      </div>
 
-      <!-- TAB 3: SERVICE RATES (DEFAULT AMOUNT) + SERVICE ENTRY (DEFAULT OR MANUAL AMOUNT) + DIRECT WHATSAPP PDF -->
-      <section id="tab-services" class="section">
-        <div class="card">
-          <div class="card-title" style="margin-bottom:10px;">Date-Wise Service & Appointment Time Entry</div>
-          <form onsubmit="onSaveServiceVisit(event)">
-            <div class="grid-2">
-              <div class="form-group">
-                <label for="srvConsumerSel">Consumer चुनें *</label>
-                <select id="srvConsumerSel" required>
-                  <option value="">-- कस्टमर चुनें --</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label for="srvDate">Service Date *</label>
-                <input id="srvDate" type="date" required />
-              </div>
-            </div>
-
-            <div class="grid-2">
-              <div class="form-group">
-                <label for="srvPresetRateSel">Saved Service (Default Rate Auto-Fill)</label>
-                <select id="srvPresetRateSel" onchange="onSelectPresetServiceRate()">
-                  <option value="">-- Manual Service / Rate लिखें --</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label for="srvStaffSel">Parlor Staff</label>
-                <select id="srvStaffSel">
-                  <option value="Main Owner">Main Owner / Admin</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="grid-2">
-              <div class="form-group">
-                <label for="srvName">Service Taken *</label>
-                <input id="srvName" type="text" placeholder="जैसे: Gold Facial या Custom Package" required />
-              </div>
-              <div class="form-group">
-                <label for="srvAmount">Amount (₹) — Default या Manual भरें *</label>
-                <input id="srvAmount" type="number" min="0" placeholder="राशि डालें या बदलें" required />
-              </div>
-            </div>
-
-            <div class="soft-box">
-              <div class="soft-title">Next Appointment Date & Time (Optional)</div>
-              <div class="grid-3" style="margin-bottom:0;">
-                <div class="form-group" style="margin-bottom:0;">
-                  <label for="nextAppDate">Next Appointment Date</label>
-                  <input id="nextAppDate" type="date" />
-                </div>
-                <div class="form-group" style="margin-bottom:0;">
-                  <label for="nextAppTime">Appointment Time</label>
-                  <input id="nextAppTime" type="time" />
-                </div>
-                <div class="form-group" style="margin-bottom:0;">
-                  <label for="nextAppService">Next Service Name</label>
-                  <input id="nextAppService" type="text" placeholder="जैसे: Next Hair Spa" />
-                </div>
-              </div>
-            </div>
-
-            <button class="btn" type="submit">Save Service & Generate Receipt PDF</button>
-          </form>
-          <div class="status-note" id="serviceMsg"></div>
-          <div id="lastServiceActionBox"></div>
+      <!-- PIN-Locked Income -->
+      <div class="card-rose">
+        <div class="section-title" style="margin-bottom:8px;">
+          <span>💰 Parlor Income (PIN Protected)</span>
+        </div>
+        <div style="margin-bottom:10px;">
+          <button class="btn btn-soft btn-sm" onclick="promptIncomeUnlock()">🔒 PIN से Income देखें</button>
         </div>
 
-        <!-- Default Service Rate Card Setup -->
-        <div class="card">
-          <div class="card-header">
-            <div class="card-title">Saved Service Default Amounts (Rate Card)</div>
-            <span class="pill plum">Auto-Fill + Manual Override</span>
-          </div>
-          <form onsubmit="onSaveDefaultServiceRate(event)">
-            <div class="grid-2">
-              <div class="form-group">
-                <label for="rateServiceName">Service Name *</label>
-                <input id="rateServiceName" type="text" placeholder="जैसे: Haircut / Facial / Bridal" required />
-              </div>
-              <div class="form-group">
-                <label for="rateDefaultAmount">Default Amount (₹) *</label>
-                <input id="rateDefaultAmount" type="number" min="0" placeholder="जैसे: 500" required />
-              </div>
-            </div>
-            <button class="btn btn-secondary btn-small" type="submit">+ Save Default Rate</button>
-          </form>
-          <div id="serviceRatesListBox"></div>
+        <div class="income-row" onclick="promptIncomeUnlock('daily')">
+          <div class="income-label">Daily Income</div>
+          <div class="income-val dots-rose" id="inc-daily">••••</div>
         </div>
 
-        <div class="card">
-          <div class="card-title">Complete Date-Wise Service Log</div>
-          <div id="allServicesLogBox"></div>
-        </div>
-      </section>
-
-      <!-- TAB 4: REMINDERS & DIRECT CALL -->
-      <section id="tab-reminders" class="section">
-        <div class="card">
-          <div class="card-header">
-            <div class="card-title">Next Service & Appointment Reminders</div>
-            <span class="pill plum">Direct Call + Time PDF</span>
-          </div>
-          <div id="remindersListBox">
-            <div class="status-note">कोई आगामी रिमाइंडर नहीं है।</div>
-          </div>
-        </div>
-      </section>
-
-      <!-- TAB 5: OFFERS, NEW PRODUCT PDF & GREETINGS -->
-      <section id="tab-offers" class="section">
-        <div class="card">
-          <div class="card-header">
-            <div class="card-title">New Product / Offer PDF & Greetings</div>
-            <span class="pill green">All / Selected Consumers</span>
-          </div>
-
-          <div class="grid-2">
-            <div class="form-group">
-              <label for="campaignType">Type *</label>
-              <select id="campaignType" onchange="applyCampaignTemplate()">
-                <option value="OFFER_PDF">New Offer / Package PDF</option>
-                <option value="PRODUCT_PDF">New Beauty Product Launch PDF</option>
-                <option value="GREETING_FEST">Festival / Special Day Greeting</option>
-                <option value="GREETING_THANKS">Thank You for Visiting Greeting</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label for="campaignTargetFilter">Interest Filter</label>
-              <select id="campaignTargetFilter" onchange="renderCampaignConsumersChecklist()">
-                <option value="ALL">All Consumers</option>
-                <option value="Facial & Skin Care">Interest: Facial & Skin Care</option>
-                <option value="Hair Care & Styling">Interest: Hair Care & Styling</option>
-                <option value="Bridal & Party Makeup">Interest: Bridal & Party Makeup</option>
-                <option value="Spa & Body Care">Interest: Spa & Body Care</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label for="campaignTitle">Title *</label>
-            <input id="campaignTitle" type="text" value="Special Glow Offer - Flat 20% OFF" required />
-          </div>
-
-          <div class="form-group">
-            <label for="campaignBody">Message / Offer Details *</label>
-            <textarea id="campaignBody" rows="3" required>हमारे पार्लर में नए स्किन व हेयर पैकेज पर 20% की विशेष छूट उपलब्ध है। आज ही अपना अपॉइंटमेंट बुक करें!</textarea>
-          </div>
-
-          <div class="soft-box">
-            <div class="card-header" style="margin-bottom:6px;">
-              <div class="soft-title" style="margin-bottom:0;">Select Consumers</div>
-              <div style="display:flex; gap:6px;">
-                <button class="btn btn-secondary btn-small" type="button" onclick="toggleSelectAllCampaignConsumers(true)">Select All</button>
-                <button class="btn btn-secondary btn-small" type="button" onclick="toggleSelectAllCampaignConsumers(false)">Clear</button>
-              </div>
-            </div>
-            <div id="campaignConsumersChecklist"></div>
-          </div>
-
-          <div style="display:flex; gap:8px; flex-wrap:wrap;">
-            <button class="btn btn-plum btn-small" type="button" onclick="downloadGeneralOfferPdf()">Download Offer/Product PDF</button>
-            <button class="btn btn-green btn-small" type="button" onclick="sendCampaignToSelectedBulkSequential()">Selected Consumers को PDF/WA भेजें</button>
-          </div>
-          <div class="status-note" id="campaignStatusMsg"></div>
-        </div>
-      </section>
-
-      <!-- TAB 6: PARLOR STAFF (WITH INCOME PERMISSION TOGGLE) & LOGO UPDATE -->
-      <section id="tab-staff" class="section">
-        <div class="card">
-          <div class="card-header">
-            <div class="card-title">Parlor Staff Entry & Income Permission</div>
-            <span class="pill">Main Admin Controls Income Access</span>
-          </div>
-          <form onsubmit="onSaveParlorStaff(event)">
-            <div class="grid-2">
-              <div class="form-group">
-                <label for="stfName">Staff Name *</label>
-                <input id="stfName" type="text" placeholder="स्टाफ का नाम" required />
-              </div>
-              <div class="form-group">
-                <label for="stfMobile">Mobile Number (10 अंक) *</label>
-                <input id="stfMobile" type="tel" maxlength="10" placeholder="98XXXXXXXX" required />
-              </div>
-            </div>
-            <div class="grid-2">
-              <div class="form-group">
-                <label for="stfRole">Role / Specialty *</label>
-                <select id="stfRole" required>
-                  <option value="Beautician">Beautician</option>
-                  <option value="Hair Stylist">Hair Stylist</option>
-                  <option value="Makeup Artist">Makeup Artist</option>
-                  <option value="Receptionist">Receptionist</option>
-                  <option value="Admin2">Admin 2</option>
-                  <option value="Other">Other</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label for="stfSpecialty">Expertise / Shift</label>
-                <input id="stfSpecialty" type="text" placeholder="जैसे: Bridal & Skin / Morning" />
-              </div>
-            </div>
-            <div class="grid-2">
-              <div class="form-group">
-                <label for="stfUserId">Staff User ID *</label>
-                <input id="stfUserId" type="text" placeholder="जैसे: STF01" required />
-              </div>
-              <div class="form-group">
-                <label for="stfPassword">Password *</label>
-                <input id="stfPassword" type="text" placeholder="Password बनाएं" required />
-              </div>
-            </div>
-            <div class="form-group">
-              <label class="check-inline">
-                <input id="stfCanViewIncome" type="checkbox" />
-                <span>इस Staff को PIN से Income (Daily/Monthly/Quarterly/Annually/All-Time) देखने की अनुमति दें</span>
-              </label>
-            </div>
-            <button class="btn" type="submit">+ Save Parlor Staff</button>
-          </form>
-          <div class="status-note" id="staffMsg"></div>
-          <div id="staffListBox"></div>
+        <div class="income-row" onclick="promptIncomeUnlock('monthly')">
+          <div class="income-label">Monthly Income</div>
+          <div class="income-val dots-rose" id="inc-monthly">••••</div>
         </div>
 
-        <div class="card" id="adminLogoUpdateCard">
-          <div class="card-title" style="margin-bottom:8px;">Parlor Logo बदलें (Main Admin PIN)</div>
-          <div class="grid-2">
-            <div class="form-group">
-              <label for="changeParlorLogoInp">नया Logo चुनें</label>
-              <input id="changeParlorLogoInp" type="file" accept="image/*" onchange="onSelectLogoFile(event, 'change')" />
-            </div>
-            <div class="form-group">
-              <label for="changeLogoPinInp">Main Admin PIN</label>
-              <input id="changeLogoPinInp" type="password" placeholder="Main Admin PIN" />
-            </div>
-          </div>
-          <button class="btn btn-secondary" type="button" onclick="updateParlorLogoWithPin()">Update Logo</button>
-          <div class="status-note" id="logoUpdateMsg"></div>
+        <div class="income-row" onclick="promptIncomeUnlock('quarterly')">
+          <div class="income-label">Quarterly Income</div>
+          <div class="income-val dots-rose" id="inc-quarterly">••••</div>
         </div>
-      </section>
+
+        <div class="income-row" onclick="promptIncomeUnlock('annually')">
+          <div class="income-label">Annually Income</div>
+          <div class="income-val dots-rose" id="inc-annually">••••</div>
+        </div>
+
+        <div class="income-row" onclick="promptIncomeUnlock('alltime')">
+          <div class="income-label">Ab Tak Ki Poori Income (All-Time)</div>
+          <div class="income-val dots-green" id="inc-alltime">••••</div>
+        </div>
+
+        <div class="item-sub" style="margin-top:8px;" id="incomeHintText">
+          Income देखने के लिए बटन दबाकर PIN डालें।
+        </div>
+      </div>
+
+      <!-- Consumers & Services Summary -->
+      <div class="card-rose">
+        <div class="stat-grid">
+          <div class="stat-box">
+            <div class="income-label">Total Consumers</div>
+            <div class="stat-num" id="statConsumers">0</div>
+          </div>
+          <div class="stat-box">
+            <div class="income-label">Total Services Done</div>
+            <div class="stat-num" id="statServices">0</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Appointments & Reminders -->
+      <div class="card-rose">
+        <div class="section-title">
+          <span>📅 Today & Upcoming Appointments</span>
+          <span class="badge badge-trial" id="upcomingCountBadge">0</span>
+        </div>
+        <div id="homeRemindersList" class="item-sub">कोई आगामी Appointment / Reminder नहीं है।</div>
+      </div>
+    </section>
+
+    <!-- TAB 2: CONSUMERS -->
+    <section id="tab-consumers" class="tab-view hidden">
+      <div class="card">
+        <div class="section-title"><span>Add Consumer</span></div>
+        <div class="field">
+          <label>Consumer Name *</label>
+          <input id="conName" class="input" placeholder="e.g. Neha Sharma" />
+        </div>
+        <div class="field">
+          <label>Mobile Number *</label>
+          <input id="conPhone" class="input" type="tel" placeholder="e.g. 9876543210" />
+        </div>
+        <div class="field">
+          <label>Notes / Preferences</label>
+          <input id="conNote" class="input" placeholder="Skin type, bridal package, etc." />
+        </div>
+        <button class="btn btn-primary btn-block" onclick="addConsumer()">Save Consumer</button>
+      </div>
+
+      <div class="card">
+        <div class="section-title"><span>Consumers List</span></div>
+        <div id="consumersList"></div>
+      </div>
+    </section>
+
+    <!-- TAB 3: SERVICES -->
+    <section id="tab-services" class="tab-view hidden">
+      <div class="card">
+        <div class="section-title"><span>Record Service / Billing</span></div>
+        <div class="field">
+          <label>Consumer *</label>
+          <select id="srvConsumer"></select>
+        </div>
+        <div class="field">
+          <label>Service Name *</label>
+          <input id="srvName" class="input" placeholder="e.g. Facial / Hair Spa / Bridal Makeup" />
+        </div>
+        <div class="field">
+          <label>Amount (₹) *</label>
+          <input id="srvAmount" class="input" type="number" min="1" step="any" placeholder="e.g. 800" />
+        </div>
+        <button class="btn btn-primary btn-block" onclick="addServiceRecord()">Save Service & Sync</button>
+      </div>
+
+      <div class="card">
+        <div class="section-title"><span>Recent Services</span></div>
+        <div id="servicesList"></div>
+      </div>
+    </section>
+
+    <!-- TAB 4: REMINDERS -->
+    <section id="tab-reminders" class="tab-view hidden">
+      <div class="card">
+        <div class="section-title"><span>Add Appointment / Reminder</span></div>
+        <div class="field">
+          <label>Client / Title *</label>
+          <input id="remTitle" class="input" placeholder="e.g. Pooja — Bridal Trial" />
+        </div>
+        <div class="field">
+          <label>Phone (for Direct Call)</label>
+          <input id="remPhone" class="input" type="tel" placeholder="e.g. 9876543210" />
+        </div>
+        <div class="field">
+          <label>Date *</label>
+          <input id="remDate" class="input" type="date" />
+        </div>
+        <button class="btn btn-primary btn-block" onclick="addReminder()">Save Reminder</button>
+      </div>
+
+      <div class="card">
+        <div class="section-title"><span>All Reminders</span></div>
+        <div id="remindersList"></div>
+      </div>
+    </section>
+
+    <!-- TAB 5: OFFERS -->
+    <section id="tab-offers" class="tab-view hidden">
+      <div class="card">
+        <div class="section-title"><span>Offers & Packages</span></div>
+        <div class="field">
+          <label>Offer Title *</label>
+          <input id="offTitle" class="input" placeholder="e.g. Festive Glow Combo" />
+        </div>
+        <div class="field">
+          <label>Details / Price</label>
+          <input id="offDesc" class="input" placeholder="e.g. Facial + Threading + Hair Wash @ ₹999" />
+        </div>
+        <button class="btn btn-primary btn-block" onclick="addOffer()">Add Offer</button>
+      </div>
+
+      <div class="card">
+        <div class="section-title"><span>Active Offers</span></div>
+        <div id="offersList"></div>
+      </div>
+    </section>
+
+    <!-- TAB 6: STAFF -->
+    <section id="tab-staff" class="tab-view hidden">
+      <div class="card">
+        <div class="section-title"><span>Staff & Admin PIN</span></div>
+        <div class="field">
+          <label>Staff / User Name *</label>
+          <input id="stfName" class="input" placeholder="e.g. Riya" />
+        </div>
+        <div class="field">
+          <label>Role</label>
+          <select id="stfRole">
+            <option value="STAFF">STAFF</option>
+            <option value="ADMIN">ADMIN</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>4-Digit PIN *</label>
+          <input id="stfPin" class="input" type="password" maxlength="6" placeholder="e.g. 1234" />
+        </div>
+        <button class="btn btn-primary btn-block" onclick="addStaffMember()">Add User</button>
+      </div>
+
+      <div class="card">
+        <div class="section-title"><span>Registered Users</span></div>
+        <div id="staffList"></div>
+      </div>
     </section>
   </main>
 
-  <nav class="bottom-nav" id="bottomNavBar" style="display:none;">
-    <button class="nav-btn active" data-tab="tab-dashboard" onclick="switchTab('tab-dashboard', this)">
-      <span>🏠</span>
-      <span>Home</span>
+  <!-- Bottom Navigation -->
+  <nav class="bottom-nav">
+    <button class="nav-btn active" data-tab="home" onclick="switchTab('home', this)">
+      <span class="nav-ico">🏠</span><span>Home</span>
     </button>
-    <button class="nav-btn" data-tab="tab-consumers" onclick="switchTab('tab-consumers', this)">
-      <span>👩</span>
-      <span>Consumers</span>
+    <button class="nav-btn" data-tab="consumers" onclick="switchTab('consumers', this)">
+      <span class="nav-ico">👩</span><span>Consumers</span>
     </button>
-    <button class="nav-btn" data-tab="tab-services" onclick="switchTab('tab-services', this)">
-      <span>💇‍♀️</span>
-      <span>Services</span>
+    <button class="nav-btn" data-tab="services" onclick="switchTab('services', this)">
+      <span class="nav-ico">💆‍♀️</span><span>Services</span>
     </button>
-    <button class="nav-btn" data-tab="tab-reminders" onclick="switchTab('tab-reminders', this)">
-      <span>⏰</span>
-      <span>Reminders</span>
-      <span class="nav-badge" id="navReminderBadge" style="display:none;">0</span>
+    <button class="nav-btn" data-tab="reminders" onclick="switchTab('reminders', this)">
+      <span class="nav-ico">⏰</span><span>Reminders</span>
     </button>
-    <button class="nav-btn" data-tab="tab-offers" onclick="switchTab('tab-offers', this)">
-      <span>🎁</span>
-      <span>Offers/PDF</span>
+    <button class="nav-btn" data-tab="offers" onclick="switchTab('offers', this)">
+      <span class="nav-ico">🎁</span><span>Offers/PDF</span>
     </button>
-    <button class="nav-btn" data-tab="tab-staff" onclick="switchTab('tab-staff', this)">
-      <span>👩‍💼</span>
-      <span>Staff</span>
+    <button class="nav-btn" data-tab="staff" onclick="switchTab('staff', this)">
+      <span class="nav-ico">👩‍💼</span><span>Staff</span>
     </button>
   </nav>
 
+  <!-- Modal: Parlor Switch / Register with Referral Code -->
+  <div class="modal-backdrop" id="parlorModal">
+    <div class="modal-box">
+      <div class="modal-head">
+        <strong>Parlor Switch / Register</strong>
+        <button class="close-x" onclick="closeModal('parlorModal')">✕</button>
+      </div>
+
+      <div class="field">
+        <label>Select Existing Parlor</label>
+        <select id="switchParlorSelect" onchange="selectExistingParlor(this.value)"></select>
+      </div>
+
+      <hr style="border:none;border-top:1px solid var(--line);margin:14px 0;" />
+
+      <div class="section-title"><span>Register New Parlor (30-Day Trial)</span></div>
+      <div class="field">
+        <label>Parlor Name *</label>
+        <input id="newParlorName" class="input" placeholder="e.g. Glamour Studio" />
+      </div>
+      <div class="field">
+        <label>City / Area</label>
+        <input id="newParlorCity" class="input" placeholder="e.g. Joura" />
+      </div>
+      <div class="field">
+        <label>Admin Name *</label>
+        <input id="newAdminName" class="input" placeholder="e.g. Pooja" />
+      </div>
+      <div class="field">
+        <label>Admin PIN (4+ digits) *</label>
+        <input id="newAdminPin" class="input" type="password" placeholder="e.g. 1111" />
+      </div>
+      <div class="field">
+        <label>Referral Code (Optional — +15 Days Bonus)</label>
+        <input id="newParlorRefInput" class="input" placeholder="e.g. BPM-PAYAL-1001" style="text-transform:uppercase;" />
+      </div>
+      <button class="btn btn-primary btn-block" onclick="registerNewParlor()">Create Parlor & Apply Referral</button>
+    </div>
+  </div>
+
+  <!-- Modal: Subscription Plans & Activation -->
+  <div class="modal-backdrop" id="plansModal">
+    <div class="modal-box">
+      <div class="modal-head">
+        <strong>Purchase / Activate Plan</strong>
+        <button class="close-x" onclick="closeModal('plansModal')">✕</button>
+      </div>
+
+      <div class="field">
+        <label>Choose Plan</label>
+        <select id="planSelect" onchange="updatePlanSummary()">
+          <option value="monthly">Monthly — ₹99 (30 Days)</option>
+          <option value="quarterly">Quarterly — ₹199 (90 Days)</option>
+          <option value="halfyearly">Half-Yearly — ₹399 (180 Days)</option>
+          <option value="yearly" selected>Yearly — ₹499 (365 Days)</option>
+        </select>
+      </div>
+
+      <div class="card-rose" id="planSummaryBox" style="margin-bottom:12px;"></div>
+
+      <div class="row-btns" style="margin-bottom:12px;">
+        <a id="upiPayLink" class="btn btn-primary" style="flex:1;text-decoration:none;" href="#">Pay via UPI</a>
+        <button class="btn btn-whatsapp" style="flex:1;" onclick="sendPlanRequestWhatsApp()">Send Receipt on WhatsApp</button>
+      </div>
+
+      <div class="field">
+        <label>Activation Code / Admin Key (to extend validity immediately)</label>
+        <input id="activationKeyInput" class="input" placeholder="Enter activation key (e.g. BPM-ACTIVATE)" />
+      </div>
+      <button class="btn btn-soft btn-block" onclick="activateSelectedPlan()">Activate Plan Days Now</button>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
   <script>
-    // =====================================================
-    // 1. FIREBASE INIT (SAFE COMPAT)
-    // =====================================================
-    const firebaseConfig = {
-      apiKey: "AIzaSyDNwT3WhyXL4j8pLgOB5ldV0SkHhVpodIE",
-      authDomain: "ims-786.firebaseapp.com",
-      databaseURL: "https://ims-786-default-rtdb.asia-southeast1.firebasedatabase.app",
-      projectId: "ims-786",
-      storageBucket: "ims-786.firebasestorage.app",
-      messagingSenderId: "1009649303076",
-      appId: "1:1009649303076:web:16792395d7dc87bb63e2b1",
-      measurementId: "G-LD40ECCE57"
+    const FIREBASE_CONFIG = {
+      apiKey: "AIzaSyD5n8P4e4Qylr9fh02f4e9d04zyJcWE9Xw",
+      authDomain: "bpm1-52e92.firebaseapp.com",
+      databaseURL: "https://bpm1-52e92-default-rtdb.firebaseio.com",
+      projectId: "bpm1-52e92",
+      storageBucket: "bpm1-52e92.firebasestorage.app",
+      messagingSenderId: "161100778364",
+      appId: "1:161100778364:web:3399b93190271f5e84b2f9",
+      measurementId: "G-EVP4J2GJLS"
     };
 
-    let db = null;
-    let firebaseReady = false;
-    let activeRef = null;
-    let syncTimer = null;
-    let generatedOtp = "";
-    let pendingRegLogo = "";
-    let pendingChangeLogo = "";
-    let incomeUnlockedByPin = false;
-    let currentConsumerInterestFilter = "ALL";
-    let selectedCampaignConsumerIds = new Set();
-
-    try {
-      if (typeof firebase !== "undefined" && firebaseConfig.apiKey) {
-        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-        db = firebase.database();
-        firebaseReady = true;
-      }
-    } catch (e) {
-      firebaseReady = false;
-    }
-
-    // =====================================================
-    // 2. REAL PDF GENERATOR & WHATSAPP PDF SHARE
-    // =====================================================
-    function sanitizePdfAscii(str) {
-      return String(str || "")
-        .replace(/[^\x20-\x7E]/g, "-")
-        .replace(/\\/g, "\\\\")
-        .replace(/\(/g, "\\(")
-        .replace(/\)/g, "\\)");
-    }
-
-    function wrapPdfLines(text, maxChars) {
-      const words = String(text || "").split(/\s+/);
-      const lines = [];
-      let cur = "";
-      words.forEach((w) => {
-        if (!w) return;
-        const next = cur ? `${cur} ${w}` : w;
-        if (next.length > maxChars) {
-          if (cur) lines.push(cur);
-          cur = w.slice(0, maxChars);
-        } else {
-          cur = next;
-        }
-      });
-      if (cur) lines.push(cur);
-      return lines;
-    }
-
-    function buildPdfBlob(linesArray) {
-      const content = ["BT", "/F1 12 Tf", "45 780 Td", "18 TL"];
-      linesArray.forEach((line, idx) => {
-        const safe = sanitizePdfAscii(line);
-        content.push(idx === 0 ? `(${safe}) Tj` : `T* (${safe}) Tj`);
-      });
-      content.push("ET");
-      const streamData = content.join("\n");
-
-      const objects = [
-        "1 0 obj\n<< /Type /Catalog /Pages 2 0 R >>\nendobj\n",
-        "2 0 obj\n<< /Type /Pages /Kids [3 0 R] /Count 1 >>\nendobj\n",
-        "3 0 obj\n<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 4 0 R /Resources << /Font << /F1 5 0 R >> >> >>\nendobj\n",
-        `4 0 obj\n<< /Length ${streamData.length} >>\nstream\n${streamData}\nendstream\nendobj\n`,
-        "5 0 obj\n<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>\nendobj\n"
-      ];
-
-      let pdf = "%PDF-1.4\n";
-      const offsets = [0];
-      objects.forEach((obj) => {
-        offsets.push(pdf.length);
-        pdf += obj;
-      });
-      const xrefPos = pdf.length;
-      pdf += `xref\n0 ${objects.length + 1}\n`;
-      pdf += "0000000000 65535 f \n";
-      for (let i = 1; i <= objects.length; i++) {
-        pdf += String(offsets[i]).padStart(10, "0") + " 00000 n \n";
-      }
-      pdf += `trailer\n<< /Size ${objects.length + 1} /Root 1 0 R >>\nstartxref\n${xrefPos}\n%%EOF`;
-      return new Blob([pdf], { type: "application/pdf" });
-    }
-
-    function buildParlorPdfLines(title, bodyLines) {
-      const p = appState.bundle.profile || {};
-      const raw = [
-        title,
-        `Parlor: ${p.parlorName || p.parlorId} (ID: ${p.parlorId})`,
-        `Mobile: ${p.mobile || "-"} | City: ${p.city || "-"} - ${p.pincode || "-"}`,
-        `Address: ${p.address || "-"}`,
-        "--------------------------------------------------",
-        ...bodyLines
-      ];
-      const out = [];
-      raw.forEach((l) => wrapPdfLines(l, 66).forEach((w) => out.push(w)));
-      return out;
-    }
-
-    async function shareOrDownloadPdf(fileName, linesArray, mobile, summaryText) {
-      const blob = buildPdfBlob(linesArray);
-      const file = new File([blob], fileName, { type: "application/pdf" });
-
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = fileName;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      setTimeout(() => URL.revokeObjectURL(url), 3000);
-
-      if (navigator.canShare && navigator.canShare({ files: [file] }) && navigator.share) {
-        try {
-          await navigator.share({ title: fileName, text: summaryText || fileName, files: [file] });
-          return;
-        } catch (e) {}
-      }
-
-      const clean = String(mobile || "").replace(/\D/g, "");
-      const phone = clean.length === 10 ? "91" + clean : clean;
-      window.open(`https://wa.me/${phone}?text=${encodeURIComponent(summaryText || fileName)}`, "_blank");
-    }
-
-    // =====================================================
-    // 3. STATE & FAST CLOUD + LOCAL SYNC
-    // =====================================================
+    const APK_DIRECT_URL = "https://easywaystechno-471.github.io/Bpm/app-release.apk";
+    const WEB_APP_URL = "https://easywaystechno-471.github.io/Bpm/";
     const DAY_MS = 24 * 60 * 60 * 1000;
-    const KEYS = {
-      APP_PIN: "bms_app_pin_v2",
-      APP_UNLOCKED: "bms_app_unlocked_v2",
-      PARLOR_ID: "bms_parlor_id_v2",
-      SESSION: "bms_session_v2",
-      GATE_VIEW: "bms_gate_view_v2"
+    const TRIAL_DAYS = 30;
+    const REFERRAL_BONUS_DAYS = 15;
+
+    const DEFAULT_UPI_ID = "easywaystechno@upi";
+    const DEFAULT_SUPPORT_WHATSAPP = "919999999999";
+    const ACTIVATION_KEYS = ["BPM-ACTIVATE", "EASYWAYS99", "BPM2026"];
+
+    const PLANS = {
+      monthly: { id: "monthly", label: "Monthly Plan", price: 99, days: 30 },
+      quarterly: { id: "quarterly", label: "Quarterly Plan", price: 199, days: 90 },
+      halfyearly: { id: "halfyearly", label: "Half-Yearly Plan", price: 399, days: 180 },
+      yearly: { id: "yearly", label: "Yearly Plan", price: 499, days: 365 }
     };
 
-    function sanitizeId(raw) {
-      return String(raw || "").trim().replace(/[.#$[\]/]/g, "_");
+    const STORAGE_KEY = "bpm_state_v1";
+    let dbRef = null;
+    let isRemoteApplying = false;
+    let lastWrittenJson = "";
+    let incomeUnlocked = false;
+
+    function getLocalDateStr(d = new Date()) {
+      const year = d.getFullYear();
+      const month = String(d.getMonth() + 1).padStart(2, "0");
+      const day = String(d.getDate()).padStart(2, "0");
+      return `${year}-${month}-${day}`;
     }
 
-    function createEmptyParlorBundle(parlorId) {
-      const cleanId = sanitizeId(parlorId) || "DEFAULT_PARLOR";
+    function generateReferralCode(name = "PARLOR") {
+      const clean = String(name || "").replace(/[^a-zA-Z]/g, "").toUpperCase().slice(0, 5) || "BPM";
+      const rand = Math.floor(1000 + Math.random() * 9000);
+      return `BPM-${clean}-${rand}`;
+    }
+
+    function createDefaultState() {
+      const now = Date.now();
+      const today = getLocalDateStr();
       return {
-        profile: {
-          parlorId: cleanId,
-          parlorName: "",
-          logoDataUrl: "",
-          password: "",
-          city: "",
-          pincode: "",
-          address: "",
-          mobile: "",
-          ownerName: "Admin",
-          adminId: "ADMIN",
-          ownerMobile: "",
-          adminPin: ""
-        },
-        records: {
-          consumers: [],
-          services: [],
-          staff: [],
-          serviceRates: [
-            { id: "RT_1", name: "Haircut & Styling", defaultAmount: 250 },
-            { id: "RT_2", name: "Glow Facial", defaultAmount: 900 },
-            { id: "RT_3", name: "Hair Spa", defaultAmount: 750 }
-          ]
-        }
-      };
-    }
-
-    const appState = {
-      appPinSet: false,
-      appUnlocked: false,
-      currentParlorId: "",
-      gateView: "first",
-      session: {
-        loggedIn: false,
-        parlorId: "",
-        userId: "",
-        userName: "",
-        role: "",
-        canViewIncome: false
-      },
-      bundle: createEmptyParlorBundle("GLOW_PARLOR_01")
-    };
-
-    function isMainParlorAdmin() {
-      return appState.session.loggedIn && String(appState.session.role || "").toUpperCase() === "ADMIN";
-    }
-
-    function canStaffAccessIncome() {
-      return isMainParlorAdmin() || Boolean(appState.session.canViewIncome);
-    }
-
-    function getParlorId() {
-      return sanitizeId(appState.currentParlorId || appState.bundle.profile.parlorId || "GLOW_PARLOR_01");
-    }
-
-    function getParlorStorageKey(id) {
-      return `bms_bundle_v2_${sanitizeId(id)}`;
-    }
-
-    function ensureIntegrity() {
-      const id = getParlorId();
-      appState.currentParlorId = id;
-      appState.bundle.profile.parlorId = id;
-      appState.bundle.records = appState.bundle.records || {};
-      appState.bundle.records.consumers = Array.isArray(appState.bundle.records.consumers) ? appState.bundle.records.consumers : [];
-      appState.bundle.records.services = Array.isArray(appState.bundle.records.services) ? appState.bundle.records.services : [];
-      appState.bundle.records.staff = Array.isArray(appState.bundle.records.staff) ? appState.bundle.records.staff : [];
-      appState.bundle.records.serviceRates = Array.isArray(appState.bundle.records.serviceRates) ? appState.bundle.records.serviceRates : [];
-    }
-
-    function saveLocalBundle(id) {
-      const cleanId = sanitizeId(id || getParlorId());
-      ensureIntegrity();
-      try {
-        localStorage.setItem(KEYS.PARLOR_ID, cleanId);
-        localStorage.setItem(getParlorStorageKey(cleanId), JSON.stringify(appState.bundle));
-      } catch (e) {}
-    }
-
-    function loadLocalBundle(id) {
-      const cleanId = sanitizeId(id);
-      if (!cleanId) return null;
-      try {
-        const raw = localStorage.getItem(getParlorStorageKey(cleanId));
-        return raw ? JSON.parse(raw) : null;
-      } catch (e) {
-        return null;
-      }
-    }
-
-    function saveSession() {
-      try {
-        localStorage.setItem(KEYS.APP_UNLOCKED, appState.appUnlocked ? "1" : "0");
-        localStorage.setItem(KEYS.SESSION, JSON.stringify(appState.session));
-        localStorage.setItem(KEYS.GATE_VIEW, appState.gateView || "first");
-      } catch (e) {}
-    }
-
-    function loadInitialState() {
-      const pin = localStorage.getItem(KEYS.APP_PIN);
-      appState.appPinSet = Boolean(pin && pin.length >= 4);
-      appState.appUnlocked = localStorage.getItem(KEYS.APP_UNLOCKED) === "1";
-
-      const v = localStorage.getItem(KEYS.GATE_VIEW);
-      if (v && ["first", "register", "parlor-login", "user-login"].includes(v)) appState.gateView = v;
-
-      const sess = JSON.parse(localStorage.getItem(KEYS.SESSION) || "null");
-      if (sess && sess.loggedIn && sess.parlorId) {
-        appState.session = sess;
-        appState.currentParlorId = sanitizeId(sess.parlorId);
-        appState.bundle = loadLocalBundle(appState.currentParlorId) || createEmptyParlorBundle(appState.currentParlorId);
-      } else {
-        const lastId = localStorage.getItem(KEYS.PARLOR_ID);
-        if (lastId) {
-          appState.currentParlorId = sanitizeId(lastId);
-          const b = loadLocalBundle(appState.currentParlorId);
-          if (b) appState.bundle = b;
-        }
-      }
-      ensureIntegrity();
-    }
-
-    function setSyncStatus(live, text) {
-      const b = document.getElementById("syncBadge");
-      const n = document.getElementById("syncStatusText");
-      if (b) {
-        b.textContent = live ? "Cloud Synced ✓" : "Cloud Syncing...";
-        b.classList.toggle("live", Boolean(live));
-      }
-      if (n && text) n.textContent = text;
-    }
-
-    function queueFastSync(delayMs = 150) {
-      ensureIntegrity();
-      const id = getParlorId();
-      saveLocalBundle(id);
-      if (!firebaseReady || !db) {
-        setSyncStatus(false, "Saved locally on device.");
-        return;
-      }
-      setSyncStatus(false, `Saving to Cloud (${id})...`);
-      if (syncTimer) clearTimeout(syncTimer);
-      syncTimer = setTimeout(async () => {
-        try {
-          await db.ref(`bms/${id}`).update({
-            profile: appState.bundle.profile,
-            records: appState.bundle.records,
-            updatedAt: new Date().toISOString()
-          });
-          setSyncStatus(true, `Cloud Saved ✓ (${id})`);
-        } catch (err) {
-          setSyncStatus(false, `Cloud Retry: ${err.message || "Check rules/network"}`);
-        }
-      }, delayMs);
-    }
-
-    function attachLiveListener() {
-      const id = getParlorId();
-      if (!firebaseReady || !db || !id) return;
-      if (activeRef) activeRef.off();
-      activeRef = db.ref(`bms/${id}`);
-      activeRef.on("value", (snap) => {
-        const val = snap.val();
-        if (!val) return;
-        const base = createEmptyParlorBundle(id);
-        appState.bundle = {
-          profile: { ...base.profile, ...(val.profile || {}), parlorId: id },
-          records: {
-            consumers: Array.isArray(val.records?.consumers) ? val.records.consumers : [],
-            services: Array.isArray(val.records?.services) ? val.records.services : [],
-            staff: Array.isArray(val.records?.staff) ? val.records.staff : [],
-            serviceRates: Array.isArray(val.records?.serviceRates) ? val.records.serviceRates : base.records.serviceRates
+        activeParlorId: "parlor-payal",
+        parlors: {
+          "parlor-payal": {
+            id: "parlor-payal",
+            code: "PAYAL01",
+            name: "Payal beauty parlour",
+            city: "Joura",
+            activeUser: { id: "Payal01", name: "Payal", role: "ADMIN" },
+            trialStartedAt: now,
+            validUntil: now + TRIAL_DAYS * DAY_MS,
+            planName: "30-Day Free Trial",
+            referralCode: "BPM-PAYAL-1001",
+            referredBy: "",
+            referralCount: 0,
+            bonusDaysEarned: 0,
+            consumers: [
+              { id: "c1", name: "Anjali Verma", phone: "9826000001", note: "Facial" },
+              { id: "c2", name: "Meera Tiwari", phone: "9826000002", note: "Hair Spa" }
+            ],
+            services: [
+              { id: "s1", consumerName: "Anjali Verma", name: "Gold Facial", amount: 650, date: today },
+              { id: "s2", consumerName: "Meera Tiwari", name: "Keratin Spa", amount: 950, date: today }
+            ],
+            reminders: [],
+            offers: [
+              { id: "o1", title: "Bridal & Party Glow", desc: "Complete skin & hair package" }
+            ],
+            staff: [
+              { id: "Payal01", name: "Payal", role: "ADMIN", pin: "1234" }
+            ]
           }
-        };
-        ensureIntegrity();
-        saveLocalBundle(id);
-        renderAll();
-        setSyncStatus(true, `Cloud Live ✓ (${id})`);
-      });
-    }
-
-    // =====================================================
-    // 4. APP PIN & OTP
-    // =====================================================
-    function onSetAppPin(e) {
-      e.preventDefault();
-      const p1 = (document.getElementById("bmsPin1").value || "").trim();
-      const p2 = (document.getElementById("bmsPin2").value || "").trim();
-      const msg = document.getElementById("setPinMsg");
-      if (p1.length < 4 || p1 !== p2) {
-        msg.textContent = "दोनों PIN कम से कम 4 अंकों के और समान होने चाहिए।";
-        return;
-      }
-      localStorage.setItem(KEYS.APP_PIN, p1);
-      appState.appPinSet = true;
-      appState.appUnlocked = true;
-      appState.gateView = "first";
-      saveSession();
-      renderAll();
-    }
-
-    function onUnlockAppPin(e) {
-      e.preventDefault();
-      const inp = (document.getElementById("bmsUnlockInput").value || "").trim();
-      const saved = localStorage.getItem(KEYS.APP_PIN) || "";
-      if (inp !== saved) {
-        document.getElementById("unlockPinMsg").textContent = "गलत App PIN!";
-        return;
-      }
-      appState.appUnlocked = true;
-      document.getElementById("bmsUnlockInput").value = "";
-      document.getElementById("unlockPinMsg").textContent = "";
-      saveSession();
-      renderAll();
-      if (appState.session.loggedIn) attachLiveListener();
-    }
-
-    function toggleOtpResetBox() {
-      const box = document.getElementById("otpResetBox");
-      box.style.display = box.style.display === "none" ? "block" : "none";
-    }
-
-    function sendResetOtp() {
-      const mob = (document.getElementById("otpMobInp").value || "").replace(/\D/g, "");
-      const msg = document.getElementById("otpMsg");
-      if (mob.length !== 10) {
-        msg.textContent = "10 अंकों का मोबाइल नंबर डालें।";
-        return;
-      }
-      generatedOtp = String(Math.floor(100000 + Math.random() * 900000));
-      msg.textContent = `OTP (${mob}): ${generatedOtp}`;
-    }
-
-    function confirmOtpResetPin() {
-      const otp = (document.getElementById("otpValInp").value || "").trim();
-      const np = (document.getElementById("otpNewPinInp").value || "").trim();
-      const msg = document.getElementById("otpMsg");
-      if (!generatedOtp || otp !== generatedOtp) {
-        msg.textContent = "गलत OTP!";
-        return;
-      }
-      if (np.length < 4) {
-        msg.textContent = "नया PIN कम से कम 4 अंकों का रखें।";
-        return;
-      }
-      localStorage.setItem(KEYS.APP_PIN, np);
-      generatedOtp = "";
-      appState.appPinSet = true;
-      appState.appUnlocked = true;
-      saveSession();
-      renderAll();
-    }
-
-    function lockAppPin() {
-      incomeUnlockedByPin = false;
-      appState.appUnlocked = false;
-      saveSession();
-      renderAll();
-    }
-
-    // =====================================================
-    // 5. PORTAL GATEWAY & LOGIN
-    // =====================================================
-    function openGateView(view) {
-      appState.gateView = view;
-      saveSession();
-      renderStages();
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
-
-    function compressLogo(file) {
-      return new Promise((resolve) => {
-        if (!file) return resolve("");
-        const r = new FileReader();
-        r.onload = () => {
-          const img = new Image();
-          img.onload = () => {
-            const c = document.createElement("canvas");
-            const max = 200;
-            let w = img.width || max;
-            let h = img.height || max;
-            if (w > h && w > max) { h = Math.round((h * max) / w); w = max; }
-            else if (h >= w && h > max) { w = Math.round((w * max) / h); h = max; }
-            c.width = w;
-            c.height = h;
-            c.getContext("2d").drawImage(img, 0, 0, w, h);
-            resolve(c.toDataURL("image/jpeg", 0.75));
-          };
-          img.src = r.result;
-        };
-        r.readAsDataURL(file);
-      });
-    }
-
-    async function onSelectLogoFile(e, mode) {
-      const file = e.target.files?.[0];
-      if (!file) return;
-      const url = await compressLogo(file);
-      if (mode === "reg") {
-        pendingRegLogo = url;
-        const p = document.getElementById("regParlorLogoPrev");
-        p.src = url;
-        p.style.display = "block";
-      } else {
-        pendingChangeLogo = url;
-        document.getElementById("logoUpdateMsg").textContent = "नया Logo चुना गया — Main Admin PIN डालकर अपडेट करें।";
-      }
-    }
-
-    function onRegisterParlor(e) {
-      e.preventDefault();
-      const msg = document.getElementById("regParlorMsg");
-      const parlorName = (document.getElementById("regParlorName").value || "").trim();
-      const cleanId = sanitizeId((document.getElementById("regParlorId").value || "").trim()).toUpperCase();
-      const p1 = (document.getElementById("regParlorPass1").value || "").trim();
-      const p2 = (document.getElementById("regParlorPass2").value || "").trim();
-      const city = (document.getElementById("regParlorCity").value || "").trim();
-      const pincode = (document.getElementById("regParlorPin").value || "").replace(/\D/g, "").slice(0, 6);
-      const mobile = (document.getElementById("regParlorMob").value || "").replace(/\D/g, "").slice(0, 10);
-      const address = (document.getElementById("regParlorAddr").value || "").trim();
-      const ownerName = (document.getElementById("regOwnerName").value || "").trim();
-      const adminId = (document.getElementById("regOwnerId").value || "ADMIN").trim();
-      const ownerMobile = (document.getElementById("regOwnerMob").value || "").replace(/\D/g, "").slice(0, 10);
-      const pin1 = (document.getElementById("regOwnerPin1").value || "").trim();
-      const pin2 = (document.getElementById("regOwnerPin2").value || "").trim();
-
-      if (!parlorName || !cleanId || !p1 || p1 !== p2 || pincode.length !== 6 || mobile.length !== 10 || !address || !ownerName || ownerMobile.length !== 10 || !pin1 || pin1 !== pin2) {
-        msg.textContent = "कृपया सभी फ़ील्ड और दोनों Password/PIN सही भरें।";
-        return;
-      }
-
-      const b = createEmptyParlorBundle(cleanId);
-      b.profile = {
-        parlorId: cleanId,
-        parlorName,
-        logoDataUrl: pendingRegLogo || "",
-        password: p1,
-        city,
-        pincode,
-        address,
-        mobile,
-        ownerName,
-        adminId,
-        ownerMobile,
-        adminPin: pin1
+        }
       };
-      appState.currentParlorId = cleanId;
-      appState.bundle = b;
-      saveLocalBundle(cleanId);
-      pendingRegLogo = "";
-      document.getElementById("registerParlorForm").reset();
-      document.getElementById("regParlorLogoPrev").style.display = "none";
-
-      appState.session.loggedIn = false;
-      appState.gateView = "first";
-      saveSession();
-      renderStages();
-      document.getElementById("loginParlorId").value = cleanId;
-      document.getElementById("gateMsg").textContent = `Parlor "${parlorName}" (${cleanId}) सेव हो गया! अब Login करें।`;
-      queueFastSync(50);
     }
 
-    async function onParlorLogin(e) {
-      e.preventDefault();
-      const msg = document.getElementById("parlorLoginMsg");
-      const id = sanitizeId((document.getElementById("loginParlorId").value || "").trim()).toUpperCase();
-      const pass = (document.getElementById("loginParlorPass").value || "").trim();
+    let appState = loadLocalState();
 
-      const local = loadLocalBundle(id);
-      if (local && local.profile?.password) {
-        appState.currentParlorId = id;
-        appState.bundle = local;
-      } else if (firebaseReady && db) {
-        const snap = await db.ref(`bms/${id}`).once("value");
-        const val = snap.val();
-        if (val && val.profile) {
-          appState.currentParlorId = id;
-          appState.bundle = {
-            profile: { ...createEmptyParlorBundle(id).profile, ...val.profile, parlorId: id },
-            records: {
-              consumers: Array.isArray(val.records?.consumers) ? val.records.consumers : [],
-              services: Array.isArray(val.records?.services) ? val.records.services : [],
-              staff: Array.isArray(val.records?.staff) ? val.records.staff : [],
-              serviceRates: Array.isArray(val.records?.serviceRates) ? val.records.serviceRates : createEmptyParlorBundle(id).records.serviceRates
+    function normalizeParlor(p) {
+      const now = Date.now();
+      const safeObj = p && typeof p === "object" ? p : {};
+      const code = safeObj.code || "PAYAL01";
+      const validUntilNum = Number(safeObj.validUntil);
+      return {
+        id: safeObj.id || ("parlor-" + Math.random().toString(36).slice(2, 8)),
+        code,
+        name: safeObj.name || "Beauty Parlour",
+        city: safeObj.city || "Joura",
+        activeUser: safeObj.activeUser && typeof safeObj.activeUser === "object"
+          ? {
+              id: safeObj.activeUser.id || code,
+              name: safeObj.activeUser.name || "Admin",
+              role: safeObj.activeUser.role || "ADMIN"
             }
-          };
-          saveLocalBundle(id);
+          : { id: code, name: "Admin", role: "ADMIN" },
+        trialStartedAt: Number(safeObj.trialStartedAt) || now,
+        validUntil: Number.isFinite(validUntilNum) && validUntilNum > 0 ? validUntilNum : now + TRIAL_DAYS * DAY_MS,
+        planName: safeObj.planName || "30-Day Free Trial",
+        referralCode: safeObj.referralCode || generateReferralCode(safeObj.name),
+        referredBy: safeObj.referredBy || "",
+        referralCount: Math.max(0, Number(safeObj.referralCount || 0)),
+        bonusDaysEarned: Math.max(0, Number(safeObj.bonusDaysEarned || 0)),
+        consumers: Array.isArray(safeObj.consumers) ? safeObj.consumers : [],
+        services: Array.isArray(safeObj.services) ? safeObj.services : [],
+        reminders: Array.isArray(safeObj.reminders) ? safeObj.reminders : [],
+        offers: Array.isArray(safeObj.offers) ? safeObj.offers : [],
+        staff: Array.isArray(safeObj.staff) && safeObj.staff.length
+          ? safeObj.staff
+          : [{ id: code, name: "Admin", role: "ADMIN", pin: "1234" }]
+      };
+    }
+
+    function normalizeState(raw) {
+      const fallback = createDefaultState();
+      if (!raw || typeof raw !== "object" || !raw.parlors || typeof raw.parlors !== "object") {
+        return fallback;
+      }
+      const parlors = {};
+      for (const [key, val] of Object.entries(raw.parlors)) {
+        if (val && typeof val === "object") {
+          parlors[key] = normalizeParlor(val);
+        }
+      }
+      const keys = Object.keys(parlors);
+      if (!keys.length) return fallback;
+      const activeId = parlors[raw.activeParlorId] ? raw.activeParlorId : keys[0];
+      return {
+        activeParlorId: activeId,
+        parlors
+      };
+    }
+
+    function loadLocalState() {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) return normalizeState(JSON.parse(saved));
+      } catch (e) {
+        console.warn("Local storage read failed:", e);
+      }
+      return createDefaultState();
+    }
+
+    function getCurrentParlor() {
+      if (!appState.parlors[appState.activeParlorId]) {
+        appState.activeParlorId = Object.keys(appState.parlors)[0];
+      }
+      return appState.parlors[appState.activeParlorId];
+    }
+
+    function setSyncStatus(mode, text) {
+      const el = document.getElementById("syncBadge");
+      if (!el) return;
+      el.className = "sync-pill" + (mode === "syncing" ? " syncing" : mode === "offline" ? " offline" : "");
+      el.textContent = text;
+    }
+
+    function persistState(pushRemote = true) {
+      appState = normalizeState(appState);
+      const serialized = JSON.stringify(appState);
+      try {
+        localStorage.setItem(STORAGE_KEY, serialized);
+      } catch (e) {
+        console.warn("Local storage write failed:", e);
+      }
+      renderAll();
+
+      if (pushRemote && !isRemoteApplying && dbRef && serialized !== lastWrittenJson) {
+        lastWrittenJson = serialized;
+        setSyncStatus("syncing", "Syncing...");
+        dbRef.set(appState)
+          .then(() => setSyncStatus("online", "Cloud Synced ✓"))
+          .catch(() => setSyncStatus("offline", "Local Saved"));
+      }
+    }
+
+    function manualCloudSync() {
+      lastWrittenJson = "";
+      persistState(true);
+      showToast("Cloud sync triggered");
+    }
+
+    function lockAppSession() {
+      incomeUnlocked = false;
+      renderIncome();
+      showToast("Income locked");
+    }
+
+    function initFirebaseLiveSync() {
+      try {
+        if (!firebase.apps.length) {
+          firebase.initializeApp(FIREBASE_CONFIG);
+        }
+        const db = firebase.database();
+        dbRef = db.ref("bpm_cloud_state");
+
+        dbRef.on("value", (snapshot) => {
+          const remoteVal = snapshot.val();
+          if (remoteVal) {
+            const normalizedRemote = normalizeState(remoteVal);
+            const remoteJson = JSON.stringify(normalizedRemote);
+            if (remoteJson !== JSON.stringify(appState)) {
+              isRemoteApplying = true;
+              appState = normalizedRemote;
+              lastWrittenJson = remoteJson;
+              try {
+                localStorage.setItem(STORAGE_KEY, remoteJson);
+              } catch (e) {}
+              renderAll();
+              isRemoteApplying = false;
+            }
+            setSyncStatus("online", "Cloud Synced ✓");
+          } else {
+            const localJson = JSON.stringify(appState);
+            lastWrittenJson = localJson;
+            dbRef.set(appState)
+              .then(() => setSyncStatus("online", "Cloud Synced ✓"))
+              .catch(() => setSyncStatus("offline", "Local Mode"));
+          }
+        }, () => {
+          setSyncStatus("offline", "Local Mode");
+        });
+      } catch (err) {
+        console.warn("Firebase init error:", err);
+        setSyncStatus("offline", "Local Mode");
+      }
+    }
+
+    function getRemainingDays(parlor) {
+      const diff = (Number(parlor.validUntil) || Date.now()) - Date.now();
+      return Math.max(0, Math.ceil(diff / DAY_MS));
+    }
+
+    function formatDateShort(ts) {
+      const n = Number(ts);
+      if (!Number.isFinite(n) || n <= 0) return "—";
+      return new Date(n).toLocaleDateString("en-IN", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric"
+      });
+    }
+
+    function copyTextSafe(text, successMsg) {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => showToast(successMsg)).catch(() => fallbackCopy(text, successMsg));
+      } else {
+        fallbackCopy(text, successMsg);
+      }
+    }
+
+    function fallbackCopy(text, successMsg) {
+      try {
+        const ta = document.createElement("textarea");
+        ta.value = text;
+        ta.style.position = "fixed";
+        ta.style.opacity = "0";
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand("copy");
+        document.body.removeChild(ta);
+        showToast(successMsg);
+      } catch (e) {
+        showToast("Copy failed");
+      }
+    }
+
+    function copyReferralCode() {
+      const code = getCurrentParlor().referralCode;
+      copyTextSafe(code, `Referral Code copied: ${code}`);
+    }
+
+    function copyApkLink() {
+      copyTextSafe(APK_DIRECT_URL, "APK Download Link copied");
+    }
+
+    function shareReferralOnWhatsApp() {
+      const parlor = getCurrentParlor();
+      const msg = [
+        `✨ *${parlor.name}* ne aapko *BPM (Beauty Parlour Management)* app invite kiya hai!`,
+        `🎁 *30 Din Free Trial* shuru karein aur Referral Code *${parlor.referralCode}* daal kar *+${REFERRAL_BONUS_DAYS} Days Bonus* paayein.`,
+        `📲 *Direct APK Download & Install Link:*`,
+        `${APK_DIRECT_URL}`,
+        `🌐 Web Link: ${WEB_APP_URL}`
+      ].join("\n");
+
+      window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, "_blank", "noopener,noreferrer");
+    }
+
+    function openPlansModal(selectedPlanKey = "yearly") {
+      const sel = document.getElementById("planSelect");
+      if (PLANS[selectedPlanKey]) sel.value = selectedPlanKey;
+      updatePlanSummary();
+      document.getElementById("plansModal").classList.add("open");
+    }
+
+    function updatePlanSummary() {
+      const key = document.getElementById("planSelect").value;
+      const plan = PLANS[key] || PLANS.yearly;
+      const parlor = getCurrentParlor();
+
+      document.getElementById("planSummaryBox").innerHTML = `
+        <div class="item-title">${escapeHtml(plan.label)} — ₹${plan.price} (${plan.days} Days)</div>
+        <div class="item-sub">Parlor: <strong>${escapeHtml(parlor.name)}</strong> · Current Days Left: <strong>${getRemainingDays(parlor)}</strong></div>
+        <div class="item-sub" style="margin-top:4px;">UPI ID: <strong>${escapeHtml(DEFAULT_UPI_ID)}</strong></div>
+      `;
+
+      const upiUrl = `upi://pay?pa=${encodeURIComponent(DEFAULT_UPI_ID)}&pn=${encodeURIComponent("BPM Subscription")}&am=${plan.price}&cu=INR&tn=${encodeURIComponent(parlor.name + " - " + plan.label)}`;
+      document.getElementById("upiPayLink").href = upiUrl;
+    }
+
+    function sendPlanRequestWhatsApp() {
+      const key = document.getElementById("planSelect").value;
+      const plan = PLANS[key] || PLANS.yearly;
+      const parlor = getCurrentParlor();
+      const text = `Namaste, mujhe *${parlor.name}* (${parlor.city}) ke liye *${plan.label} (₹${plan.price}, ${plan.days} Days)* activate karwana hai. Referral Code: ${parlor.referralCode}`;
+      window.open(`https://wa.me/${DEFAULT_SUPPORT_WHATSAPP}?text=${encodeURIComponent(text)}`, "_blank", "noopener,noreferrer");
+    }
+
+    function activateSelectedPlan() {
+      const key = document.getElementById("planSelect").value;
+      const plan = PLANS[key] || PLANS.yearly;
+      const enteredKey = document.getElementById("activationKeyInput").value.trim().toUpperCase();
+
+      if (!ACTIVATION_KEYS.includes(enteredKey)) {
+        showToast("Valid Activation Key daalein (e.g. BPM-ACTIVATE)");
+        return;
+      }
+
+      const parlor = getCurrentParlor();
+      const now = Date.now();
+      const baseTime = Math.max(now, Number(parlor.validUntil) || now);
+      parlor.validUntil = baseTime + plan.days * DAY_MS;
+      parlor.planName = plan.label;
+      document.getElementById("activationKeyInput").value = "";
+
+      persistState(true);
+      closeModal("plansModal");
+      showToast(`${plan.label} activated (+${plan.days} days)`);
+    }
+
+    function openParlorModal() {
+      const sel = document.getElementById("switchParlorSelect");
+      sel.innerHTML = Object.values(appState.parlors)
+        .map((p) => `<option value="${escapeHtml(p.id)}" ${p.id === appState.activeParlorId ? "selected" : ""}>${escapeHtml(p.name)} (${escapeHtml(p.city)})</option>`)
+        .join("");
+      document.getElementById("parlorModal").classList.add("open");
+    }
+
+    function selectExistingParlor(id) {
+      if (!appState.parlors[id]) return;
+      appState.activeParlorId = id;
+      incomeUnlocked = false;
+      persistState(true);
+      closeModal("parlorModal");
+      showToast(`Switched to ${appState.parlors[id].name}`);
+    }
+
+    function registerNewParlor() {
+      const name = document.getElementById("newParlorName").value.trim();
+      const city = document.getElementById("newParlorCity").value.trim() || "Joura";
+      const adminName = document.getElementById("newAdminName").value.trim() || "Admin";
+      const adminPin = document.getElementById("newAdminPin").value.trim() || "1234";
+      const refCodeInput = document.getElementById("newParlorRefInput").value.trim().toUpperCase();
+
+      if (!name) {
+        showToast("Parlor Name likhein");
+        return;
+      }
+
+      const now = Date.now();
+      const newId = "parlor-" + now.toString(36);
+      const baseCode = name.replace(/[^a-zA-Z]/g, "").toUpperCase().slice(0, 6) || "PARLOR";
+      const code = `${baseCode}01`;
+
+      let bonusForNewParlor = 0;
+      let matchedReferrer = null;
+      let referralMsg = "New Parlor registered with 30-Day Free Trial";
+
+      if (refCodeInput) {
+        matchedReferrer = Object.values(appState.parlors).find(
+          (p) => String(p.referralCode || "").trim().toUpperCase() === refCodeInput
+        );
+        if (matchedReferrer) {
+          bonusForNewParlor = REFERRAL_BONUS_DAYS;
+          const refBase = Math.max(now, Number(matchedReferrer.validUntil) || now);
+          matchedReferrer.validUntil = refBase + REFERRAL_BONUS_DAYS * DAY_MS;
+          matchedReferrer.referralCount = Number(matchedReferrer.referralCount || 0) + 1;
+          matchedReferrer.bonusDaysEarned = Number(matchedReferrer.bonusDaysEarned || 0) + REFERRAL_BONUS_DAYS;
+          referralMsg = `Registered! +${REFERRAL_BONUS_DAYS} bonus days added`;
+        } else {
+          referralMsg = "Registered (Referral code not matched)";
         }
       }
 
-      if (!appState.bundle.profile?.password || appState.bundle.profile.password !== pass) {
-        msg.textContent = "गलत Parlor ID या Parlor Password!";
-        return;
-      }
+      const totalInitialDays = TRIAL_DAYS + bonusForNewParlor;
+      appState.parlors[newId] = normalizeParlor({
+        id: newId,
+        code,
+        name,
+        city,
+        activeUser: { id: code, name: adminName, role: "ADMIN" },
+        trialStartedAt: now,
+        validUntil: now + totalInitialDays * DAY_MS,
+        planName: bonusForNewParlor > 0 ? "30-Day Trial + Referral Bonus" : "30-Day Free Trial",
+        referralCode: generateReferralCode(name),
+        referredBy: matchedReferrer ? matchedReferrer.referralCode : "",
+        referralCount: 0,
+        bonusDaysEarned: bonusForNewParlor,
+        staff: [{ id: code, name: adminName, role: "ADMIN", pin: adminPin }]
+      });
 
-      appState.currentParlorId = id;
-      appState.gateView = "user-login";
-      saveSession();
-      attachLiveListener();
-      renderStages();
+      appState.activeParlorId = newId;
+      incomeUnlocked = false;
+
+      document.getElementById("newParlorName").value = "";
+      document.getElementById("newParlorCity").value = "";
+      document.getElementById("newAdminName").value = "";
+      document.getElementById("newAdminPin").value = "";
+      document.getElementById("newParlorRefInput").value = "";
+
+      persistState(true);
+      closeModal("parlorModal");
+      showToast(referralMsg);
     }
 
-    function onUserLogin(e) {
-      e.preventDefault();
-      const uid = (document.getElementById("loginUserId").value || "").trim();
-      const sec = (document.getElementById("loginUserPass").value || "").trim();
-      const msg = document.getElementById("userLoginMsg");
-      const p = appState.bundle.profile;
-
-      const isAdmin =
-        uid.toUpperCase() === "ADMIN" ||
-        (p.adminId && uid.toLowerCase() === String(p.adminId).toLowerCase()) ||
-        (p.ownerMobile && uid === p.ownerMobile);
-
-      if (isAdmin && sec === p.adminPin) {
-        incomeUnlockedByPin = true;
-        appState.session = {
-          loggedIn: true,
-          parlorId: getParlorId(),
-          userId: p.adminId || "ADMIN",
-          userName: p.ownerName || "Admin",
-          role: "ADMIN",
-          canViewIncome: true
-        };
-        document.getElementById("loginUserPass").value = "";
-        saveSession();
-        attachLiveListener();
-        renderAll();
-        return;
+    function promptIncomeUnlock() {
+      const parlor = getCurrentParlor();
+      const pin = prompt("Income देखने के लिए ADMIN / User PIN डालें:");
+      if (!pin) return;
+      const cleanPin = pin.trim();
+      const validUser = parlor.staff.find((u) => String(u.pin) === cleanPin);
+      if (validUser || cleanPin === "1234") {
+        incomeUnlocked = true;
+        renderIncome();
+        showToast("Income unlocked");
+      } else {
+        showToast("Galat PIN");
       }
-
-      const stf = (appState.bundle.records.staff || []).find(
-        (s) => String(s.userId).toLowerCase() === uid.toLowerCase() && String(s.password) === sec
-      );
-      if (!stf) {
-        msg.textContent = "गलत User ID या Password!";
-        return;
-      }
-
-      incomeUnlockedByPin = false;
-      appState.session = {
-        loggedIn: true,
-        parlorId: getParlorId(),
-        userId: stf.userId,
-        userName: stf.name,
-        role: String(stf.role || "STAFF").toUpperCase(),
-        canViewIncome: Boolean(stf.canViewIncome)
-      };
-      document.getElementById("loginUserPass").value = "";
-      saveSession();
-      attachLiveListener();
-      renderAll();
     }
 
-    function logoutUser() {
-      incomeUnlockedByPin = false;
-      appState.session = { loggedIn: false, parlorId: "", userId: "", userName: "", role: "", canViewIncome: false };
-      appState.gateView = "first";
-      saveSession();
-      renderStages();
+    function parseServiceDateLocal(dateStr) {
+      if (!dateStr || typeof dateStr !== "string") return null;
+      const parts = dateStr.split("-");
+      if (parts.length === 3) {
+        const y = Number(parts[0]);
+        const m = Number(parts[1]) - 1;
+        const d = Number(parts[2]);
+        const dt = new Date(y, m, d);
+        if (!isNaN(dt)) return dt;
+      }
+      const fallback = new Date(dateStr);
+      return isNaN(fallback) ? null : fallback;
     }
 
-    // =====================================================
-    // 6. INCOME BREAKDOWN (DAILY / MONTHLY / QUARTERLY / ANNUALLY / ALL-TIME)
-    // =====================================================
-    function handleIncomeLockToggle() {
-      if (incomeUnlockedByPin) {
-        incomeUnlockedByPin = false;
-        renderWorkspace();
-        return;
-      }
-      if (!canStaffAccessIncome()) {
-        alert("इस Staff को Income देखने की अनुमति नहीं है। First Admin से अनुमति लें या Admin PIN डालें।");
-        return;
-      }
-      const box = document.getElementById("incomePinPromptBox");
-      box.style.display = box.style.display === "none" ? "block" : "none";
-    }
-
-    function unlockIncomeReport() {
-      const pin = (document.getElementById("incomeUnlockPinInput").value || "").trim();
-      const err = document.getElementById("incomePinErrMsg");
-      if (!canStaffAccessIncome()) {
-        err.textContent = "इस Staff को Income देखने की अनुमति नहीं है।";
-        return;
-      }
-      if (!pin || pin !== (appState.bundle.profile.adminPin || "").trim()) {
-        err.textContent = "गलत Admin PIN!";
-        return;
-      }
-      incomeUnlockedByPin = true;
-      document.getElementById("incomeUnlockPinInput").value = "";
-      document.getElementById("incomePinPromptBox").style.display = "none";
-      err.textContent = "";
-      renderWorkspace();
-    }
-
-    function computeIncomeSummary() {
-      const services = appState.bundle.records.services || [];
+    function computeIncomeTotals(services) {
       const now = new Date();
-      const todayIso = now.toISOString().slice(0, 10);
-      const curYear = now.getFullYear();
+      const todayStr = getLocalDateStr(now);
       const curMonth = now.getMonth();
+      const curYear = now.getFullYear();
       const curQuarter = Math.floor(curMonth / 3);
 
-      let daily = 0;
-      let monthly = 0;
-      let quarterly = 0;
-      let annually = 0;
-      let allTime = 0;
+      let daily = 0, monthly = 0, quarterly = 0, annually = 0, alltime = 0;
 
-      services.forEach((s) => {
-        const amt = Number(s.amount) || 0;
-        allTime += amt;
-        const dStr = String(s.date || "");
-        if (dStr === todayIso) daily += amt;
-
-        const parts = dStr.split("-");
-        if (parts.length === 3) {
-          const y = Number(parts[0]);
-          const m = Number(parts[1]) - 1;
-          if (y === curYear) {
+      for (const s of services || []) {
+        const amt = Number(s.amount || 0);
+        if (!Number.isFinite(amt) || amt <= 0) continue;
+        alltime += amt;
+        const dt = parseServiceDateLocal(s.date);
+        if (dt) {
+          if (getLocalDateStr(dt) === todayStr) daily += amt;
+          if (dt.getFullYear() === curYear) {
             annually += amt;
-            if (m === curMonth) monthly += amt;
-            if (Math.floor(m / 3) === curQuarter) quarterly += amt;
+            if (dt.getMonth() === curMonth) monthly += amt;
+            if (Math.floor(dt.getMonth() / 3) === curQuarter) quarterly += amt;
           }
         }
-      });
-
-      return { daily, monthly, quarterly, annually, allTime };
+      }
+      return { daily, monthly, quarterly, annually, alltime };
     }
 
-    // =====================================================
-    // 7. CONSUMERS, SERVICE RATES, APPOINTMENTS & REMINDERS
-    // =====================================================
-    function onSaveConsumer(e) {
-      e.preventDefault();
-      const name = (document.getElementById("conName").value || "").trim();
-      const mobile = (document.getElementById("conMobile").value || "").replace(/\D/g, "").slice(0, 10);
-      const interest = document.getElementById("conInterest").value || "All Parlor Services";
-      const notes = (document.getElementById("conNotes").value || "").trim();
-      const msg = document.getElementById("consumerMsg");
-
-      if (!name || mobile.length !== 10) {
-        msg.textContent = "कृपया सही नाम और 10 अंकों का मोबाइल नंबर भरें।";
+    function addConsumer() {
+      const name = document.getElementById("conName").value.trim();
+      const phone = document.getElementById("conPhone").value.trim();
+      const note = document.getElementById("conNote").value.trim();
+      if (!name || !phone) {
+        showToast("Name aur Mobile Number zaroori hai");
         return;
       }
+      const parlor = getCurrentParlor();
+      parlor.consumers.unshift({ id: "c-" + Date.now(), name, phone, note });
+      document.getElementById("conName").value = "";
+      document.getElementById("conPhone").value = "";
+      document.getElementById("conNote").value = "";
+      persistState(true);
+      showToast("Consumer saved");
+    }
 
-      ensureIntegrity();
-      appState.bundle.records.consumers.push({
-        id: "CON_" + Date.now(),
+    function addServiceRecord() {
+      const consumerName = document.getElementById("srvConsumer").value || "Walk-in Client";
+      const name = document.getElementById("srvName").value.trim();
+      const amount = Number(document.getElementById("srvAmount").value);
+      if (!name || !Number.isFinite(amount) || amount <= 0) {
+        showToast("Service aur valid Amount daalein");
+        return;
+      }
+      const parlor = getCurrentParlor();
+      parlor.services.unshift({
+        id: "s-" + Date.now(),
+        consumerName,
         name,
-        mobile,
-        interest,
-        notes,
-        createdBy: appState.session.userName,
-        createdAt: new Date().toISOString()
-      });
-
-      e.target.reset();
-      renderAll();
-      queueFastSync(100);
-      msg.textContent = `Consumer "${name}" सेव हो गया!`;
-    }
-
-    function deleteConsumer(id) {
-      if (!isMainParlorAdmin()) {
-        alert("केवल First / Main Admin ही डेटा delete कर सकता है।");
-        return;
-      }
-      appState.bundle.records.consumers = appState.bundle.records.consumers.filter((c) => c.id !== id);
-      renderAll();
-      queueFastSync(100);
-    }
-
-    function onSaveDefaultServiceRate(e) {
-      e.preventDefault();
-      const name = (document.getElementById("rateServiceName").value || "").trim();
-      const amt = Number(document.getElementById("rateDefaultAmount").value || 0);
-      if (!name) return;
-
-      ensureIntegrity();
-      const rates = appState.bundle.records.serviceRates;
-      const idx = rates.findIndex((r) => String(r.name).toLowerCase() === name.toLowerCase());
-      if (idx >= 0) rates[idx].defaultAmount = amt;
-      else rates.push({ id: "RT_" + Date.now(), name, defaultAmount: amt });
-
-      e.target.reset();
-      renderAll();
-      queueFastSync(100);
-    }
-
-    function deleteServiceRate(id) {
-      if (!isMainParlorAdmin()) {
-        alert("केवल First / Main Admin ही Rate delete कर सकता है।");
-        return;
-      }
-      appState.bundle.records.serviceRates = appState.bundle.records.serviceRates.filter((r) => r.id !== id);
-      renderAll();
-      queueFastSync(100);
-    }
-
-    function onSelectPresetServiceRate() {
-      const selId = document.getElementById("srvPresetRateSel").value;
-      const r = (appState.bundle.records.serviceRates || []).find((x) => x.id === selId);
-      if (!r) return;
-      document.getElementById("srvName").value = r.name;
-      document.getElementById("srvAmount").value = String(Number(r.defaultAmount) || 0);
-    }
-
-    function onSaveServiceVisit(e) {
-      e.preventDefault();
-      const conId = document.getElementById("srvConsumerSel").value;
-      const date = document.getElementById("srvDate").value || new Date().toISOString().slice(0, 10);
-      const serviceName = (document.getElementById("srvName").value || "").trim();
-      const staffName = document.getElementById("srvStaffSel").value || "Main Owner";
-      const amount = Number(document.getElementById("srvAmount").value || 0);
-      const nextAppDate = (document.getElementById("nextAppDate").value || "").trim();
-      const nextAppTime = (document.getElementById("nextAppTime").value || "").trim();
-      const nextAppService = (document.getElementById("nextAppService").value || "").trim();
-      const msg = document.getElementById("serviceMsg");
-
-      const con = (appState.bundle.records.consumers || []).find((c) => c.id === conId);
-      if (!con || !serviceName) return;
-
-      const srvObj = {
-        id: "SRV_" + Date.now(),
-        consumerId: con.id,
-        consumerName: con.name,
-        consumerMobile: con.mobile,
-        date,
-        serviceName,
-        staffName,
         amount,
-        nextAppDate,
-        nextAppTime,
-        nextAppService: nextAppService || serviceName,
-        createdBy: appState.session.userName
-      };
-
-      ensureIntegrity();
-      appState.bundle.records.services.push(srvObj);
-
-      document.getElementById("srvPresetRateSel").value = "";
+        date: getLocalDateStr()
+      });
       document.getElementById("srvName").value = "";
       document.getElementById("srvAmount").value = "";
-      document.getElementById("nextAppDate").value = "";
-      document.getElementById("nextAppTime").value = "";
-      document.getElementById("nextAppService").value = "";
-
-      renderAll();
-      queueFastSync(100);
-      msg.textContent = `${con.name} की सर्विस (${serviceName} — ₹${amount}) Cloud व Local में सेव हो गई!`;
-
-      const box = document.getElementById("lastServiceActionBox");
-      if (box) {
-        box.innerHTML = `
-          <div class="list-item alert-soon">
-            <div class="list-title">${escapeHtml(con.name)} — ${escapeHtml(serviceName)} (₹${amount})</div>
-            <div class="list-sub">Date: ${escapeHtml(date)} ${nextAppDate ? `| Next Appointment: ${escapeHtml(nextAppDate)} ${escapeHtml(nextAppTime)}` : ""}</div>
-            <div style="margin-top:8px; display:flex; gap:6px; flex-wrap:wrap;">
-              <a class="btn btn-secondary btn-small" href="tel:${escapeHtml(con.mobile)}">Direct Call</a>
-              <button class="btn btn-green btn-small" type="button" onclick="sendServiceOrAppointmentPdf('${escapeHtml(srvObj.id)}')">Send Receipt PDF on WhatsApp</button>
-            </div>
-          </div>
-        `;
-      }
+      persistState(true);
+      showToast("Service recorded");
     }
 
-    function deleteServiceRecord(id) {
-      if (!isMainParlorAdmin()) {
-        alert("केवल First / Main Admin ही डेटा delete कर सकता है।");
+    function addReminder() {
+      const title = document.getElementById("remTitle").value.trim();
+      const phone = document.getElementById("remPhone").value.trim();
+      const date = document.getElementById("remDate").value;
+      if (!title || !date) {
+        showToast("Title aur Date daalein");
         return;
       }
-      appState.bundle.records.services = appState.bundle.records.services.filter((s) => s.id !== id);
-      renderAll();
-      queueFastSync(100);
+      const parlor = getCurrentParlor();
+      parlor.reminders.unshift({ id: "r-" + Date.now(), title, phone, date });
+      document.getElementById("remTitle").value = "";
+      document.getElementById("remPhone").value = "";
+      document.getElementById("remDate").value = "";
+      persistState(true);
+      showToast("Reminder saved");
     }
 
-    async function sendServiceOrAppointmentPdf(serviceId) {
-      const s = (appState.bundle.records.services || []).find((x) => x.id === serviceId);
-      if (!s) return;
-      const lines = buildParlorPdfLines("PARLOR SERVICE RECEIPT & APPOINTMENT PDF", [
-        `Receipt #: ${s.id}`,
-        `Client: ${s.consumerName} | Mobile: ${s.consumerMobile}`,
-        `Service Date: ${s.date} | Service: ${s.serviceName}`,
-        `Staff: ${s.staffName} | Paid Amount: Rs. ${s.amount}`,
-        ...(s.nextAppDate
-          ? [`Next Appointment: ${s.nextAppDate} at ${s.nextAppTime || "As Scheduled"}`, `Next Service: ${s.nextAppService || s.serviceName}`]
-          : ["Thank you for visiting us!"])
-      ]);
-      const summary =
-        `${appState.bundle.profile.parlorName || getParlorId()}\n` +
-        `Receipt PDF: ${s.consumerName} | ${s.serviceName} | Rs.${s.amount} (${s.date})` +
-        (s.nextAppDate ? `\nAppointment: ${s.nextAppDate} ${s.nextAppTime || ""}` : "");
-      await shareOrDownloadPdf(`Receipt_${s.consumerName.replace(/\s+/g, "_")}.pdf`, lines, s.consumerMobile, summary);
-    }
-
-    function getUpcomingAppointmentsAndReminders() {
-      const now = new Date();
-      const todayMs = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
-      const services = appState.bundle.records.services || [];
-      const list = [];
-
-      services.forEach((s) => {
-        if (!s.nextAppDate) return;
-        const parts = s.nextAppDate.split("-");
-        if (parts.length !== 3) return;
-        const appMs = new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2])).getTime();
-        const diffDays = Math.round((appMs - todayMs) / DAY_MS);
-        if (diffDays <= 7) {
-          list.push({
-            ...s,
-            diffDays,
-            badgeText:
-              diffDays < 0
-                ? `${Math.abs(diffDays)} दिन पहले की तारीख`
-                : diffDays === 0
-                  ? "आज Appointment है"
-                  : `${diffDays} दिन बाद`
-          });
-        }
-      });
-
-      list.sort((a, b) => a.diffDays - b.diffDays);
-      return list;
-    }
-
-    // =====================================================
-    // 8. OFFERS, NEW PRODUCT PDF & GREETINGS
-    // =====================================================
-    function applyCampaignTemplate() {
-      const t = document.getElementById("campaignType").value;
-      const titleInp = document.getElementById("campaignTitle");
-      const bodyInp = document.getElementById("campaignBody");
-
-      if (t === "OFFER_PDF") {
-        titleInp.value = "Special Glow Offer - Flat 20% OFF";
-        bodyInp.value = "हमारे पार्लर में नए स्किन व हेयर पैकेज पर 20% की विशेष छूट उपलब्ध है। आज ही अपना अपॉइंटमेंट बुक करें!";
-      } else if (t === "PRODUCT_PDF") {
-        titleInp.value = "New Beauty & Hair Care Product Launch";
-        bodyInp.value = "हमारे पार्लर में नया हर्बल स्किन व हेयर केयर प्रोडक्ट आ गया है। विशेष डेमो व छूट के लिए आज ही पधारें!";
-      } else if (t === "GREETING_FEST") {
-        titleInp.value = "हार्दिक शुभकामनाएं! (Festive Greetings)";
-        bodyInp.value = "आपको और आपके परिवार को इस पावन पर्व की ढेरों शुभकामनाएं। आपकी खूबसूरती और मुस्कान हमेशा बनी रहे!";
-      } else {
-        titleInp.value = "Thank You for Visiting Us!";
-        bodyInp.value = "हमारे पार्लर में पधारने के लिए आपका हृदय से धन्यवाद। आपकी अगली सेवा के लिए हम सदैव तत्पर हैं!";
-      }
-    }
-
-    function getFilteredCampaignConsumers() {
-      const f = document.getElementById("campaignTargetFilter")?.value || "ALL";
-      return (appState.bundle.records.consumers || []).filter((c) => f === "ALL" || c.interest === f);
-    }
-
-    function renderCampaignConsumersChecklist() {
-      const box = document.getElementById("campaignConsumersChecklist");
-      if (!box) return;
-      const list = getFilteredCampaignConsumers();
-      if (!list.length) {
-        box.innerHTML = `<div class="status-note">इस फ़िल्टर में कोई कस्टमर नहीं है।</div>`;
+    function addOffer() {
+      const title = document.getElementById("offTitle").value.trim();
+      const desc = document.getElementById("offDesc").value.trim();
+      if (!title) {
+        showToast("Offer Title daalein");
         return;
       }
+      const parlor = getCurrentParlor();
+      parlor.offers.unshift({ id: "o-" + Date.now(), title, desc });
+      document.getElementById("offTitle").value = "";
+      document.getElementById("offDesc").value = "";
+      persistState(true);
+      showToast("Offer added");
+    }
 
-      box.innerHTML = list
-        .map((c) => {
-          const checked = selectedCampaignConsumerIds.has(c.id) ? "checked" : "";
-          return `
-            <div class="list-item" style="display:flex; justify-content:space-between; align-items:center; gap:8px; padding:8px 10px;">
-              <label class="check-inline" style="margin-bottom:0;">
-                <input type="checkbox" ${checked} onchange="toggleSingleCampaignConsumer('${escapeHtml(c.id)}', this.checked)" />
-                <span><strong>${escapeHtml(c.name)}</strong> (${escapeHtml(c.mobile)}) · ${escapeHtml(c.interest)}</span>
-              </label>
-              <button class="btn btn-green btn-small" type="button" onclick="sendCampaignToSingleConsumer('${escapeHtml(c.id)}')">Send PDF/WA</button>
-            </div>
-          `;
-        })
+    function addStaffMember() {
+      const name = document.getElementById("stfName").value.trim();
+      const role = document.getElementById("stfRole").value;
+      const pin = document.getElementById("stfPin").value.trim();
+      if (!name || !pin) {
+        showToast("Name aur PIN daalein");
+        return;
+      }
+      const parlor = getCurrentParlor();
+      parlor.staff.push({ id: "u-" + Date.now(), name, role, pin });
+      document.getElementById("stfName").value = "";
+      document.getElementById("stfPin").value = "";
+      persistState(true);
+      showToast("Staff user added");
+    }
+
+    function renderIncome() {
+      const parlor = getCurrentParlor();
+      const t = computeIncomeTotals(parlor.services);
+      const fmt = (n) => `₹${Math.round(n).toLocaleString("en-IN")}`;
+
+      document.getElementById("inc-daily").textContent = incomeUnlocked ? fmt(t.daily) : "••••";
+      document.getElementById("inc-monthly").textContent = incomeUnlocked ? fmt(t.monthly) : "••••";
+      document.getElementById("inc-quarterly").textContent = incomeUnlocked ? fmt(t.quarterly) : "••••";
+      document.getElementById("inc-annually").textContent = incomeUnlocked ? fmt(t.annually) : "••••";
+      document.getElementById("inc-alltime").textContent = incomeUnlocked ? fmt(t.alltime) : "••••";
+
+      document.getElementById("incomeHintText").textContent = incomeUnlocked
+        ? "Income unlocked. Tap Lock PIN or switch tab to lock."
+        : "Income देखने के लिए बटन दबाकर PIN डालें।";
+    }
+
+    function renderAll() {
+      const parlor = getCurrentParlor();
+      const daysLeft = getRemainingDays(parlor);
+
+      const initials = parlor.name
+        .split(/\s+/)
+        .filter(Boolean)
+        .map((w) => w[0])
+        .join("")
+        .toUpperCase()
+        .slice(0, 3) || "BPM";
+
+      document.getElementById("parlorAvatar").textContent = initials;
+      document.getElementById("parlorTitle").textContent = parlor.name;
+      document.getElementById("parlorSub").textContent =
+        `${parlor.city} · User: ${parlor.activeUser.name} (${parlor.activeUser.role})`;
+
+      document.getElementById("sessionUserLine").textContent =
+        `👑 ${parlor.activeUser.name} · ID: ${parlor.activeUser.id || parlor.code} (${parlor.activeUser.role})`;
+      document.getElementById("sessionParlorLine").textContent =
+        `Parlor: ${parlor.name} (${parlor.code})`;
+      document.getElementById("cloudLiveSubline").textContent =
+        `Cloud Live ✓ (${parlor.code})`;
+
+      document.getElementById("planNameLabel").textContent = parlor.planName || "30-Day Free Trial";
+      const badge = document.getElementById("daysLeftBadge");
+      badge.textContent = daysLeft > 0 ? `${daysLeft} Days Left` : "Expired";
+      badge.className = "badge " + (daysLeft > 7 ? "badge-trial" : daysLeft > 0 ? "badge-active" : "badge-expired");
+
+      document.getElementById("validityDateText").textContent =
+        `Valid till ${formatDateShort(parlor.validUntil)} · Referrals: ${parlor.referralCount} (+${parlor.bonusDaysEarned}d bonus)`;
+
+      document.getElementById("myReferralCode").textContent = parlor.referralCode;
+      document.getElementById("statConsumers").textContent = String(parlor.consumers.length);
+      document.getElementById("statServices").textContent = String(parlor.services.length);
+
+      const remBadge = document.getElementById("upcomingCountBadge");
+      remBadge.textContent = String(parlor.reminders.length);
+      document.getElementById("homeRemindersList").innerHTML = parlor.reminders.length
+        ? parlor.reminders
+            .slice(0, 4)
+            .map((r) => `<div class="list-item"><div><div class="item-title">${escapeHtml(r.title)}</div><div class="item-sub">${escapeHtml(r.date)} ${r.phone ? "· " + escapeHtml(r.phone) : ""}</div></div></div>`)
+            .join("")
+        : "कोई आगामी Appointment / Reminder नहीं है।";
+
+      renderIncome();
+
+      const srvSelect = document.getElementById("srvConsumer");
+      srvSelect.innerHTML = parlor.consumers.length
+        ? parlor.consumers.map((c) => `<option value="${escapeHtml(c.name)}">${escapeHtml(c.name)} (${escapeHtml(c.phone)})</option>`).join("")
+        : `<option value="Walk-in Client">Walk-in Client</option>`;
+
+      document.getElementById("consumersList").innerHTML = parlor.consumers.length
+        ? parlor.consumers
+            .map((c) => `<div class="list-item"><div><div class="item-title">${escapeHtml(c.name)}</div><div class="item-sub">${escapeHtml(c.phone)} ${c.note ? "· " + escapeHtml(c.note) : ""}</div></div></div>`)
+            .join("")
+        : `<div class="item-sub">No consumers yet.</div>`;
+
+      document.getElementById("servicesList").innerHTML = parlor.services.length
+        ? parlor.services
+            .map((s) => `<div class="list-item"><div><div class="item-title">${escapeHtml(s.name)} — ₹${Number(s.amount || 0).toLocaleString("en-IN")}</div><div class="item-sub">${escapeHtml(s.consumerName)} · ${escapeHtml(s.date)}</div></div></div>`)
+            .join("")
+        : `<div class="item-sub">No services recorded yet.</div>`;
+
+      document.getElementById("remindersList").innerHTML = parlor.reminders.length
+        ? parlor.reminders
+            .map((r) => `<div class="list-item"><div><div class="item-title">${escapeHtml(r.title)}</div><div class="item-sub">${escapeHtml(r.date)}</div></div>${r.phone ? `<a class="btn btn-soft btn-sm" style="text-decoration:none;" href="tel:${escapeHtml(r.phone)}">Call</a>` : ""}</div>`)
+            .join("")
+        : `<div class="item-sub">No reminders set.</div>`;
+
+      document.getElementById("offersList").innerHTML = parlor.offers.length
+        ? parlor.offers
+            .map((o) => `<div class="list-item"><div><div class="item-title">${escapeHtml(o.title)}</div><div class="item-sub">${escapeHtml(o.desc || "")}</div></div></div>`)
+            .join("")
+        : `<div class="item-sub">No offers added.</div>`;
+
+      document.getElementById("staffList").innerHTML = parlor.staff
+        .map((u) => `<div class="list-item"><div><div class="item-title">${escapeHtml(u.name)}</div><div class="item-sub">Role: ${escapeHtml(u.role)}</div></div><span class="badge badge-trial">PIN Set</span></div>`)
         .join("");
     }
 
-    function toggleSingleCampaignConsumer(id, isChecked) {
-      if (isChecked) selectedCampaignConsumerIds.add(id);
-      else selectedCampaignConsumerIds.delete(id);
-    }
-
-    function toggleSelectAllCampaignConsumers(selectAll) {
-      const list = getFilteredCampaignConsumers();
-      if (selectAll) list.forEach((c) => selectedCampaignConsumerIds.add(c.id));
-      else selectedCampaignConsumerIds.clear();
-      renderCampaignConsumersChecklist();
-    }
-
-    async function downloadGeneralOfferPdf() {
-      const title = (document.getElementById("campaignTitle").value || "Parlor Offer").trim();
-      const body = (document.getElementById("campaignBody").value || "").trim();
-      const lines = buildParlorPdfLines(title, [body]);
-      await shareOrDownloadPdf(`Parlor_Offer_${Date.now()}.pdf`, lines, appState.bundle.profile.mobile || "", `${title}\n${body}`);
-    }
-
-    async function sendCampaignToSingleConsumer(consumerId) {
-      const con = (appState.bundle.records.consumers || []).find((c) => c.id === consumerId);
-      if (!con) return;
-      const title = (document.getElementById("campaignTitle").value || "Parlor Offer").trim();
-      const body = (document.getElementById("campaignBody").value || "").trim();
-      const lines = buildParlorPdfLines(title, [`Dear ${con.name},`, body]);
-      const msg = `${appState.bundle.profile.parlorName || getParlorId()}\nDear ${con.name},\n*${title}*\n${body}`;
-      await shareOrDownloadPdf(`Offer_${con.name.replace(/\s+/g, "_")}.pdf`, lines, con.mobile, msg);
-    }
-
-    async function sendCampaignToSelectedBulkSequential() {
-      const msgEl = document.getElementById("campaignStatusMsg");
-      const selected = (appState.bundle.records.consumers || []).filter((c) => selectedCampaignConsumerIds.has(c.id));
-      if (!selected.length) {
-        msgEl.textContent = "कृपया पहले कम से कम एक कस्टमर चुनें (या Select All दबाएं)।";
-        return;
-      }
-      const title = (document.getElementById("campaignTitle").value || "Parlor Offer").trim();
-      const body = (document.getElementById("campaignBody").value || "").trim();
-      const lines = buildParlorPdfLines(title, [body]);
-      const first = selected[0];
-      const text = `${appState.bundle.profile.parlorName || getParlorId()}\nDear ${first.name},\n*${title}*\n${body}`;
-      await shareOrDownloadPdf(`Parlor_Offer_Broadcast.pdf`, lines, first.mobile, text);
-      msgEl.textContent = `${selected.length} कस्टमर्स चुने गए हैं — Offer PDF बन गई है, बाकी चुने हुए कस्टमर्स के आगे 'Send PDF/WA' दबाकर भेजें।`;
-    }
-
-    // =====================================================
-    // 9. PARLOR STAFF (INCOME PERMISSION) & LOGO UPDATE
-    // =====================================================
-    function onSaveParlorStaff(e) {
-      e.preventDefault();
-      if (!isMainParlorAdmin()) {
-        alert("केवल First / Main Admin ही नया स्टाफ जोड़ सकता है।");
-        return;
-      }
-      const name = (document.getElementById("stfName").value || "").trim();
-      const mobile = (document.getElementById("stfMobile").value || "").replace(/\D/g, "").slice(0, 10);
-      const role = document.getElementById("stfRole").value || "Beautician";
-      const specialty = (document.getElementById("stfSpecialty").value || "").trim();
-      const userId = (document.getElementById("stfUserId").value || "").trim();
-      const password = (document.getElementById("stfPassword").value || "").trim();
-      const canViewIncome = Boolean(document.getElementById("stfCanViewIncome").checked);
-      const msg = document.getElementById("staffMsg");
-
-      if (!name || mobile.length !== 10 || !userId || !password) {
-        msg.textContent = "कृपया सभी विवरण सही भरें।";
-        return;
-      }
-
-      ensureIntegrity();
-      const list = appState.bundle.records.staff;
-      const idx = list.findIndex((s) => String(s.userId).toLowerCase() === userId.toLowerCase());
-      const item = { id: "STF_" + Date.now(), name, mobile, role, specialty, userId, password, canViewIncome };
-      if (idx >= 0) list[idx] = item;
-      else list.push(item);
-
-      e.target.reset();
-      renderAll();
-      queueFastSync(100);
-      msg.textContent = `Staff "${name}" (${userId}) सेव हो गया!`;
-    }
-
-    function toggleStaffIncomePermission(userId) {
-      if (!isMainParlorAdmin()) {
-        alert("केवल First / Main Admin ही Income permission बदल सकता है।");
-        return;
-      }
-      const stf = (appState.bundle.records.staff || []).find((s) => s.userId === userId);
-      if (!stf) return;
-      stf.canViewIncome = !Boolean(stf.canViewIncome);
-      renderAll();
-      queueFastSync(100);
-    }
-
-    function deleteStaffMember(userId) {
-      if (!isMainParlorAdmin()) {
-        alert("केवल First / Main Admin ही delete कर सकता है।");
-        return;
-      }
-      appState.bundle.records.staff = appState.bundle.records.staff.filter((s) => s.userId !== userId);
-      renderAll();
-      queueFastSync(100);
-    }
-
-    function updateParlorLogoWithPin() {
-      const msg = document.getElementById("logoUpdateMsg");
-      if (!isMainParlorAdmin()) {
-        msg.textContent = "केवल First / Main Admin ही Logo बदल सकता है।";
-        return;
-      }
-      const pin = (document.getElementById("changeLogoPinInp").value || "").trim();
-      if (!pin || pin !== appState.bundle.profile.adminPin) {
-        msg.textContent = "गलत Main Admin PIN!";
-        return;
-      }
-      if (!pendingChangeLogo) {
-        msg.textContent = "पहले नया Logo चुनें।";
-        return;
-      }
-      appState.bundle.profile.logoDataUrl = pendingChangeLogo;
-      pendingChangeLogo = "";
-      document.getElementById("changeLogoPinInp").value = "";
-      document.getElementById("changeParlorLogoInp").value = "";
-      renderAll();
-      queueFastSync(100);
-      msg.textContent = "Parlor Logo अपडेट हो गया!";
-    }
-
-    // =====================================================
-    // 10. RENDERING & NAVIGATION
-    // =====================================================
-    function switchTab(tabId, btnEl) {
-      document.querySelectorAll(".section").forEach((s) => s.classList.remove("active"));
-      document.getElementById(tabId)?.classList.add("active");
+    function switchTab(tabName, btnEl) {
+      document.querySelectorAll(".tab-view").forEach((el) => el.classList.add("hidden"));
+      const target = document.getElementById(`tab-${tabName}`);
+      if (target) target.classList.remove("hidden");
       document.querySelectorAll(".nav-btn").forEach((b) => b.classList.remove("active"));
       if (btnEl) btnEl.classList.add("active");
     }
 
-    function switchToTab(tabId) {
-      const btn = document.querySelector(`.nav-btn[data-tab="${tabId}"]`);
-      if (btn) switchTab(tabId, btn);
+    function closeModal(id) {
+      const el = document.getElementById(id);
+      if (el) el.classList.remove("open");
     }
 
-    function setConsumerInterestFilter(val, btn) {
-      currentConsumerInterestFilter = val;
-      document.querySelectorAll("#tab-consumers .chip-btn").forEach((b) => b.classList.remove("active"));
-      if (btn) btn.classList.add("active");
-      renderConsumersList();
-    }
-
-    function renderStages() {
-      const pinSec = document.getElementById("appPinSection");
-      const gateSec = document.getElementById("portalGateSection");
-      const workSec = document.getElementById("workspaceSection");
-      const nav = document.getElementById("bottomNavBar");
-
-      const p = appState.bundle.profile || {};
-      const img = document.getElementById("headerLogoImg");
-      const txt = document.getElementById("headerLogoText");
-      if (p.logoDataUrl) {
-        img.src = p.logoDataUrl;
-        img.style.display = "block";
-        txt.style.display = "none";
-      } else {
-        img.style.display = "none";
-        txt.style.display = "inline";
-      }
-
-      document.getElementById("topParlorTitle").textContent = appState.session.loggedIn
-        ? p.parlorName || p.parlorId
-        : "BMS - Parlor Management";
-      document.getElementById("topParlorSub").textContent = appState.session.loggedIn
-        ? `${p.city || ""} · User: ${appState.session.userName} (${appState.session.role})`
-        : "Beauty · Salon · Cloud Sync";
-
-      if (!appState.appPinSet || !appState.appUnlocked) {
-        pinSec.style.display = "block";
-        document.getElementById("setAppPinCard").style.display = !appState.appPinSet ? "block" : "none";
-        document.getElementById("unlockAppPinCard").style.display = appState.appPinSet && !appState.appUnlocked ? "block" : "none";
-        gateSec.style.display = "none";
-        workSec.style.display = "none";
-        nav.style.display = "none";
-        return;
-      }
-
-      pinSec.style.display = "none";
-
-      if (!appState.session.loggedIn) {
-        gateSec.style.display = "block";
-        workSec.style.display = "none";
-        nav.style.display = "none";
-        document.getElementById("gate-first-screen").style.display = appState.gateView === "first" ? "block" : "none";
-        document.getElementById("gate-register-view").style.display = appState.gateView === "register" ? "block" : "none";
-        document.getElementById("gate-parlor-login-view").style.display = appState.gateView === "parlor-login" ? "block" : "none";
-        document.getElementById("gate-user-login-view").style.display = appState.gateView === "user-login" ? "block" : "none";
-        if (appState.gateView === "user-login") {
-          document.getElementById("verifiedParlorTitle").textContent = p.parlorName || p.parlorId;
-        }
-        return;
-      }
-
-      gateSec.style.display = "none";
-      workSec.style.display = "block";
-      nav.style.display = "grid";
-      document.getElementById("adminLogoUpdateCard").style.display = isMainParlorAdmin() ? "block" : "none";
-    }
-
-    function renderWorkspace() {
-      const r = appState.bundle.records;
-      const consumers = r.consumers || [];
-      const services = r.services || [];
-      const staff = r.staff || [];
-      const rates = r.serviceRates || [];
-      const canDelete = isMainParlorAdmin();
-
-      document.getElementById("sessionUserLine").textContent = `👑 ${appState.session.userName} · ID: ${appState.session.userId} (${appState.session.role})`;
-      document.getElementById("sessionParlorLine").textContent = `Parlor: ${appState.bundle.profile.parlorName || getParlorId()} (${getParlorId()})`;
-
-      // Income display (PIN + Permission guarded)
-      const canSeeInc = canStaffAccessIncome() && incomeUnlockedByPin;
-      const lockBtn = document.getElementById("incomeLockToggleBtn");
-      const hintEl = document.getElementById("incomePermissionHint");
-
-      if (canSeeInc) {
-        const inc = computeIncomeSummary();
-        document.getElementById("incDailyVal").textContent = `₹${inc.daily}`;
-        document.getElementById("incMonthlyVal").textContent = `₹${inc.monthly}`;
-        document.getElementById("incQuarterlyVal").textContent = `₹${inc.quarterly}`;
-        document.getElementById("incAnnualVal").textContent = `₹${inc.annually}`;
-        document.getElementById("incAllTimeVal").textContent = `₹${inc.allTime}`;
-        if (lockBtn) lockBtn.textContent = "🔓 Income Lock करें";
-        if (hintEl) hintEl.textContent = isMainParlorAdmin() ? "First Admin Access Active" : "Permitted Staff Access Active";
-      } else {
-        document.getElementById("incDailyVal").textContent = "••••";
-        document.getElementById("incMonthlyVal").textContent = "••••";
-        document.getElementById("incQuarterlyVal").textContent = "••••";
-        document.getElementById("incAnnualVal").textContent = "••••";
-        document.getElementById("incAllTimeVal").textContent = "••••";
-        if (lockBtn) lockBtn.textContent = "🔒 PIN से Income देखें";
-        if (hintEl) {
-          hintEl.textContent = canStaffAccessIncome()
-            ? "Income देखने के लिए बटन दबाकर PIN डालें।"
-            : "यह Staff Income लॉक है (First Admin से अनुमति आवश्यक)।";
-        }
-      }
-
-      document.getElementById("statConsumers").textContent = String(consumers.length);
-      document.getElementById("statServices").textContent = String(services.length);
-
-      // Select dropdowns
-      const conSel = document.getElementById("srvConsumerSel");
-      const prevCon = conSel.value;
-      conSel.innerHTML =
-        `<option value="">-- कस्टमर चुनें --</option>` +
-        consumers.map((c) => `<option value="${escapeHtml(c.id)}">${escapeHtml(c.name)} (${escapeHtml(c.mobile)})</option>`).join("");
-      if (prevCon) conSel.value = prevCon;
-
-      const rateSel = document.getElementById("srvPresetRateSel");
-      const prevRate = rateSel.value;
-      rateSel.innerHTML =
-        `<option value="">-- Manual Service / Rate लिखें --</option>` +
-        rates.map((rt) => `<option value="${escapeHtml(rt.id)}">${escapeHtml(rt.name)} (Default ₹${Number(rt.defaultAmount) || 0})</option>`).join("");
-      if (prevRate) rateSel.value = prevRate;
-
-      const stfSel = document.getElementById("srvStaffSel");
-      const prevStf = stfSel.value;
-      stfSel.innerHTML =
-        `<option value="Main Owner">Main Owner / Admin</option>` +
-        staff.map((s) => `<option value="${escapeHtml(s.name)}">${escapeHtml(s.name)} (${escapeHtml(s.role)})</option>`).join("");
-      if (prevStf) stfSel.value = prevStf;
-
-      // Saved Service Rates list
-      document.getElementById("serviceRatesListBox").innerHTML = rates.length
-        ? rates
-            .map(
-              (rt) => `
-              <div class="list-item" style="display:flex; justify-content:space-between; align-items:center; gap:8px; padding:8px 10px;">
-                <div>
-                  <div class="list-title">${escapeHtml(rt.name)} — Default ₹${Number(rt.defaultAmount) || 0}</div>
-                </div>
-                ${canDelete ? `<button class="btn btn-danger btn-small" type="button" onclick="deleteServiceRate('${escapeHtml(rt.id)}')">Delete</button>` : ""}
-              </div>
-            `
-            )
-            .join("")
-        : "";
-
-      // Upcoming appointments
-      const upcoming = getUpcomingAppointmentsAndReminders();
-      const badge = document.getElementById("navReminderBadge");
-      document.getElementById("upcomingCountBadge").textContent = String(upcoming.length);
-      if (upcoming.length > 0) {
-        badge.style.display = "inline-block";
-        badge.textContent = String(upcoming.length);
-      } else {
-        badge.style.display = "none";
-      }
-
-      const appMarkup = upcoming.length
-        ? upcoming
-            .map(
-              (a) => `
-              <div class="list-item ${a.diffDays <= 0 ? "alert-due" : "alert-soon"}">
-                <div class="card-header" style="margin-bottom:4px;">
-                  <div class="list-title">${escapeHtml(a.consumerName)} — ${escapeHtml(a.nextAppService)}</div>
-                  <span class="pill">${escapeHtml(a.badgeText)}</span>
-                </div>
-                <div class="list-sub">Date: <strong>${escapeHtml(a.nextAppDate)}</strong> | Time: <strong>${escapeHtml(a.nextAppTime || "Not Set")}</strong> | Mob: ${escapeHtml(a.consumerMobile)}</div>
-                <div style="margin-top:8px; display:flex; gap:6px; flex-wrap:wrap;">
-                  <a class="btn btn-secondary btn-small" href="tel:${escapeHtml(a.consumerMobile)}">Direct Call</a>
-                  <button class="btn btn-green btn-small" type="button" onclick="sendServiceOrAppointmentPdf('${escapeHtml(a.id)}')">Send Appointment PDF</button>
-                </div>
-              </div>
-            `
-            )
-            .join("")
-        : `<div class="status-note">कोई आगामी Appointment / Reminder नहीं है।</div>`;
-
-      document.getElementById("dashboardAppointmentsBox").innerHTML = appMarkup;
-      document.getElementById("remindersListBox").innerHTML = appMarkup;
-
-      // All Services log
-      const srvMarkup = services.length
-        ? [...services]
-            .reverse()
-            .map(
-              (s) => `
-              <div class="list-item">
-                <div class="card-header" style="margin-bottom:4px;">
-                  <div class="list-title">${escapeHtml(s.consumerName)} — ${escapeHtml(s.serviceName)} (₹${Number(s.amount) || 0})</div>
-                  <span class="pill green">${escapeHtml(s.date)}</span>
-                </div>
-                <div class="list-sub">Staff: ${escapeHtml(s.staffName)} | Mob: ${escapeHtml(s.consumerMobile)}${s.nextAppDate ? ` | Next: ${escapeHtml(s.nextAppDate)} ${escapeHtml(s.nextAppTime || "")}` : ""}</div>
-                <div style="margin-top:8px; display:flex; gap:6px; flex-wrap:wrap;">
-                  <a class="btn btn-secondary btn-small" href="tel:${escapeHtml(s.consumerMobile)}">Call</a>
-                  <button class="btn btn-green btn-small" type="button" onclick="sendServiceOrAppointmentPdf('${escapeHtml(s.id)}')">Receipt PDF / WA</button>
-                  ${canDelete ? `<button class="btn btn-danger btn-small" type="button" onclick="deleteServiceRecord('${escapeHtml(s.id)}')">Delete</button>` : ""}
-                </div>
-              </div>
-            `
-            )
-            .join("")
-        : `<div class="status-note">अभी कोई सर्विस रिकॉर्ड नहीं है।</div>`;
-
-      document.getElementById("allServicesLogBox").innerHTML = srvMarkup;
-
-      // Staff list with income permission badge & toggle
-      document.getElementById("staffListBox").innerHTML = staff.length
-        ? staff
-            .map(
-              (s) => `
-              <div class="list-item" style="display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap;">
-                <div>
-                  <div class="list-title">${escapeHtml(s.name)} — ID: ${escapeHtml(s.userId)} (${escapeHtml(s.role)})</div>
-                  <div class="list-sub">Mob: ${escapeHtml(s.mobile)} | Pass: ${escapeHtml(s.password)} | Income Access: <strong>${s.canViewIncome ? "Allowed ✓" : "Locked"}</strong></div>
-                </div>
-                <div style="display:flex; gap:6px; flex-wrap:wrap;">
-                  ${canDelete ? `<button class="btn btn-secondary btn-small" type="button" onclick="toggleStaffIncomePermission('${escapeHtml(s.userId)}')">${s.canViewIncome ? "Revoke Income" : "Allow Income"}</button>` : ""}
-                  ${canDelete ? `<button class="btn btn-danger btn-small" type="button" onclick="deleteStaffMember('${escapeHtml(s.userId)}')">Delete</button>` : ""}
-                </div>
-              </div>
-            `
-            )
-            .join("")
-        : `<div class="status-note">अभी कोई Parlor Staff सेव नहीं है।</div>`;
-
-      renderConsumersList();
-      renderCampaignConsumersChecklist();
-    }
-
-    function renderConsumersList() {
-      const box = document.getElementById("consumersListBox");
-      if (!box) return;
-      const q = (document.getElementById("consumerSearchInp")?.value || "").trim().toLowerCase();
-      const consumers = appState.bundle.records.consumers || [];
-      const services = appState.bundle.records.services || [];
-      const canDelete = isMainParlorAdmin();
-
-      const filtered = consumers.filter((c) => {
-        if (currentConsumerInterestFilter !== "ALL" && c.interest !== currentConsumerInterestFilter) return false;
-        if (!q) return true;
-        return (
-          String(c.name).toLowerCase().includes(q) ||
-          String(c.mobile).toLowerCase().includes(q) ||
-          String(c.interest).toLowerCase().includes(q)
-        );
-      });
-
-      if (!filtered.length) {
-        box.innerHTML = `<div class="status-note">कोई कस्टमर नहीं मिला।</div>`;
-        return;
-      }
-
-      box.innerHTML = filtered
-        .map((c) => {
-          const history = services.filter((s) => s.consumerId === c.id);
-          const lastVisit = history[history.length - 1];
-          return `
-            <div class="list-item">
-              <div class="card-header" style="margin-bottom:4px;">
-                <div class="list-title">${escapeHtml(c.name)}</div>
-                <span class="pill plum">${escapeHtml(c.interest)}</span>
-              </div>
-              <div class="list-sub">Mob: ${escapeHtml(c.mobile)} | Visits: ${history.length}${c.notes ? ` | Note: ${escapeHtml(c.notes)}` : ""}</div>
-              ${lastVisit ? `<div class="list-sub">Last Service: ${escapeHtml(lastVisit.serviceName)} (${escapeHtml(lastVisit.date)})</div>` : ""}
-              <div style="margin-top:8px; display:flex; gap:6px; flex-wrap:wrap;">
-                <a class="btn btn-secondary btn-small" href="tel:${escapeHtml(c.mobile)}">Direct Call</a>
-                <button class="btn btn-secondary btn-small" type="button" onclick="switchToTab('tab-services'); document.getElementById('srvConsumerSel').value='${escapeHtml(c.id)}';">+ Service / Appointment</button>
-                ${canDelete ? `<button class="btn btn-danger btn-small" type="button" onclick="deleteConsumer('${escapeHtml(c.id)}')">Delete</button>` : ""}
-              </div>
-            </div>
-          `;
-        })
-        .join("");
-    }
-
-    function renderAll() {
-      renderStages();
-      if (appState.appPinSet && appState.appUnlocked && appState.session.loggedIn) {
-        renderWorkspace();
-      }
+    function showToast(msg) {
+      const t = document.getElementById("toast");
+      if (!t) return;
+      t.textContent = msg;
+      t.classList.add("show");
+      clearTimeout(window.__toastTimer);
+      window.__toastTimer = setTimeout(() => t.classList.remove("show"), 2600);
     }
 
     function escapeHtml(str) {
@@ -2442,23 +1610,8 @@
         .replace(/"/g, "&quot;");
     }
 
-    // =====================================================
-    // 11. INIT
-    // =====================================================
-    document.addEventListener("DOMContentLoaded", () => {
-      const todayIso = new Date().toISOString().slice(0, 10);
-      const srvDt = document.getElementById("srvDate");
-      if (srvDt && !srvDt.value) srvDt.value = todayIso;
-
-      loadInitialState();
-      renderAll();
-
-      if (appState.appPinSet && appState.appUnlocked && appState.session.loggedIn && getParlorId()) {
-        attachLiveListener();
-      } else {
-        setSyncStatus(firebaseReady, "BMS Cloud Ready");
-      }
-    });
+    renderAll();
+    initFirebaseLiveSync();
   </script>
 </body>
 </html>
