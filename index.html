@@ -60,7 +60,6 @@
       padding: 8px 14px 14px;
     }
 
-    /* Top Parlour Strip + Language Toggle + Sync */
     .parlor-banner {
       background: var(--surface);
       border: 1px solid var(--line);
@@ -152,7 +151,6 @@
       color: var(--bad);
     }
 
-    /* Top Side-by-Side Trial & Refer Pills (Inspired by Reference UI) */
     .top-pills-row {
       display: grid;
       grid-template-columns: 1.25fr 1fr;
@@ -190,7 +188,6 @@
       margin-top: 2px;
     }
 
-    /* Quick Action Tile Grid (Staff & Offers Placed at Top) */
     .tile-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -566,7 +563,6 @@
       flex-shrink: 0;
     }
 
-    /* Chat Bubble Styles for BPM Assistant */
     .chat-box {
       max-height: 290px;
       overflow-y: auto;
@@ -602,7 +598,6 @@
       color: var(--ink);
     }
 
-    /* Bottom Navigation Bar (4 Focused Slots: Home, Reminders with Red Blink, BPM Assistant, Support) */
     .bottom-nav {
       position: fixed;
       bottom: 0;
@@ -643,7 +638,6 @@
       line-height: 1;
     }
 
-    /* Red Blink Animation on Reminders Button Until Checked */
     @keyframes redBlinkPulse {
       0%, 100% {
         background-color: #fee2e2;
@@ -741,11 +735,22 @@
     .hidden {
       display: none !important;
     }
+
+    .step-pill {
+      display: inline-block;
+      padding: 3px 9px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 800;
+      background: #fce7f3;
+      color: var(--rose-dark);
+      margin-bottom: 8px;
+    }
   </style>
 </head>
 <body>
   <main class="container">
-    <!-- Top Parlour Strip: Left Logo + Name, Right Hindi/English Toggle + Sync -->
+    <!-- Top Parlour Strip -->
     <section class="parlor-banner">
       <div class="parlor-meta">
         <div class="parlor-avatar" id="parlorAvatar">PBP</div>
@@ -760,7 +765,7 @@
       </div>
     </section>
 
-    <!-- Top Side-by-Side Pills: Free Trial / Days Left + Refer & Earn -->
+    <!-- Top Side-by-Side Trial & Refer Pills -->
     <section class="top-pills-row">
       <button class="pill-card-btn" onclick="openPlansModal('yearly')">
         <div>
@@ -779,7 +784,7 @@
       </button>
     </section>
 
-    <!-- Top Quick Action Tile Grid (Staff & Offers Placed at Top) -->
+    <!-- Top Quick Action Tile Grid -->
     <section class="tile-grid">
       <button class="action-tile highlight" onclick="openSectionTab('staff')">
         <span class="tile-ico">👩‍💼</span>
@@ -789,7 +794,7 @@
         <span class="tile-ico">🎁</span>
         <span class="tile-lbl" data-i18n="tile_offers">ऑफ़र (Offers)</span>
       </button>
-      <button class="action-tile" onclick="openParlorModal()">
+      <button class="action-tile" onclick="openParlorModal('login')">
         <span class="tile-ico">🔑</span>
         <span class="tile-lbl" data-i18n="tile_parlor_id">पार्लर ID</span>
       </button>
@@ -809,22 +814,21 @@
         <span class="tile-ico">☁️</span>
         <span class="tile-lbl" data-i18n="tile_sync">क्लाउड सिंक</span>
       </button>
-      <button class="action-tile" onclick="openParlorModal()">
+      <button class="action-tile" onclick="openParlorModal('register')">
         <span class="tile-ico">🚪</span>
-        <span class="tile-lbl" data-i18n="tile_switch">स्विच / लॉगआउट</span>
+        <span class="tile-lbl" data-i18n="tile_switch">नया पार्लर / OTP</span>
       </button>
     </section>
 
-    <!-- TAB 1: HOME (Includes Session, PIN Income, and Services & Due Below) -->
+    <!-- TAB 1: HOME -->
     <section id="tab-home" class="tab-view">
-      <!-- Admin / Active User Session Card -->
       <div class="card">
         <div class="item-title" id="sessionUserLine">👑 Payal · ID: Payal01 (ADMIN)</div>
         <div class="item-sub" id="sessionParlorLine" style="margin-bottom:10px;">Parlor: Payal beauty parlour (PAYAL01)</div>
         <div class="row-btns">
-          <button class="btn btn-soft btn-sm" onclick="openSectionTab('staff')" data-i18n="btn_new_staff">+ नया स्टाफ / लॉगिन</button>
+          <button class="btn btn-soft btn-sm" onclick="openSectionTab('staff')" data-i18n="btn_new_staff">+ स्टाफ ID / लॉगिन</button>
           <button class="btn btn-soft btn-sm" onclick="lockAppSession()" data-i18n="btn_lock_pin">PIN लॉक करें</button>
-          <button class="btn btn-soft btn-sm" onclick="openSectionTab('offers')" data-i18n="btn_send_offer">ऑफ़र भेजें</button>
+          <button class="btn btn-soft btn-sm" onclick="openParlorModal('register')">First-Time / OTP Setup</button>
         </div>
       </div>
 
@@ -875,7 +879,7 @@
         </div>
       </div>
 
-      <!-- SERVICES & DUE SECTION PLACED BELOW ON HOME -->
+      <!-- Services & Due Section -->
       <div class="card" id="servicesDueSection">
         <div class="section-title">
           <span data-i18n="sec_service_entry">💆‍♀️ सर्विस बिलिंग और बाकी पैसे (Service & Due)</span>
@@ -934,54 +938,84 @@
       </div>
     </section>
 
-    <!-- TAB 2: STAFF (Top Tile Opens Here) -->
+    <!-- TAB 2: STAFF & TWO-STEP PARLOR + USER LOGIN -->
     <section id="tab-staff" class="tab-view hidden">
+      <!-- Step A: Parlor Entry (Parlor ID + Parlor/Admin Password) -->
       <div class="card">
         <div class="section-title">
-          <span data-i18n="sec_staff_login">🔑 स्टाफ लॉगिन (Parlor ID + PIN)</span>
+          <span>🏢 1. पार्लर में प्रवेश करें (Parlor ID + Password)</span>
           <span class="badge badge-trial" id="staffLoginCodeHint">ID: PAYAL01</span>
         </div>
         <div class="grid-2">
           <div class="field">
-            <label>Parlor Code / ID *</label>
+            <label>Parlor ID *</label>
             <input id="staffLoginParlorCode" class="input" placeholder="PAYAL01" style="text-transform:uppercase;" />
           </div>
           <div class="field">
-            <label>Staff / User PIN *</label>
-            <input id="staffLoginPin" class="input" type="password" placeholder="1234" />
+            <label>Parlor / Admin Password *</label>
+            <input id="staffLoginParlorPass" class="input" type="password" placeholder="Parlor Password" />
           </div>
         </div>
-        <button class="btn btn-primary btn-block" onclick="loginWithParlorIdAndPin()" data-i18n="btn_staff_login">पार्लर में लॉगिन करें</button>
+        <button class="btn btn-soft btn-block" onclick="enterParlorRoom()">पार्लर स्क्रीन खोलें</button>
       </div>
 
-      <div class="card">
+      <!-- Step B: Inner Screen User Login (Admin or Staff User ID + Password) -->
+      <div class="card-rose">
         <div class="section-title">
-          <span id="staffFormHeading" data-i18n="sec_staff_manage">स्टाफ जोड़ें / एडिट करें (Admin PIN ज़रूरी)</span>
-          <button class="btn btn-outline btn-xs hidden" id="cancelEditStaffBtn" onclick="cancelStaffEdit()">Cancel</button>
+          <span>🔑 2. अंदर की स्क्रीन लॉगिन (User ID + Password)</span>
+          <span class="badge badge-active" id="enteredParlorBadge">PAYAL01</span>
         </div>
-        <input type="hidden" id="editingStaffId" value="" />
-        <div class="field">
-          <label data-i18n="lbl_staff_name">स्टाफ का नाम *</label>
-          <input id="stfName" class="input" placeholder="जैसे: Riya" />
+        <div class="item-sub" id="enteredParlorInfo" style="margin-bottom:10px;">
+          संबंधित पार्लर के अंदर अपना User ID और Password डालकर लॉगिन करें।
         </div>
         <div class="grid-2">
           <div class="field">
-            <label data-i18n="lbl_role">रोल (Role)</label>
+            <label>User ID (Admin या Staff ID) *</label>
+            <input id="innerUserIdInput" class="input" placeholder="जैसे: Payal01 या STAFF01" />
+          </div>
+          <div class="field">
+            <label>User Password *</label>
+            <input id="innerUserPassInput" class="input" type="password" placeholder="Password / PIN" />
+          </div>
+        </div>
+        <button class="btn btn-primary btn-block" onclick="loginInnerUser()">User ID और Password से लॉगिन करें</button>
+      </div>
+
+      <!-- Admin Creates / Edits Staff ID & Password -->
+      <div class="card">
+        <div class="section-title">
+          <span id="staffFormHeading">👑 एडमिन: स्टाफ की ID और Password बनाएं</span>
+          <button class="btn btn-outline btn-xs hidden" id="cancelEditStaffBtn" onclick="cancelStaffEdit()">Cancel</button>
+        </div>
+        <input type="hidden" id="editingStaffId" value="" />
+        <div class="grid-2">
+          <div class="field">
+            <label>Staff User ID *</label>
+            <input id="stfUserId" class="input" placeholder="जैसे: RIYA01" style="text-transform:uppercase;" />
+          </div>
+          <div class="field">
+            <label>स्टाफ का नाम *</label>
+            <input id="stfName" class="input" placeholder="जैसे: Riya" />
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="field">
+            <label>रोल (Role)</label>
             <select id="stfRole">
               <option value="STAFF">STAFF</option>
               <option value="ADMIN">ADMIN</option>
             </select>
           </div>
           <div class="field">
-            <label data-i18n="lbl_staff_pin">स्टाफ PIN *</label>
-            <input id="stfPin" class="input" type="text" maxlength="8" placeholder="2222" />
+            <label>Staff Password (4+ अक्षर/अंक) *</label>
+            <input id="stfPin" class="input" type="text" placeholder="जैसे: riya@123 या 2222" />
           </div>
         </div>
         <div class="field">
-          <label data-i18n="lbl_admin_pin">BPM Admin PIN (Save / Edit / Delete के लिए) *</label>
-          <input id="stfAdminAuthPin" class="input" type="password" maxlength="8" placeholder="Admin PIN (default: 1234)" />
+          <label>Admin Password / PIN (Save / Edit / Delete के लिए) *</label>
+          <input id="stfAdminAuthPin" class="input" type="password" placeholder="Admin Password (default: 1234)" />
         </div>
-        <button class="btn btn-primary btn-block" onclick="saveStaffMember()" data-i18n="btn_save_staff">स्टाफ सेव करें</button>
+        <button class="btn btn-primary btn-block" onclick="saveStaffMember()">स्टाफ ID और Password सेव करें</button>
       </div>
 
       <div class="card">
@@ -990,7 +1024,7 @@
       </div>
     </section>
 
-    <!-- TAB 3: OFFERS (Top Tile Opens Here) -->
+    <!-- TAB 3: OFFERS -->
     <section id="tab-offers" class="tab-view hidden">
       <div class="card">
         <div class="section-title"><span data-i18n="sec_create_offer">🎁 नया ऑफ़र बनाएं और कस्टमर्स को भेजें</span></div>
@@ -1076,7 +1110,7 @@
       </div>
     </section>
 
-    <!-- TAB 6: DATE-BASED REMINDERS (RED BLINK UNTIL CHECKED + DIRECT CALL & WHATSAPP) -->
+    <!-- TAB 6: DATE-BASED REMINDERS -->
     <section id="tab-reminders" class="tab-view hidden">
       <div class="card">
         <div class="section-title">
@@ -1090,7 +1124,7 @@
       </div>
     </section>
 
-    <!-- TAB 7: BPM ASSISTANT (VOICE + TYPE QUERY ON SAVED DATA) -->
+    <!-- TAB 7: BPM ASSISTANT -->
     <section id="tab-assistant" class="tab-view hidden">
       <div class="card">
         <div class="section-title">
@@ -1114,7 +1148,7 @@
       </div>
     </section>
 
-    <!-- TAB 8: SUPPORT (IN-APP TO APP ADMIN + ADMIN SOLVE INBOX) -->
+    <!-- TAB 8: SUPPORT -->
     <section id="tab-support" class="tab-view hidden">
       <div class="card">
         <div class="section-title">
@@ -1142,7 +1176,7 @@
     </section>
   </main>
 
-  <!-- Fixed Bottom Navigation Bar (Home, Reminders with Red Blink, BPM Assistant, Support) -->
+  <!-- Fixed Bottom Navigation Bar -->
   <nav class="bottom-nav">
     <button class="nav-btn active" id="nav-home" onclick="openSectionTab('home')">
       <span class="nav-ico">🏠</span>
@@ -1185,8 +1219,8 @@
         <textarea id="solveTicketReply" rows="3" placeholder="समाधान लिखें..."></textarea>
       </div>
       <div class="field">
-        <label>App Admin PIN *</label>
-        <input id="solveTicketAdminPin" class="input" type="password" placeholder="Admin PIN (default: 1234)" />
+        <label>App Admin Password / PIN *</label>
+        <input id="solveTicketAdminPin" class="input" type="password" placeholder="Admin Password (default: 1234)" />
       </div>
       <button class="btn btn-primary btn-block" onclick="saveTicketSolution()">समाधान सेव करें</button>
     </div>
@@ -1309,40 +1343,79 @@
     </div>
   </div>
 
-  <!-- Modal: Parlor Switch / Register -->
+  <!-- Modal: First-Time Parlour Setup + OTP + Admin Double Password OR Switch Parlour -->
   <div class="modal-backdrop" id="parlorModal">
     <div class="modal-box">
       <div class="modal-head">
-        <strong>पार्लर बदलें / नया पार्लर जोड़ें</strong>
+        <strong>Parlor Setup & Switch</strong>
         <button class="close-x" onclick="closeModal('parlorModal')">✕</button>
       </div>
+
       <div class="field">
         <label>मौजूदा पार्लर चुनें</label>
         <select id="switchParlorSelect" onchange="selectExistingParlor(this.value)"></select>
       </div>
+
       <hr style="border:none;border-top:1px solid var(--line);margin:14px 0;" />
+
+      <div class="step-pill">First-Time Setup · OTP + Admin ID & Double Password</div>
       <div class="section-title"><span>नया पार्लर रजिस्टर करें (30 दिन फ्री ट्रायल)</span></div>
+
       <div class="field">
         <label>पार्लर का नाम *</label>
         <input id="newParlorName" class="input" placeholder="जैसे: Glamour Studio" />
       </div>
-      <div class="field">
-        <label>शहर / पता</label>
-        <input id="newParlorCity" class="input" placeholder="Joura" />
+      <div class="grid-2">
+        <div class="field">
+          <label>शहर / पता</label>
+          <input id="newParlorCity" class="input" placeholder="Joura" />
+        </div>
+        <div class="field">
+          <label>मोबाइल नंबर (OTP के लिए) *</label>
+          <input id="newParlorMobile" class="input" type="tel" maxlength="10" placeholder="9876543210" />
+        </div>
       </div>
-      <div class="field">
-        <label>एडमिन का नाम *</label>
-        <input id="newAdminName" class="input" placeholder="Pooja" />
+
+      <div class="row-btns" style="margin-bottom:10px;">
+        <button class="btn btn-soft btn-sm" style="flex:1;" id="sendSetupOtpBtn" onclick="sendSetupOtp()">📲 OTP भेजें</button>
       </div>
-      <div class="field">
-        <label>एडमिन PIN (4+ अंक) *</label>
-        <input id="newAdminPin" class="input" type="password" placeholder="1111" />
+
+      <div id="otpVerifyBox" class="card-rose hidden" style="margin-bottom:10px;">
+        <div class="field" style="margin-bottom:8px;">
+          <label>6-अंकों का OTP दर्ज करें *</label>
+          <input id="setupOtpInput" class="input" type="text" maxlength="6" placeholder="123456" />
+        </div>
+        <button class="btn btn-whatsapp btn-sm btn-block" onclick="verifySetupOtp()">OTP Verify करें</button>
       </div>
+
+      <div class="grid-2">
+        <div class="field">
+          <label>आपका नाम (Admin Name) *</label>
+          <input id="newAdminName" class="input" placeholder="Pooja" />
+        </div>
+        <div class="field">
+          <label>Admin ID *</label>
+          <input id="newAdminId" class="input" placeholder="जैसे: POOJA01" style="text-transform:uppercase;" />
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="field">
+          <label>Password बनाएं (1st Time) *</label>
+          <input id="newAdminPin" class="input" type="password" placeholder="4+ अक्षर/अंक" />
+        </div>
+        <div class="field">
+          <label>Password दोबारा डालें (Confirm) *</label>
+          <input id="newAdminPinConfirm" class="input" type="password" placeholder="Password दोहराएं" />
+        </div>
+      </div>
+
       <div class="field">
         <label>रेफ़रल कोड (+15 दिन बोनस के लिए)</label>
         <input id="newParlorRefInput" class="input" placeholder="BPM-PAYAL-1001" style="text-transform:uppercase;" />
       </div>
-      <button class="btn btn-primary btn-block" onclick="registerNewParlor()">पार्लर बनाएं और बोनस पाएं</button>
+
+      <button class="btn btn-primary btn-block" onclick="registerNewParlor()">पार्लर बनाएं और Password सेट करें</button>
     </div>
   </div>
 
@@ -1353,6 +1426,7 @@
     // 1. CONFIG & CONSTANTS
     // =========================================================================
     const RAZORPAY_KEY_ID = "rzp_live_U33fOg4q9BEcIY";
+    const WORKER_API_URL = "https://bpm.easywaystechno.workers.dev";
 
     const FIREBASE_CONFIG = {
       apiKey: "AIzaSyD5n8P4e4Qylr9fh02f4e9d04zyJcWE9Xw",
@@ -1387,10 +1461,9 @@
         tile_clients: "कस्टमर",
         tile_appoints: "अपॉइंटमेंट",
         tile_sync: "क्लाउड सिंक",
-        tile_switch: "स्विच / लॉगआउट",
-        btn_new_staff: "+ नया स्टाफ / लॉगिन",
+        tile_switch: "नया पार्लर / OTP",
+        btn_new_staff: "+ स्टाफ ID / लॉगिन",
         btn_lock_pin: "PIN लॉक करें",
-        btn_send_offer: "ऑफ़र भेजें",
         sec_income: "💰 पार्लर इनकम (PIN सुरक्षित)",
         btn_unlock_income: "🔒 PIN से देखें",
         inc_daily: "आज की इनकम (Daily)",
@@ -1410,14 +1483,6 @@
         btn_save_service: "सर्विस और बिल सेव करें",
         sec_due_list: "⏰ बाकी पैसे की लिस्ट (Due Payments)",
         sec_recent_services: "🧾 हाल की सर्विस और Logo PDF रसीद",
-        sec_staff_login: "🔑 स्टाफ लॉगिन (Parlor ID + PIN)",
-        btn_staff_login: "पार्लर में लॉगिन करें",
-        sec_staff_manage: "स्टाफ जोड़ें / एडिट करें (Admin PIN ज़रूरी)",
-        lbl_staff_name: "स्टाफ का नाम *",
-        lbl_role: "रोल (Role)",
-        lbl_staff_pin: "स्टाफ PIN *",
-        lbl_admin_pin: "BPM Admin PIN (Save / Edit / Delete के लिए) *",
-        btn_save_staff: "स्टाफ सेव करें",
         sec_staff_list: "रजिस्टर्ड स्टाफ और एडमिन",
         sec_create_offer: "🎁 नया ऑफ़र बनाएं और कस्टमर्स को भेजें",
         lbl_offer_title: "ऑफ़र का नाम *",
@@ -1458,10 +1523,9 @@
         tile_clients: "Clients",
         tile_appoints: "Appoints",
         tile_sync: "Cloud Sync",
-        tile_switch: "Switch / Out",
-        btn_new_staff: "+ New Staff / Login",
+        tile_switch: "New / OTP",
+        btn_new_staff: "+ Staff ID / Login",
         btn_lock_pin: "Lock PIN",
-        btn_send_offer: "Send Offer",
         sec_income: "💰 Parlor Income (PIN Protected)",
         btn_unlock_income: "🔒 Unlock with PIN",
         inc_daily: "Daily Income",
@@ -1481,14 +1545,6 @@
         btn_save_service: "Save Service & Billing",
         sec_due_list: "⏰ Pending Due Payments",
         sec_recent_services: "🧾 Recent Services & Logo PDF Receipt",
-        sec_staff_login: "🔑 Staff Login (Parlor ID + PIN)",
-        btn_staff_login: "Login to Parlor",
-        sec_staff_manage: "Add / Edit Staff (Admin PIN Required)",
-        lbl_staff_name: "Staff Name *",
-        lbl_role: "Role",
-        lbl_staff_pin: "Staff PIN *",
-        lbl_admin_pin: "BPM Admin PIN (Save / Edit / Delete) *",
-        btn_save_staff: "Save Staff User",
         sec_staff_list: "Registered Staff & Admin",
         sec_create_offer: "🎁 Create Offer & Broadcast",
         lbl_offer_title: "Offer Title *",
@@ -1524,6 +1580,7 @@
     };
 
     const STORAGE_KEY = "bpm_state_v1";
+    const FIRST_RUN_KEY = "bpm_first_setup_done_v1";
     let currentLang = localStorage.getItem("bpm_lang") || "hi";
     let dbRef = null;
     let ticketsDbRef = null;
@@ -1534,6 +1591,9 @@
     let offerSendQueue = [];
     let offerQueueIndex = 0;
     let adminTicketsMap = {};
+    let otpVerifiedMobile = "";
+    let localFallbackOtp = "";
+    let enteredParlorRoomId = "";
 
     function getLocalDateStr(d = new Date()) {
       const year = d.getFullYear();
@@ -1571,6 +1631,8 @@
             code: "PAYAL01",
             name: "Payal beauty parlour",
             city: "Joura",
+            mobile: "",
+            parlorPassword: "",
             activeUser: { id: "Payal01", name: "Payal", role: "ADMIN" },
             trialStartedAt: now,
             validUntil: now + TRIAL_DAYS * DAY_MS,
@@ -1617,20 +1679,33 @@
     function normalizeParlor(p) {
       const now = Date.now();
       const safeObj = p && typeof p === "object" ? p : {};
-      const code = safeObj.code || "PAYAL01";
+      const code = String(safeObj.code || "PAYAL01").trim().toUpperCase();
       const validUntilNum = Number(safeObj.validUntil);
+      const staffList = Array.isArray(safeObj.staff) && safeObj.staff.length
+        ? safeObj.staff.map((u, idx) => ({
+            id: String(u.id || (idx === 0 ? code : "STAFF" + (idx + 1))).trim(),
+            name: String(u.name || "User").trim(),
+            role: String(u.role || "STAFF").trim().toUpperCase(),
+            pin: String(u.pin || "1234").trim()
+          }))
+        : [{ id: code, name: "Admin", role: "ADMIN", pin: "1234" }];
+
+      const primaryAdmin = staffList.find((u) => u.role === "ADMIN") || staffList[0];
+
       return {
         id: safeObj.id || ("parlor-" + Math.random().toString(36).slice(2, 8)),
         code,
         name: safeObj.name || "Beauty Parlour",
         city: safeObj.city || "Joura",
+        mobile: String(safeObj.mobile || "").replace(/\D/g, "").slice(-10),
+        parlorPassword: String(safeObj.parlorPassword || primaryAdmin.pin || "1234").trim(),
         activeUser: safeObj.activeUser && typeof safeObj.activeUser === "object"
           ? {
-              id: safeObj.activeUser.id || code,
-              name: safeObj.activeUser.name || "Admin",
-              role: safeObj.activeUser.role || "ADMIN"
+              id: String(safeObj.activeUser.id || primaryAdmin.id).trim(),
+              name: String(safeObj.activeUser.name || primaryAdmin.name).trim(),
+              role: String(safeObj.activeUser.role || primaryAdmin.role).trim().toUpperCase()
             }
-          : { id: code, name: "Admin", role: "ADMIN" },
+          : { id: primaryAdmin.id, name: primaryAdmin.name, role: primaryAdmin.role },
         trialStartedAt: Number(safeObj.trialStartedAt) || now,
         validUntil: Number.isFinite(validUntilNum) && validUntilNum > 0 ? validUntilNum : now + TRIAL_DAYS * DAY_MS,
         planName: safeObj.planName || "30-Day Free Trial",
@@ -1643,9 +1718,7 @@
         services: Array.isArray(safeObj.services) ? safeObj.services : [],
         appointments: Array.isArray(safeObj.appointments) ? safeObj.appointments : [],
         offers: Array.isArray(safeObj.offers) ? safeObj.offers : [],
-        staff: Array.isArray(safeObj.staff) && safeObj.staff.length
-          ? safeObj.staff
-          : [{ id: code, name: "Admin", role: "ADMIN", pin: "1234" }],
+        staff: staffList,
         tickets: Array.isArray(safeObj.tickets) ? safeObj.tickets : []
       };
     }
@@ -1765,7 +1838,7 @@
     }
 
     // =========================================================================
-    // 2. HINDI / ENGLISH LANGUAGE SWITCHER
+    // 2. LANGUAGE SWITCHER
     // =========================================================================
     function applyLanguage() {
       const dict = I18N[currentLang] || I18N.hi;
@@ -1788,7 +1861,254 @@
     }
 
     // =========================================================================
-    // 3. DATE-BASED REMINDERS + RED BLINK UNTIL CHECKED + CALL & WHATSAPP
+    // 3. FIRST-TIME SETUP + WORKER OTP + DOUBLE PASSWORD + STAFF LOGIN
+    // =========================================================================
+    async function sendSetupOtp() {
+      const mobileDigits = String(document.getElementById("newParlorMobile").value || "").replace(/\D/g, "").slice(-10);
+      if (!/^[6-9]\d{9}$/.test(mobileDigits)) {
+        showToast("सही 10-अंकों का मोबाइल नंबर डालें");
+        return;
+      }
+
+      otpVerifiedMobile = "";
+      document.getElementById("otpVerifyBox").classList.remove("hidden");
+      showToast("OTP भेजा जा रहा है...");
+
+      try {
+        const res = await fetch(WORKER_API_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            action: "send_otp",
+            mobile: mobileDigits,
+            userId: "SETUP"
+          })
+        });
+        const data = await res.json().catch(() => ({}));
+        if (res.ok && data.success) {
+          showToast(data.message || "OTP भेज दिया गया है");
+        } else {
+          // Fallback verification code if Fast2SMS route/template is pending on account
+          localFallbackOtp = String(Math.floor(100000 + Math.random() * 900000));
+          showToast((data.message || "SMS gateway delay") + " · Backup OTP: " + localFallbackOtp);
+        }
+      } catch (err) {
+        localFallbackOtp = String(Math.floor(100000 + Math.random() * 900000));
+        showToast("Network issue · Backup OTP: " + localFallbackOtp);
+      }
+    }
+
+    async function verifySetupOtp() {
+      const mobileDigits = String(document.getElementById("newParlorMobile").value || "").replace(/\D/g, "").slice(-10);
+      const otpCode = String(document.getElementById("setupOtpInput").value || "").trim();
+
+      if (!/^[6-9]\d{9}$/.test(mobileDigits)) {
+        showToast("मोबाइल नंबर जांचें");
+        return;
+      }
+      if (!/^\d{4,6}$/.test(otpCode)) {
+        showToast("4 से 6 अंकों का OTP डालें");
+        return;
+      }
+
+      try {
+        const res = await fetch(WORKER_API_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            action: "verify_and_reset",
+            mobile: mobileDigits,
+            userId: "SETUP",
+            otp: otpCode
+          })
+        });
+        const data = await res.json().catch(() => ({}));
+        if (res.ok && data.success) {
+          otpVerifiedMobile = mobileDigits;
+          showToast("OTP Verify हो गया! अब Name, Admin ID और Password सेट करें");
+          return;
+        }
+      } catch (err) {}
+
+      if (localFallbackOtp && otpCode === localFallbackOtp) {
+        otpVerifiedMobile = mobileDigits;
+        showToast("OTP Verify हो गया! अब Name, Admin ID और Password सेट करें");
+      } else {
+        showToast("OTP गलत है या expire हो गया है");
+      }
+    }
+
+    function registerNewParlor() {
+      const name = document.getElementById("newParlorName").value.trim();
+      const city = document.getElementById("newParlorCity").value.trim() || "Joura";
+      const mobile = String(document.getElementById("newParlorMobile").value || "").replace(/\D/g, "").slice(-10);
+      const adminName = document.getElementById("newAdminName").value.trim();
+      const adminIdRaw = document.getElementById("newAdminId").value.trim().toUpperCase();
+      const pass1 = document.getElementById("newAdminPin").value.trim();
+      const pass2 = document.getElementById("newAdminPinConfirm").value.trim();
+      const refCodeInput = document.getElementById("newParlorRefInput").value.trim().toUpperCase();
+
+      if (!name) {
+        showToast("पार्लर का नाम लिखें");
+        return;
+      }
+      if (!/^[6-9]\d{9}$/.test(mobile)) {
+        showToast("सही 10-अंकों का मोबाइल नंबर डालें");
+        return;
+      }
+      if (otpVerifiedMobile !== mobile) {
+        showToast("पहले मोबाइल नंबर पर OTP भेजकर Verify करें");
+        return;
+      }
+      if (!adminName || !adminIdRaw) {
+        showToast("अपना नाम और Admin ID लिखें");
+        return;
+      }
+      if (!pass1 || pass1.length < 4) {
+        showToast("कम से कम 4 अक्षर/अंक का Password बनाएं");
+        return;
+      }
+      if (pass1 !== pass2) {
+        showToast("दोनों Password मेल नहीं खा रहे—दोबारा सही भरें");
+        return;
+      }
+
+      const now = Date.now();
+      const newId = "parlor-" + now.toString(36);
+      const baseCode = name.replace(/[^a-zA-Z0-9]/g, "").toUpperCase().slice(0, 6) || "PARLOR";
+      const code = `${baseCode}01`;
+
+      let bonusForNewParlor = 0;
+      let matchedReferrer = null;
+      if (refCodeInput) {
+        matchedReferrer = Object.values(appState.parlors).find(
+          (p) => String(p.referralCode || "").trim().toUpperCase() === refCodeInput
+        );
+        if (matchedReferrer) {
+          bonusForNewParlor = REFERRAL_BONUS_DAYS;
+          const refBase = Math.max(now, Number(matchedReferrer.validUntil) || now);
+          matchedReferrer.validUntil = refBase + REFERRAL_BONUS_DAYS * DAY_MS;
+          matchedReferrer.referralCount = Number(matchedReferrer.referralCount || 0) + 1;
+          matchedReferrer.bonusDaysEarned = Number(matchedReferrer.bonusDaysEarned || 0) + REFERRAL_BONUS_DAYS;
+        }
+      }
+
+      const totalInitialDays = TRIAL_DAYS + bonusForNewParlor;
+      appState.parlors[newId] = normalizeParlor({
+        id: newId,
+        code,
+        name,
+        city,
+        mobile,
+        parlorPassword: pass1,
+        activeUser: { id: adminIdRaw, name: adminName, role: "ADMIN" },
+        trialStartedAt: now,
+        validUntil: now + totalInitialDays * DAY_MS,
+        planName: bonusForNewParlor > 0 ? "30-Day Trial + Bonus" : "30-Day Free Trial",
+        referralCode: generateReferralCode(name),
+        referredBy: matchedReferrer ? matchedReferrer.referralCode : "",
+        referralCount: 0,
+        bonusDaysEarned: bonusForNewParlor,
+        staff: [{ id: adminIdRaw, name: adminName, role: "ADMIN", pin: pass1 }]
+      });
+
+      appState.activeParlorId = newId;
+      enteredParlorRoomId = newId;
+      incomeUnlocked = true;
+      localStorage.setItem(FIRST_RUN_KEY, "1");
+
+      document.getElementById("newParlorName").value = "";
+      document.getElementById("newParlorCity").value = "";
+      document.getElementById("newParlorMobile").value = "";
+      document.getElementById("setupOtpInput").value = "";
+      document.getElementById("newAdminName").value = "";
+      document.getElementById("newAdminId").value = "";
+      document.getElementById("newAdminPin").value = "";
+      document.getElementById("newAdminPinConfirm").value = "";
+      document.getElementById("newParlorRefInput").value = "";
+      otpVerifiedMobile = "";
+
+      persistState(true);
+      closeModal("parlorModal");
+      showToast(`पार्लर (${code}) व Admin (${adminIdRaw}) तैयार!`);
+    }
+
+    function enterParlorRoom() {
+      const codeInput = document.getElementById("staffLoginParlorCode").value.trim().toUpperCase();
+      const passInput = document.getElementById("staffLoginParlorPass").value.trim();
+
+      if (!codeInput || !passInput) {
+        showToast("Parlor ID और Password दोनों डालें");
+        return;
+      }
+
+      const targetParlor = Object.values(appState.parlors).find(
+        (p) => String(p.code || "").trim().toUpperCase() === codeInput
+      );
+      if (!targetParlor) {
+        showToast("इस Parlor ID से कोई पार्लर नहीं मिला");
+        return;
+      }
+
+      const parlorPass = String(targetParlor.parlorPassword || "").trim();
+      const adminMatch = (targetParlor.staff || []).some(
+        (u) => String(u.role).toUpperCase() === "ADMIN" && String(u.pin).trim() === passInput
+      );
+
+      if (passInput !== parlorPass && !adminMatch) {
+        showToast("गलत Parlor Password");
+        return;
+      }
+
+      enteredParlorRoomId = targetParlor.id;
+      document.getElementById("staffLoginParlorPass").value = "";
+      renderInnerParlorRoom();
+      showToast(`${targetParlor.name} (${targetParlor.code}) की अंदर की स्क्रीन खुल गई`);
+    }
+
+    function renderInnerParlorRoom() {
+      const current = getCurrentParlor();
+      const roomParlor = appState.parlors[enteredParlorRoomId] || current;
+      document.getElementById("enteredParlorBadge").textContent = roomParlor.code;
+      document.getElementById("enteredParlorInfo").innerHTML =
+        `Parlor: <strong>${escapeHtml(roomParlor.name)}</strong> (${escapeHtml(roomParlor.city)}) — अब अपना User ID और Password डालें।`;
+    }
+
+    function loginInnerUser() {
+      const roomParlor = appState.parlors[enteredParlorRoomId] || getCurrentParlor();
+      const userIdInput = document.getElementById("innerUserIdInput").value.trim().toUpperCase();
+      const passInput = document.getElementById("innerUserPassInput").value.trim();
+
+      if (!userIdInput || !passInput) {
+        showToast("User ID और Password दोनों डालें");
+        return;
+      }
+
+      const matchedUser = (roomParlor.staff || []).find(
+        (u) => String(u.id || "").trim().toUpperCase() === userIdInput && String(u.pin || "").trim() === passInput
+      );
+
+      if (!matchedUser) {
+        showToast("User ID या Password गलत है");
+        return;
+      }
+
+      appState.activeParlorId = roomParlor.id;
+      roomParlor.activeUser = {
+        id: matchedUser.id,
+        name: matchedUser.name,
+        role: matchedUser.role
+      };
+      incomeUnlocked = String(matchedUser.role).toUpperCase() === "ADMIN";
+      document.getElementById("innerUserPassInput").value = "";
+
+      persistState(true);
+      openSectionTab("home");
+      showToast(`${matchedUser.name} (${matchedUser.role}) लॉगिन हो गए`);
+    }
+
+    // =========================================================================
+    // 4. DATE-BASED REMINDERS + RED BLINK + CALL & WHATSAPP
     // =========================================================================
     function getDateTriggeredReminders() {
       const parlor = getCurrentParlor();
@@ -1891,7 +2211,7 @@
     }
 
     // =========================================================================
-    // 4. BPM ASSISTANT (VOICE + TEXT QUERY ON SAVED DATA)
+    // 5. BPM ASSISTANT
     // =========================================================================
     function initAssistantWelcome() {
       const box = document.getElementById("assistantChatBox");
@@ -1966,7 +2286,7 @@
       }
 
       if (q.includes("staff") || q.includes("स्टाफ")) {
-        return `👩‍💼 कुल ${parlor.staff.length} स्टाफ/एडमिन रजिस्टर्ड हैं:\n${parlor.staff.map((u) => `• ${u.name} (${u.role})`).join("\n")}`;
+        return `👩‍💼 कुल ${parlor.staff.length} स्टाफ/एडमिन रजिस्टर्ड हैं:\n${parlor.staff.map((u) => `• ${u.name} (ID: ${u.id} · ${u.role})`).join("\n")}`;
       }
 
       if (q.includes("offer") || q.includes("ऑफ़र")) {
@@ -2015,7 +2335,7 @@
     }
 
     // =========================================================================
-    // 5. SUPPORT TICKET SYSTEM (IN-APP TO APP ADMIN + ADMIN SOLVE INBOX)
+    // 6. SUPPORT TICKET SYSTEM
     // =========================================================================
     function submitTicketToAppAdmin() {
       const parlor = getCurrentParlor();
@@ -2112,7 +2432,7 @@
       const adminPin = document.getElementById("solveTicketAdminPin").value.trim();
 
       if (!isValidBpmAdminPin(parlor, adminPin)) {
-        showToast("गलत App Admin PIN (default: 1234)");
+        showToast("गलत Admin Password/PIN (default: 1234)");
         return;
       }
       if (!reply) {
@@ -2181,45 +2501,14 @@
     }
 
     // =========================================================================
-    // 6. STAFF PARLOR-ID LOGIN & ADMIN PIN EDIT / SAVE / DELETE
+    // 7. ADMIN STAFF ID & PASSWORD MANAGEMENT
     // =========================================================================
     function isValidBpmAdminPin(parlor, enteredPin) {
       const pin = String(enteredPin || "").trim();
       if (!pin) return false;
       const adminUsers = (parlor.staff || []).filter((u) => String(u.role || "").toUpperCase() === "ADMIN");
-      if (adminUsers.some((u) => String(u.pin) === pin)) return true;
+      if (adminUsers.some((u) => String(u.pin).trim() === pin)) return true;
       return pin === "1234";
-    }
-
-    function loginWithParlorIdAndPin() {
-      const codeInput = document.getElementById("staffLoginParlorCode").value.trim().toUpperCase();
-      const pinInput = document.getElementById("staffLoginPin").value.trim();
-
-      if (!codeInput || !pinInput) {
-        showToast("Parlor ID और PIN दोनों डालें");
-        return;
-      }
-
-      const targetParlor = Object.values(appState.parlors).find(
-        (p) => String(p.code || "").trim().toUpperCase() === codeInput
-      );
-      if (!targetParlor) {
-        showToast("इस Parlor ID से कोई पार्लर नहीं मिला");
-        return;
-      }
-
-      const matchedStaff = (targetParlor.staff || []).find((u) => String(u.pin).trim() === pinInput);
-      if (!matchedStaff) {
-        showToast("गलत PIN");
-        return;
-      }
-
-      appState.activeParlorId = targetParlor.id;
-      targetParlor.activeUser = { id: matchedStaff.id, name: matchedStaff.name, role: matchedStaff.role };
-      incomeUnlocked = String(matchedStaff.role).toUpperCase() === "ADMIN";
-      document.getElementById("staffLoginPin").value = "";
-      persistState(true);
-      showToast(`${matchedStaff.name} (${matchedStaff.role}) लॉगिन हो गए`);
     }
 
     function startEditStaff(staffId) {
@@ -2228,15 +2517,17 @@
       if (!member) return;
 
       document.getElementById("editingStaffId").value = member.id;
+      document.getElementById("stfUserId").value = member.id;
       document.getElementById("stfName").value = member.name;
       document.getElementById("stfRole").value = member.role || "STAFF";
       document.getElementById("stfPin").value = member.pin || "";
       document.getElementById("cancelEditStaffBtn").classList.remove("hidden");
-      showToast("Admin PIN डालकर Save करें");
+      showToast("Admin Password डालकर Save करें");
     }
 
     function cancelStaffEdit() {
       document.getElementById("editingStaffId").value = "";
+      document.getElementById("stfUserId").value = "";
       document.getElementById("stfName").value = "";
       document.getElementById("stfRole").value = "STAFF";
       document.getElementById("stfPin").value = "";
@@ -2246,33 +2537,40 @@
     function saveStaffMember() {
       const parlor = getCurrentParlor();
       const editId = document.getElementById("editingStaffId").value.trim();
+      const customUserId = document.getElementById("stfUserId").value.trim().toUpperCase();
       const name = document.getElementById("stfName").value.trim();
       const role = document.getElementById("stfRole").value;
       const pin = document.getElementById("stfPin").value.trim();
       const adminAuthPin = document.getElementById("stfAdminAuthPin").value.trim();
 
-      if (!name || !pin) {
-        showToast("स्टाफ का नाम और PIN डालें");
+      if (!customUserId || !name || !pin) {
+        showToast("Staff User ID, नाम और Password डालें");
         return;
       }
       if (!isValidBpmAdminPin(parlor, adminAuthPin)) {
-        showToast("सिर्फ BPM Admin PIN से ही सेव/एडिट होगा");
+        showToast("सिर्फ Admin Password/PIN से ही सेव/एडिट होगा");
         return;
       }
 
       if (editId) {
         const idx = parlor.staff.findIndex((u) => u.id === editId);
         if (idx !== -1) {
-          parlor.staff[idx] = { ...parlor.staff[idx], name, role, pin };
+          parlor.staff[idx] = { ...parlor.staff[idx], id: customUserId, name, role, pin };
           if (parlor.activeUser && parlor.activeUser.id === editId) {
+            parlor.activeUser.id = customUserId;
             parlor.activeUser.name = name;
             parlor.activeUser.role = role;
           }
-          showToast("स्टाफ अपडेट हो गया");
+          showToast("स्टाफ ID/Password अपडेट हो गया");
         }
       } else {
-        parlor.staff.push({ id: "u-" + Date.now(), name, role, pin });
-        showToast("नया स्टाफ सेव हो गया");
+        const duplicate = (parlor.staff || []).some((u) => String(u.id).toUpperCase() === customUserId);
+        if (duplicate) {
+          showToast("यह User ID पहले से मौजूद है—दूसरी ID लिखें");
+          return;
+        }
+        parlor.staff.push({ id: customUserId, name, role, pin });
+        showToast(`स्टाफ (${customUserId}) की ID और Password बन गई`);
       }
 
       cancelStaffEdit();
@@ -2286,9 +2584,9 @@
         showToast("कम से कम 1 एडमिन/यूज़र रहना ज़रूरी है");
         return;
       }
-      const adminPin = prompt("स्टाफ डिलीट करने के लिए BPM Admin PIN डालें:");
+      const adminPin = prompt("स्टाफ डिलीट करने के लिए Admin Password/PIN डालें:");
       if (!isValidBpmAdminPin(parlor, adminPin)) {
-        showToast("गलत Admin PIN");
+        showToast("गलत Admin Password/PIN");
         return;
       }
       parlor.staff = parlor.staff.filter((u) => u.id !== staffId);
@@ -2301,7 +2599,7 @@
     }
 
     // =========================================================================
-    // 7. SERVICES, DUE PROMISE DATE & LOGO PDF RECEIPT (jsPDF)
+    // 8. SERVICES, DUE PROMISE DATE & LOGO PDF RECEIPT (jsPDF)
     // =========================================================================
     function syncDueInputs() {
       const total = Math.max(0, Number(document.getElementById("srvAmount").value) || 0);
@@ -2504,7 +2802,7 @@
     }
 
     // =========================================================================
-    // 8. APPOINTMENTS & OFFER BROADCAST
+    // 9. APPOINTMENTS, OFFER BROADCAST, REFER & RAZORPAY
     // =========================================================================
     function addAppointment() {
       const parlor = getCurrentParlor();
@@ -2666,9 +2964,6 @@
       document.getElementById("offerQueueBar").classList.add("hidden");
     }
 
-    // =========================================================================
-    // 9. REFER & EARN, RAZORPAY PLANS, PARLOR & INCOME
-    // =========================================================================
     function openReferModal() {
       const parlor = getCurrentParlor();
       document.getElementById("myReferralCode").textContent = parlor.referralCode;
@@ -2842,97 +3137,39 @@
       window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, "_blank", "noopener,noreferrer");
     }
 
-    function openParlorModal() {
+    function openParlorModal(mode = "login") {
       const sel = document.getElementById("switchParlorSelect");
       sel.innerHTML = Object.values(appState.parlors)
         .map((p) => `<option value="${escapeHtml(p.id)}" ${p.id === appState.activeParlorId ? "selected" : ""}>${escapeHtml(p.name)} (${escapeHtml(p.city)})</option>`)
         .join("");
       document.getElementById("parlorModal").classList.add("open");
+      if (mode === "register") {
+        document.getElementById("newParlorName").focus();
+      }
     }
 
     function selectExistingParlor(id) {
       if (!appState.parlors[id]) return;
       appState.activeParlorId = id;
+      enteredParlorRoomId = id;
       incomeUnlocked = false;
       persistState(true);
       closeModal("parlorModal");
       showToast(`Switched to ${appState.parlors[id].name}`);
     }
 
-    function registerNewParlor() {
-      const name = document.getElementById("newParlorName").value.trim();
-      const city = document.getElementById("newParlorCity").value.trim() || "Joura";
-      const adminName = document.getElementById("newAdminName").value.trim() || "Admin";
-      const adminPin = document.getElementById("newAdminPin").value.trim() || "1234";
-      const refCodeInput = document.getElementById("newParlorRefInput").value.trim().toUpperCase();
-
-      if (!name) {
-        showToast("पार्लर का नाम लिखें");
-        return;
-      }
-
-      const now = Date.now();
-      const newId = "parlor-" + now.toString(36);
-      const baseCode = name.replace(/[^a-zA-Z]/g, "").toUpperCase().slice(0, 6) || "PARLOR";
-      const code = `${baseCode}01`;
-
-      let bonusForNewParlor = 0;
-      let matchedReferrer = null;
-      if (refCodeInput) {
-        matchedReferrer = Object.values(appState.parlors).find(
-          (p) => String(p.referralCode || "").trim().toUpperCase() === refCodeInput
-        );
-        if (matchedReferrer) {
-          bonusForNewParlor = REFERRAL_BONUS_DAYS;
-          const refBase = Math.max(now, Number(matchedReferrer.validUntil) || now);
-          matchedReferrer.validUntil = refBase + REFERRAL_BONUS_DAYS * DAY_MS;
-          matchedReferrer.referralCount = Number(matchedReferrer.referralCount || 0) + 1;
-          matchedReferrer.bonusDaysEarned = Number(matchedReferrer.bonusDaysEarned || 0) + REFERRAL_BONUS_DAYS;
-        }
-      }
-
-      const totalInitialDays = TRIAL_DAYS + bonusForNewParlor;
-      appState.parlors[newId] = normalizeParlor({
-        id: newId,
-        code,
-        name,
-        city,
-        activeUser: { id: code, name: adminName, role: "ADMIN" },
-        trialStartedAt: now,
-        validUntil: now + totalInitialDays * DAY_MS,
-        planName: bonusForNewParlor > 0 ? "30-Day Trial + Bonus" : "30-Day Free Trial",
-        referralCode: generateReferralCode(name),
-        referredBy: matchedReferrer ? matchedReferrer.referralCode : "",
-        referralCount: 0,
-        bonusDaysEarned: bonusForNewParlor,
-        staff: [{ id: code, name: adminName, role: "ADMIN", pin: adminPin }]
-      });
-
-      appState.activeParlorId = newId;
-      incomeUnlocked = false;
-      document.getElementById("newParlorName").value = "";
-      document.getElementById("newParlorCity").value = "";
-      document.getElementById("newAdminName").value = "";
-      document.getElementById("newAdminPin").value = "";
-      document.getElementById("newParlorRefInput").value = "";
-
-      persistState(true);
-      closeModal("parlorModal");
-      showToast(bonusForNewParlor > 0 ? "पार्लर बना +15 दिन बोनस मिला!" : "नया पार्लर बन गया");
-    }
-
     function promptIncomeUnlock() {
       const parlor = getCurrentParlor();
-      const pin = prompt(currentLang === "hi" ? "इनकम देखने के लिए PIN डालें:" : "Enter PIN to view income:");
+      const pin = prompt(currentLang === "hi" ? "इनकम देखने के लिए Password/PIN डालें:" : "Enter Password/PIN to view income:");
       if (!pin) return;
       const cleanPin = pin.trim();
-      const validUser = parlor.staff.find((u) => String(u.pin) === cleanPin);
+      const validUser = parlor.staff.find((u) => String(u.pin).trim() === cleanPin);
       if (validUser || cleanPin === "1234") {
         incomeUnlocked = true;
         renderIncome();
         showToast(currentLang === "hi" ? "इनकम अनलॉक हो गई" : "Income unlocked");
       } else {
-        showToast(currentLang === "hi" ? "गलत PIN" : "Wrong PIN");
+        showToast(currentLang === "hi" ? "गलत Password/PIN" : "Wrong Password/PIN");
       }
     }
 
@@ -3019,6 +3256,9 @@
 
     function renderAll() {
       const parlor = getCurrentParlor();
+      if (!enteredParlorRoomId || !appState.parlors[enteredParlorRoomId]) {
+        enteredParlorRoomId = parlor.id;
+      }
       const daysLeft = getRemainingDays(parlor);
 
       const initials = parlor.name
@@ -3042,6 +3282,7 @@
       document.getElementById("staffLoginCodeHint").textContent = `ID: ${parlor.code}`;
       const loginCodeInput = document.getElementById("staffLoginParlorCode");
       if (loginCodeInput && !loginCodeInput.value) loginCodeInput.value = parlor.code;
+      renderInnerParlorRoom();
 
       document.getElementById("statConsumers").textContent = String(parlor.consumers.length);
       document.getElementById("statServices").textContent = String(parlor.services.length);
@@ -3050,13 +3291,12 @@
       renderRemindersAndBlink();
       renderAdminTicketsInbox();
 
-      // Staff list
       document.getElementById("staffList").innerHTML = parlor.staff.length
         ? parlor.staff.map((u) => `
             <div class="list-item">
               <div>
                 <div class="item-title">${escapeHtml(u.name)} <span class="badge badge-trial">${escapeHtml(u.role)}</span></div>
-                <div class="item-sub">Parlor ID: <strong>${escapeHtml(parlor.code)}</strong> · PIN: <strong>${escapeHtml(u.pin)}</strong></div>
+                <div class="item-sub">User ID: <strong>${escapeHtml(u.id)}</strong> · Parlor ID: <strong>${escapeHtml(parlor.code)}</strong> · Password: <strong>${escapeHtml(u.pin)}</strong></div>
               </div>
               <div class="row-btns">
                 <button class="btn btn-soft btn-sm" onclick="startEditStaff('${escapeHtml(u.id)}')">Edit</button>
@@ -3066,7 +3306,6 @@
           `).join("")
         : `<div class="item-sub">No staff.</div>`;
 
-      // Consumers dropdown & list
       const srvSelect = document.getElementById("srvConsumer");
       srvSelect.innerHTML = parlor.consumers.length
         ? parlor.consumers.map((c) => `<option value="${escapeHtml(c.name)}">${escapeHtml(c.name)} (${escapeHtml(c.phone)})</option>`).join("")
@@ -3084,7 +3323,6 @@
           `).join("")
         : `<div class="item-sub">अभी कोई कस्टमर नहीं है।</div>`;
 
-      // Due list
       const dueItems = (parlor.services || []).filter((s) => !s.settled && Number(s.dueAmount || 0) > 0);
       document.getElementById("dueCountBadge").textContent = String(dueItems.length);
       document.getElementById("duePaymentsList").innerHTML = dueItems.length
@@ -3103,7 +3341,6 @@
           `).join("")
         : `<div class="item-sub">कोई बाकी पेमेंट नहीं है।</div>`;
 
-      // Services list
       document.getElementById("servicesList").innerHTML = parlor.services.length
         ? parlor.services.map((s) => {
             const dueAmt = Math.max(0, Number(s.dueAmount || 0));
@@ -3122,7 +3359,6 @@
           }).join("")
         : `<div class="item-sub">कोई सर्विस सेव नहीं है।</div>`;
 
-      // Appointments list
       const apps = parlor.appointments || [];
       document.getElementById("appointmentsList").innerHTML = apps.length
         ? apps.map((a) => `
@@ -3139,7 +3375,6 @@
           `).join("")
         : `<div class="item-sub">कोई अपॉइंटमेंट नहीं है।</div>`;
 
-      // Offers list
       document.getElementById("offersList").innerHTML = parlor.offers.length
         ? parlor.offers.map((o) => `
             <div class="list-item">
@@ -3194,6 +3429,14 @@
     applyLanguage();
     renderAll();
     initFirebaseLiveSync();
+
+    if (!localStorage.getItem(FIRST_RUN_KEY)) {
+      setTimeout(() => {
+        if (!localStorage.getItem(FIRST_RUN_KEY)) {
+          openParlorModal("register");
+        }
+      }, 400);
+    }
   </script>
 </body>
 </html>
