@@ -3,9 +3,16 @@ function generatePin() {
 }
 
 function generateUserId(seed = "BPM") {
-  const clean = String(seed || "BPM").replace(/[^A-Za-z0-9]/g, "").toUpperCase().slice(0, 5) || "BPM";
+  const clean = String(seed || "BPM")
+    .replace(/[^A-Za-z0-9]/g, "")
+    .toUpperCase()
+    .slice(0, 5) || "BPM";
   const num = Math.floor(100 + Math.random() * 900);
   return `${clean}${num}`;
+}
+
+function normalizeMobile(raw) {
+  return String(raw || "").replace(/\D/g, "").slice(-10);
 }
 
 function corsHeaders() {
@@ -17,90 +24,133 @@ function corsHeaders() {
   };
 }
 
+function jsonResponse(data, status = 200) {
+  return new Response(JSON.stringify(data), {
+    status,
+    headers: corsHeaders()
+  });
+}
+
+async function findUserRecord(dbUrl, mobile, userIdInput) {
+  const candidateRoots = ["users", "bms"];
+
+  for (const root of candidateRoots) {
+    const res = await fetch(`${dbUrl}/${root}.json`);
+    if (!res.ok) {
+      return { error: `Firebase se ${root} data nahi padha ja saka.` };
+    }
+
+    const data = await res.json();
+    if (!data || typeof data !== "object") {
+      continue;
+    }
+
+    const entries = Object.entries(data);
+    const matched = entries.find(([, u]) => {
+      if (!u || typeof u !== "object") return false;
+      const uMob = normalizeMobile(u.mobile || u.phone || u.contact);
+      const uCode = String(u.userId || u.id || u.code || "").trim().toUpperCase();
+      const idMatches = !userIdInput || uCode === userIdInput;
+      return uMob === mobile && idMatches;
+    });
+
+    if (matched) {
+      return {
+        root,
+        userKey: matched[0],
+        userData: matched[1]
+      };
+    }
+  }
+
+  return {
+    notFound: "Yeh mobile number / User ID registered nahi hai."
+  };
+}
+
 export default {
   async fetch(request, env) {
-    const headers = corsHeaders();
-
     if (request.method === "OPTIONS") {
-      return new Response(JSON.stringify({ ok: true }), { status: 200, headers });
+      return jsonResponse({ ok: true }, 200);
     }
 
     if (request.method !== "POST") {
-      return new Response(JSON.stringify({ success: false, message: "Only POST allowed." }), {
-        status: 405,
-        headers
-      });
+      return jsonResponse({ success: false, message: "Only POST allowed." }, 405);
     }
 
     try {
-      const apiKey = env.FAST2SMS_API_KEY;
-      const dbUrl = String(env.FIREBASE_DB_URL || "").replace(/\/+$/, "");
+      const apiKey = String(env.FAST2SMS_API_KEY || "").trim();
+      const dbUrl = String(env.FIREBASE_DB_URL || "")
+        .trim()
+        .replace(/\/+$/, "");
 
       if (!apiKey) {
-        return new Response(
-          JSON.stringify({ success: false, message: "FAST2SMS_API_KEY secret set nahi hai." }),
-          { status: 500, headers }
+        return jsonResponse(
+          { success: false, message: "FAST2SMS_API_KEY secret set nahi hai." },
+          500
         );
       }
 
       if (!dbUrl) {
-        return new Response(
-          JSON.stringify({ success: false, message: "FIREBASE_DB_URL variable set nahi hai." }),
-          { status: 500, headers }
+        return jsonResponse(
+          { success: false, message: "FIREBASE_DB_URL variable set nahi hai." },
+          500
         );
       }
 
-      const body = await request.json();
+      let body;
+      try {
+        body = await request.json();
+      } catch {
+        return jsonResponse(
+          { success: false, message: "Invalid JSON request body." },
+          400
+        );
+      }
+
       const action = String(body.action || "").trim();
-      const mobile = String(body.mobile || "").replace(/\D/g, "").slice(-10);
+      const mobile = normalizeMobile(body.mobile);
       const userIdInput = String(body.userId || "").trim().toUpperCase();
 
       if (!/^[6-9]\d{9}$/.test(mobile)) {
-        return new Response(
-          JSON.stringify({ success: false, message: "Sahi 10-digit mobile number daalein." }),
-          { status: 400, headers }
+        return jsonResponse(
+          { success: false, message: "Sahi 10-digit mobile number daalein." },
+          400
         );
       }
 
-      const usersRes = await fetch(`${dbUrl}/users.json`);
-      if (!usersRes.ok) {
-        return new Response(
-          JSON.stringify({ success: false, message: "Firebase se user data nahi padha ja saka." }),
-          { status: 502, headers }
-        );
+      const lookup = await findUserRecord(dbUrl, mobile, userIdInput);
+      if (lookup.error) {
+        return jsonResponse({ success: false, message: lookup.error }, 502);
       }
-      const usersObj = (await usersRes.json()) || {};
-
-      const matchedEntry = Object.entries(usersObj).find(([, u]) => {
-        if (!u) return false;
-        const uMob = String(u.mobile || "").replace(/\D/g, "").slice(-10);
-        const uIdMatch = !userIdInput || String(u.userId || "").toUpperCase() === userIdInput;
-        return uMob === mobile && uIdMatch;
-      });
-
-      if (!matchedEntry) {
-        return new Response(
-          JSON.stringify({ success: false, message: "Yeh mobile number / User ID registered nahi hai." }),
-          { status: 404, headers }
-        );
+      if (lookup.notFound) {
+        return jsonResponse({ success: false, message: lookup.notFound }, 404);
       }
 
-      const [userKey, userData] = matchedEntry;
+      const { root, userKey, userData } = lookup;
 
       if (action === "send_otp") {
         const otp = String(Math.floor(100000 + Math.random() * 900000));
         const expiresAt = Date.now() + 5 * 60 * 1000;
 
-        await fetch(`${dbUrl}/otpRequests/${mobile}.json`, {
+        const saveOtpRes = await fetch(`${dbUrl}/otpRequests/${mobile}.json`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             otp,
             expiresAt,
             attempts: 0,
+            root,
             userKey
           })
         });
+
+        if (!saveOtpRes.ok) {
+          return jsonResponse(
+            { success: false, message: "Firebase mein OTP save nahi ho saka." },
+            502
+          );
+        }
 
         const params = new URLSearchParams({
           authorization: apiKey,
@@ -111,72 +161,87 @@ export default {
         });
 
         const smsRes = await fetch(`https://www.fast2sms.com/dev/bulkV2?${params.toString()}`);
-        const smsData = await smsRes.json();
+        const smsData = await smsRes.json().catch(() => ({}));
 
-        if (!smsData.return) {
-          return new Response(
-            JSON.stringify({
+        if (!smsRes.ok || !smsData.return) {
+          return jsonResponse(
+            {
               success: false,
               message: smsData.message || "Fast2SMS se OTP bhejne mein samasya aayi."
-            }),
-            { status: 502, headers }
+            },
+            502
           );
         }
 
-        return new Response(
-          JSON.stringify({
+        return jsonResponse(
+          {
             success: true,
             message: "OTP aapke registered mobile number par bhej diya gaya hai."
-          }),
-          { status: 200, headers }
+          },
+          200
         );
       }
 
       if (action === "verify_and_reset") {
         const otpEntered = String(body.otp || "").trim();
-        const otpRes = await fetch(`${dbUrl}/otpRequests/${mobile}.json`);
-        const savedOtp = await otpRes.json();
+        if (!/^\d{4,6}$/.test(otpEntered)) {
+          return jsonResponse(
+            { success: false, message: "Kripya sahi OTP daalein." },
+            400
+          );
+        }
 
+        const otpRes = await fetch(`${dbUrl}/otpRequests/${mobile}.json`);
+        if (!otpRes.ok) {
+          return jsonResponse(
+            { success: false, message: "OTP record padhne mein samasya aayi." },
+            502
+          );
+        }
+
+        const savedOtp = await otpRes.json();
         if (!savedOtp || !savedOtp.otp) {
-          return new Response(
-            JSON.stringify({ success: false, message: "Pehle OTP mangayein ya OTP expire ho gaya hai." }),
-            { status: 400, headers }
+          return jsonResponse(
+            { success: false, message: "Pehle OTP mangayein ya OTP expire ho gaya hai." },
+            400
           );
         }
 
         if (Date.now() > Number(savedOtp.expiresAt || 0)) {
           await fetch(`${dbUrl}/otpRequests/${mobile}.json`, { method: "DELETE" });
-          return new Response(
-            JSON.stringify({ success: false, message: "OTP expire ho gaya hai. Dobara OTP bhejein." }),
-            { status: 400, headers }
+          return jsonResponse(
+            { success: false, message: "OTP expire ho gaya hai. Dobara OTP bhejein." },
+            400
           );
         }
 
         const currentAttempts = Number(savedOtp.attempts || 0);
         if (currentAttempts >= 5) {
           await fetch(`${dbUrl}/otpRequests/${mobile}.json`, { method: "DELETE" });
-          return new Response(
-            JSON.stringify({ success: false, message: "Bahut zyada galat koshishein hui hain. Naya OTP bhejein." }),
-            { status: 429, headers }
+          return jsonResponse(
+            { success: false, message: "Bahut zyada galat koshishein hui hain. Naya OTP bhejein." },
+            429
           );
         }
 
-        if (String(savedOtp.otp) !== otpEntered) {
+        if (String(savedOtp.otp).trim() !== otpEntered) {
           await fetch(`${dbUrl}/otpRequests/${mobile}.json`, {
             method: "PATCH",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ attempts: currentAttempts + 1 })
           });
-          return new Response(
-            JSON.stringify({ success: false, message: "Galat OTP. Kripya sahi 6-digit OTP daalein." }),
-            { status: 400, headers }
+          return jsonResponse(
+            { success: false, message: "Galat OTP. Kripya sahi OTP daalein." },
+            400
           );
         }
 
+        const targetRoot = savedOtp.root || root;
+        const targetKey = savedOtp.userKey || userKey;
         const newUserId = generateUserId(userIdInput || userData.userId || "BPM");
         const newPin = generatePin();
 
-        await fetch(`${dbUrl}/users/${userKey}.json`, {
+        const updateRes = await fetch(`${dbUrl}/${targetRoot}/${targetKey}.json`, {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -186,27 +251,31 @@ export default {
           })
         });
 
+        if (!updateRes.ok) {
+          return jsonResponse(
+            { success: false, message: "Firebase mein naya User ID / PIN save nahi ho saka." },
+            502
+          );
+        }
+
         await fetch(`${dbUrl}/otpRequests/${mobile}.json`, { method: "DELETE" });
 
-        return new Response(
-          JSON.stringify({
+        return jsonResponse(
+          {
             success: true,
             message: "OTP verify ho gaya! Naya User ID aur PIN taiyar hai.",
             newUserId,
             newPin
-          }),
-          { status: 200, headers }
+          },
+          200
         );
       }
 
-      return new Response(JSON.stringify({ success: false, message: "Invalid action." }), {
-        status: 400,
-        headers
-      });
+      return jsonResponse({ success: false, message: "Invalid action." }, 400);
     } catch (err) {
-      return new Response(
-        JSON.stringify({ success: false, message: "Worker error: " + err.message }),
-        { status: 500, headers }
+      return jsonResponse(
+        { success: false, message: "Worker error: " + err.message },
+        500
       );
     }
   }
