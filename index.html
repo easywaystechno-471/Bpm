@@ -189,6 +189,7 @@
     }
 
     .pill-card-btn {
+      position: relative;
       background: var(--surface);
       border: 1.5px solid #dfbdd0;
       border-radius: 14px;
@@ -216,6 +217,43 @@
       font-size: 10.5px;
       color: var(--muted);
       margin-top: 2px;
+    }
+
+    /* Star stuck directly on top of Refer & Earn */
+    .stuck-star-badge {
+      position: absolute;
+      top: -9px;
+      right: 10px;
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      color: #ffffff;
+      border: 1.5px solid #ffffff;
+      border-radius: 999px;
+      padding: 2px 8px;
+      font-size: 10px;
+      font-weight: 800;
+      box-shadow: 0 3px 10px rgba(217, 119, 6, 0.35);
+      z-index: 4;
+      white-space: nowrap;
+    }
+
+    .ref-rem-icon {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-size: 10px;
+      font-weight: 800;
+      background: #fce7f3;
+      color: var(--rose-dark);
+      border: 1px solid #f2bdd8;
+      white-space: nowrap;
+    }
+
+    .ref-rem-icon.limit-done {
+      background: var(--bad-bg);
+      color: var(--bad);
+      border-color: #fecaca;
     }
 
     .tile-grid {
@@ -779,66 +817,82 @@
   </style>
 </head>
 <body>
-  <!-- FULL LOG OUT / APP LOGIN GATE (Visible when logged out) -->
+  <!-- FULL LOG OUT / APP PIN & PARLOR LOGIN GATE (Visible when logged out) -->
   <section id="appAuthGate" class="auth-gate-wrap hidden">
     <div class="auth-brand-card">
       <div>
         <div class="auth-brand-title">Beauty Parlour Management</div>
-        <div class="auth-brand-sub">पहले Parlor ID + Password से पार्लर लॉगिन करें, फिर User ID + Password से अंदर जाएं</div>
+        <div class="auth-brand-sub">Parlor PIN ya Parlor ID + User ID se app kholein</div>
       </div>
       <span class="sync-pill" id="gateSyncBadge">Cloud Synced ✓</span>
+    </div>
+
+    <!-- Main App Lock PIN Card (Set by Parlor Admin at Registration) -->
+    <div class="card-rose">
+      <div class="section-title">
+        <span>🔐 Parlor App Unlock PIN</span>
+        <span class="badge badge-active" id="devicePinStatusBadge">App Lock</span>
+      </div>
+      <div class="item-sub" id="devicePinHint" style="margin-bottom:10px;">
+        Parlor: <strong>Glamour</strong> (GLAMOUR01 · Mumbai) — Parlor Admin dwara banaya gaya App PIN daalein.
+      </div>
+      <div class="field">
+        <label>App PIN *</label>
+        <input id="gateDevicePinInput" class="input" type="password" inputmode="numeric" maxlength="6" placeholder="Apna App PIN daalein" onkeydown="if(event.key==='Enter') unlockWithDevicePin()" />
+      </div>
+      <div class="row-btns">
+        <button class="btn btn-primary" style="flex:1;" onclick="unlockWithDevicePin()">App PIN se App Kholein</button>
+        <button class="btn btn-outline" onclick="openForgotPasswordModal()">Forgot PIN (Parlor Admin)</button>
+      </div>
     </div>
 
     <!-- Step 1: Registered Parlor Login -->
     <div class="card">
       <div class="section-title">
-        <span>🏢 1. रजिस्टर्ड पार्लर लॉगिन (Parlor ID + Password)</span>
+        <span>🏢 1. Registered Parlor Login (Parlor ID + Password)</span>
         <span class="badge badge-trial" id="gateParlorStatusBadge">Locked</span>
       </div>
       <div class="field">
-        <label>रजिस्टर्ड पार्लर चुनें (या Parlor ID डालें)</label>
+        <label>Registered Parlor chunein (ya Parlor ID daalein)</label>
         <select id="gateParlorQuickSelect" onchange="onGateParlorSelect(this.value)"></select>
       </div>
       <div class="grid-2">
         <div class="field">
           <label>Parlor ID *</label>
-          <input id="gateParlorCodeInput" class="input" placeholder="PAYAL01" style="text-transform:uppercase;" />
+          <input id="gateParlorCodeInput" class="input" placeholder="GLAMOUR01" style="text-transform:uppercase;" />
         </div>
         <div class="field">
           <label>Parlor / Admin Password *</label>
           <input id="gateParlorPassInput" class="input" type="password" placeholder="Parlor Password" />
         </div>
       </div>
-      <button class="btn btn-soft btn-block" onclick="loginGateParlor()">पार्लर लॉगिन करें (Unlock Users)</button>
+      <button class="btn btn-soft btn-block" onclick="loginGateParlor()">Parlor Login Karein (Unlock Users)</button>
     </div>
 
     <!-- Step 2: Users of That Specific Parlor Login -->
-    <div class="card-rose" id="gateUserLoginCard">
+    <div class="card" id="gateUserLoginCard">
       <div class="section-title">
-        <span>🔑 2. इस पार्लर के यूज़र का लॉगिन (User ID + Password)</span>
+        <span>🔑 2. Is Parlor Ke User Ka Login (User ID + Password)</span>
         <span class="badge badge-warn" id="gateActiveParlorBadge">Parlor Required</span>
       </div>
       <div class="item-sub" id="gateActiveParlorUsersHint" style="margin-bottom:10px;">
-        पहले ऊपर Parlor ID और Password डालकर पार्लर लॉगिन करें, फिर इस पार्लर के Admin/Staff की User ID व Password डालें।
+        Pehle upar Parlor ID aur Password daal kar parlor login karein, phir is parlor ke Admin/Staff ki User ID aur Password daalein.
       </div>
       <div class="grid-2">
         <div class="field">
-          <label>User ID (Admin या Staff ID) *</label>
-          <input id="gateUserIdInput" class="input" placeholder="जैसे: Payal01 या RIYA01" style="text-transform:uppercase;" />
+          <label>User ID (Admin ya Staff ID) *</label>
+          <input id="gateUserIdInput" class="input" placeholder="Jaise: Glamour01 ya RIYA01" style="text-transform:uppercase;" />
         </div>
         <div class="field">
-          <label>User Password *</label>
+          <label>User Password / PIN *</label>
           <input id="gateUserPassInput" class="input" type="password" placeholder="Password / PIN" />
         </div>
       </div>
-      <div class="row-btns">
-        <button class="btn btn-primary" style="flex:1;" onclick="loginGateUser()">ऐप में लॉगिन करें</button>
-        <button class="btn btn-outline" onclick="openForgotPasswordModal()">Forgot Password?</button>
-      </div>
+      <button class="btn btn-primary btn-block" onclick="loginGateUser()">User ID se App Mein Login Karein</button>
     </div>
 
     <div class="row-btns">
-      <button class="btn btn-soft btn-sm" style="flex:1;" onclick="openParlorModal('register')">+ नया पार्लर रजिस्टर करें</button>
+      <button class="btn btn-soft btn-sm" style="flex:1;" onclick="openParlorModal('register')">+ Naya Parlor / App PIN Banayein</button>
       <button class="btn btn-outline btn-sm" onclick="manualCloudSync()">☁️ Sync</button>
     </div>
   </section>
@@ -849,10 +903,10 @@
       <!-- Top Parlour Strip -->
       <section class="parlor-banner">
         <div class="parlor-meta">
-          <div class="parlor-avatar" id="parlorAvatar">PBP</div>
+          <div class="parlor-avatar" id="parlorAvatar">GLA</div>
           <div style="min-width:0;">
-            <div class="parlor-name" id="parlorTitle">Payal beauty parlour</div>
-            <div class="parlor-sub" id="parlorSub">Joura · Payal (ADMIN)</div>
+            <div class="parlor-name" id="parlorTitle">Glamour</div>
+            <div class="parlor-sub" id="parlorSub">Mumbai · Glamour Admin (ADMIN)</div>
           </div>
         </div>
         <div class="banner-right">
@@ -866,17 +920,18 @@
         <button class="pill-card-btn" onclick="openPlansModal('yearly')">
           <div>
             <div class="pill-main-txt" id="planNameLabel">⏳ 30 Days Left</div>
-            <div class="pill-sub-txt" id="validityDateText">प्लान देखने के लिए टैप करें</div>
+            <div class="pill-sub-txt" id="validityDateText">Plan dekhne ke liye tap karein</div>
           </div>
           <span class="badge badge-trial" id="plansBadgeLabel">Plans</span>
         </button>
 
         <button class="pill-card-btn" onclick="openReferModal()">
+          <span class="stuck-star-badge" id="stuckStarBadge">⭐ 0</span>
           <div>
             <div class="pill-main-txt" id="referPillTitle">🎁 Refer & Earn</div>
-            <div class="pill-sub-txt" id="referPillSub">+15 दिन बोनस पाएं</div>
+            <div class="pill-sub-txt" id="referPillSub">1 Star = 5d · M:2, Y:15</div>
           </div>
-          <span class="badge badge-active">APK</span>
+          <span class="ref-rem-icon" id="referRemainingIcon" title="Bache huye referrals: Mahina (max 2) / Saal (max 15)">🎟️ M:2·Y:15</span>
         </button>
       </section>
 
@@ -916,16 +971,25 @@
         </button>
       </section>
 
-      <!-- TAB 1: HOME -->
+      <!-- TAB 1: HOME (Parlor Admin Operations) -->
       <section id="tab-home" class="tab-view">
+        <!-- Star Notifications Card -->
+        <div class="card-rose" id="starNotificationsCard">
+          <div class="section-title" style="margin-bottom:6px;">
+            <span>🔔 Star Notifications (10-Day Referral Monitor)</span>
+            <span class="badge badge-trial" id="starNotifCountBadge">0</span>
+          </div>
+          <div id="starNotificationsList"></div>
+        </div>
+
         <div class="card">
-          <div class="item-title" id="sessionUserLine">👑 Payal · ID: Payal01 (ADMIN)</div>
-          <div class="item-sub" id="sessionParlorLine" style="margin-bottom:10px;">Parlor: Payal beauty parlour (PAYAL01)</div>
+          <div class="item-title" id="sessionUserLine">👑 Glamour Admin · ID: Glamour01 (ADMIN)</div>
+          <div class="item-sub" id="sessionParlorLine" style="margin-bottom:10px;">Parlor: Glamour (Mumbai · GLAMOUR01) · App PIN: 1234</div>
           <div class="row-btns">
-            <button class="btn btn-soft btn-sm" onclick="openSectionTab('staff')" data-i18n="btn_new_staff">+ स्टाफ ID / लॉगिन</button>
+            <button class="btn btn-soft btn-sm" onclick="openSectionTab('staff')" data-i18n="btn_new_staff">+ Staff PIN / ID</button>
             <button class="btn btn-soft btn-sm" onclick="lockAppSession()" data-i18n="btn_lock_pin">PIN लॉक करें</button>
             <button class="btn btn-danger btn-sm" onclick="logoutCurrentSession()">Log Out</button>
-            <button class="btn btn-soft btn-sm" onclick="openParlorModal('register')">नया पार्लर / OTP</button>
+            <button class="btn btn-soft btn-sm" onclick="openParlorModal('register')">Naya Parlor / PIN</button>
           </div>
         </div>
 
@@ -988,7 +1052,7 @@
           </div>
           <div class="field">
             <label data-i18n="lbl_service_name">सर्विस का नाम *</label>
-            <input id="srvName" class="input" placeholder="जैसे: Bridal Makeup / Facial / Hair Spa" />
+            <input id="srvName" class="input" placeholder="Jaise: Bridal Makeup / Facial / Hair Spa" />
           </div>
           <div class="grid-2">
             <div class="field">
@@ -1035,87 +1099,90 @@
         </div>
       </section>
 
-      <!-- TAB 2: STAFF & TWO-STEP PARLOR + USER LOGIN + FORGOT PASSWORD -->
+      <!-- TAB 2: STAFF & PARLOR ADMIN STAFF PIN RESET -->
       <section id="tab-staff" class="tab-view hidden">
         <div class="card">
           <div class="section-title">
-            <span>🏢 1. पार्लर में प्रवेश करें (Parlor ID + Password)</span>
+            <span>🏢 1. Parlor Mein Pravesh Karein (Parlor ID + Password)</span>
             <div class="row-btns">
-              <span class="badge badge-trial" id="staffLoginCodeHint">ID: PAYAL01</span>
+              <span class="badge badge-trial" id="staffLoginCodeHint">ID: GLAMOUR01</span>
               <button class="btn btn-danger btn-xs" onclick="logoutCurrentSession()">Log Out</button>
             </div>
           </div>
           <div class="grid-2">
             <div class="field">
               <label>Parlor ID *</label>
-              <input id="staffLoginParlorCode" class="input" placeholder="PAYAL01" style="text-transform:uppercase;" />
+              <input id="staffLoginParlorCode" class="input" placeholder="GLAMOUR01" style="text-transform:uppercase;" />
             </div>
             <div class="field">
               <label>Parlor / Admin Password *</label>
               <input id="staffLoginParlorPass" class="input" type="password" placeholder="Parlor Password" />
             </div>
           </div>
-          <button class="btn btn-soft btn-block" onclick="enterParlorRoom()">पार्लर स्क्रीन खोलें</button>
+          <button class="btn btn-soft btn-block" onclick="enterParlorRoom()">Parlor Screen Kholein</button>
         </div>
 
         <div class="card-rose">
           <div class="section-title">
-            <span>🔑 2. अंदर की स्क्रीन लॉगिन (User ID + Password)</span>
-            <span class="badge badge-active" id="enteredParlorBadge">PAYAL01</span>
+            <span>🔑 2. Andar Ki Screen Login (User ID + Password)</span>
+            <span class="badge badge-active" id="enteredParlorBadge">GLAMOUR01</span>
           </div>
           <div class="item-sub" id="enteredParlorInfo" style="margin-bottom:10px;">
-            संबंधित पार्लर के अंदर अपना User ID और Password डालकर लॉगिन करें।
+            Sambandhit parlor ke andar apna User ID aur Password daal kar login karein.
           </div>
           <div class="grid-2">
             <div class="field">
-              <label>User ID (Admin या Staff ID) *</label>
-              <input id="innerUserIdInput" class="input" placeholder="जैसे: Payal01 या STAFF01" />
+              <label>User ID (Admin ya Staff ID) *</label>
+              <input id="innerUserIdInput" class="input" placeholder="Jaise: Glamour01 ya STAFF01" />
             </div>
             <div class="field">
-              <label>User Password *</label>
+              <label>User Password / PIN *</label>
               <input id="innerUserPassInput" class="input" type="password" placeholder="Password / PIN" />
             </div>
           </div>
           <div class="row-btns">
-            <button class="btn btn-primary" style="flex:1;" onclick="loginInnerUser()">User ID और Password से लॉगिन करें</button>
-            <button class="btn btn-outline" onclick="openForgotPasswordModal()">Forgot Password?</button>
+            <button class="btn btn-primary" style="flex:1;" onclick="loginInnerUser()">User ID aur Password se Login Karein</button>
+            <button class="btn btn-outline" onclick="openForgotPasswordModal()">Forgot PIN (Parlor Admin)</button>
           </div>
         </div>
 
         <div class="card">
           <div class="section-title">
-            <span id="staffFormHeading">👑 एडमिन: स्टाफ की ID और Password बनाएं</span>
+            <span id="staffFormHeading">👑 Parlor Admin: Staff PIN / ID Banayein ya Badlein</span>
             <button class="btn btn-outline btn-xs hidden" id="cancelEditStaffBtn" onclick="cancelStaffEdit()">Cancel</button>
+          </div>
+          <div class="item-sub" style="margin-bottom:10px;">
+            Yadi koi staff apna PIN/password bhool jaye, to <strong>Parlor Admin</strong> apna Parlor PIN daal kar yahan se uska naya PIN badal kar de sakta hai.
           </div>
           <input type="hidden" id="editingStaffId" value="" />
           <div class="grid-2">
             <div class="field">
               <label>Staff User ID *</label>
-              <input id="stfUserId" class="input" placeholder="जैसे: RIYA01" style="text-transform:uppercase;" />
+              <input id="stfUserId" class="input" placeholder="Jaise: RIYA01" style="text-transform:uppercase;" />
             </div>
             <div class="field">
-              <label>स्टाफ का नाम *</label>
-              <input id="stfName" class="input" placeholder="जैसे: Riya" />
+              <label>Staff Ka Naam *</label>
+              <input id="stfName" class="input" placeholder="Jaise: Riya" />
             </div>
           </div>
           <div class="grid-2">
             <div class="field">
-              <label>रोल (Role)</label>
+              <label>Role</label>
               <select id="stfRole">
                 <option value="STAFF">STAFF</option>
                 <option value="ADMIN">ADMIN</option>
               </select>
             </div>
             <div class="field">
-              <label>Staff Password (4+ अक्षर/अंक) *</label>
-              <input id="stfPin" class="input" type="text" placeholder="जैसे: riya@123 या 2222" />
+              <label>Naya Staff PIN / Password (4+ akshar/ank) *</label>
+              <input id="stfPin" class="input" type="text" placeholder="Jaise: 2222 ya riya@123" />
             </div>
           </div>
           <div class="field">
-            <label>Admin Password / PIN (Save / Edit / Delete के लिए) *</label>
-            <input id="stfAdminAuthPin" class="input" type="password" placeholder="Admin Password (default: 1234)" />
+            <label>Parlor Admin PIN / Password (Save / PIN Reset ke liye zaroori) *</label>
+            <input id="stfAdminAuthPin" class="input" type="password" placeholder="Parlor Admin PIN (default: 1234)" />
           </div>
-          <button class="btn btn-primary btn-block" onclick="saveStaffMember()">स्टाफ ID और Password सेव करें</button>
+          <button class="btn btn-primary btn-block" onclick="saveStaffMember()">Staff PIN / ID Save Karein</button>
         </div>
 
         <div class="card">
@@ -1130,11 +1197,11 @@
           <div class="section-title"><span data-i18n="sec_create_offer">🎁 नया ऑफ़र बनाएं और कस्टमर्स को भेजें</span></div>
           <div class="field">
             <label data-i18n="lbl_offer_title">ऑफ़र का नाम *</label>
-            <input id="offTitle" class="input" placeholder="जैसे: करवाचौथ / शादी स्पेशल पैकेज" />
+            <input id="offTitle" class="input" placeholder="Jaise: Bridal & Party Glow Package" />
           </div>
           <div class="field">
             <label data-i18n="lbl_offer_desc">ऑफ़र की जानकारी / रेट</label>
-            <input id="offDesc" class="input" placeholder="जैसे: Facial + Hair Spa + Threading सिर्फ ₹999 में" />
+            <input id="offDesc" class="input" placeholder="Jaise: Facial + Hair Spa + Threading sirf ₹999 mein" />
           </div>
           <button class="btn btn-primary btn-block" onclick="addOffer()" data-i18n="btn_add_offer">ऑफ़र सेव करें</button>
         </div>
@@ -1153,7 +1220,7 @@
           <div class="section-title"><span data-i18n="sec_add_client">👩 नया कस्टमर जोड़ें</span></div>
           <div class="field">
             <label data-i18n="lbl_client_name">कस्टमर का नाम *</label>
-            <input id="conName" class="input" placeholder="जैसे: Neha Sharma" />
+            <input id="conName" class="input" placeholder="Jaise: Neha Sharma" />
           </div>
           <div class="field">
             <label data-i18n="lbl_mobile">मोबाइल नंबर *</label>
@@ -1181,7 +1248,7 @@
           </div>
           <div class="field">
             <label data-i18n="lbl_client_name">क्लाइंट का नाम *</label>
-            <input id="appClientName" class="input" placeholder="जैसे: Priya Verma" />
+            <input id="appClientName" class="input" placeholder="Jaise: Priya Verma" />
           </div>
           <div class="field">
             <label data-i18n="lbl_mobile">मोबाइल नंबर *</label>
@@ -1189,7 +1256,7 @@
           </div>
           <div class="field">
             <label data-i18n="lbl_service_pkg">सर्विस / पैकेज *</label>
-            <input id="appServiceType" class="input" placeholder="जैसे: Bridal Makeup / Engagement" />
+            <input id="appServiceType" class="input" placeholder="Jaise: Bridal Makeup / Engagement" />
           </div>
           <div class="grid-2">
             <div class="field">
@@ -1248,30 +1315,124 @@
         </div>
       </section>
 
-      <!-- TAB 8: SUPPORT -->
+      <!-- TAB 8: SUPPORT & APP ADMIN MASTER PANEL (App Admin ID + PIN, No Forgot Option) -->
       <section id="tab-support" class="tab-view hidden">
+        <!-- Parlor User Ticket Submission Card -->
         <div class="card">
           <div class="section-title">
-            <span data-i18n="sec_support">🛟 BPM सपोर्ट टिकट (App Admin को भेजें)</span>
+            <span data-i18n="sec_support">🛟 Parlor Support Ticket (App Admin को भेजें)</span>
             <span class="badge badge-trial">In-App</span>
           </div>
           <div class="field">
             <label data-i18n="lbl_tkt_topic">समस्या का विषय *</label>
-            <input id="tktSubject" class="input" placeholder="जैसे: PIN भूल गए / पेमेंट / रसीद PDF" />
+            <input id="tktSubject" class="input" placeholder="Jaise: Trial days badhane / PIN reset / Receipt PDF" />
           </div>
           <div class="field">
             <label data-i18n="lbl_tkt_detail">पूरी समस्या लिखें *</label>
-            <textarea id="tktMessage" rows="3" placeholder="अपनी समस्या विस्तार से लिखें..."></textarea>
+            <textarea id="tktMessage" rows="3" placeholder="Apni samasya vistaar se likhein..."></textarea>
           </div>
           <button class="btn btn-primary btn-block" onclick="submitTicketToAppAdmin()" data-i18n="btn_send_ticket">App Admin को टिकट भेजें</button>
         </div>
 
-        <div class="card">
+        <!-- App Admin Master Authentication Card (ID + PIN Only, No Forgot Option) -->
+        <div class="card-rose">
           <div class="section-title">
-            <span data-i18n="sec_admin_inbox">📥 App Admin Inbox (टिकट हल करें)</span>
-            <span class="badge badge-warn" id="openTicketCountBadge">0 Open</span>
+            <span>🛡️ App Admin Login & ID/PIN Setup</span>
+            <span class="badge" id="appAdminStatusBadge">Locked</span>
           </div>
-          <div id="adminTicketInboxList"></div>
+          <div class="item-sub" id="appAdminActiveInfo" style="margin-bottom:10px;">
+            App Admin apni <strong>App Admin ID</strong> aur <strong>App Admin PIN</strong> se login karein. (Isme Forgot Password/PIN ka koi option nahi hai.)
+          </div>
+          <div class="grid-2">
+            <div class="field">
+              <label>App Admin ID *</label>
+              <input id="appAdminIdInput" class="input" placeholder="ADMIN01" style="text-transform:uppercase;" />
+            </div>
+            <div class="field">
+              <label>App Admin PIN *</label>
+              <input id="appAdminPinInput" class="input" type="password" placeholder="Apna App Admin PIN" onkeydown="if(event.key==='Enter') unlockAppAdminConsole()" />
+            </div>
+          </div>
+          <div class="row-btns">
+            <button class="btn btn-primary btn-sm" id="appAdminUnlockBtn" onclick="unlockAppAdminConsole()">App Admin Login</button>
+            <button class="btn btn-soft btn-sm" onclick="toggleAppAdminSetBox()">ID / PIN Set Karein</button>
+            <button class="btn btn-outline btn-sm hidden" id="appAdminLockBtn" onclick="lockAppAdminConsole()">Lock</button>
+          </div>
+
+          <!-- One-time or intentional ID + PIN Set Box -->
+          <div id="appAdminSetCredentialsBox" class="card hidden" style="margin-top:12px;margin-bottom:0;">
+            <div class="section-title"><span>⚙️ App Admin ID aur PIN Set / Update Karein</span></div>
+            <div class="grid-2">
+              <div class="field">
+                <label>Nayi App Admin ID *</label>
+                <input id="setNewAppAdminId" class="input" placeholder="Jaise: ADMIN01" style="text-transform:uppercase;" />
+              </div>
+              <div class="field">
+                <label>Naya App Admin PIN (4+ ank/akshar) *</label>
+                <input id="setNewAppAdminPin" class="input" type="password" placeholder="Naya PIN" />
+              </div>
+            </div>
+            <div class="field">
+              <label>Maujooda App Admin PIN (Confirm karne ke liye) *</label>
+              <input id="confirmCurrentAppAdminPin" class="input" type="password" placeholder="Maujooda PIN (default: BPMADMIN)" />
+            </div>
+            <button class="btn btn-whatsapp btn-sm btn-block" onclick="saveAppAdminCredentials()">App Admin ID & PIN Save Karein</button>
+          </div>
+        </div>
+
+        <!-- App Admin Only Console: All Users/Parlors Directory + Trial Extend + Tickets -->
+        <div id="appAdminMasterConsole" class="hidden">
+          <!-- Free Trial Days Extension Box -->
+          <div class="card">
+            <div class="section-title">
+              <span>⏳ App Admin: Kisi Bhi User / Parlor Ke Free Trial Days Badhayein</span>
+              <span class="badge badge-active">Trial Extend</span>
+            </div>
+            <div class="field">
+              <label>Parlor / User Chunein *</label>
+              <select id="extendTrialParlorSelect"></select>
+            </div>
+            <div class="grid-2">
+              <div class="field">
+                <label>Kitne Free Trial Days Badhane Hain? *</label>
+                <input id="extendTrialDaysInput" class="input" type="number" min="1" max="3650" value="15" />
+              </div>
+              <div class="field">
+                <label>Quick Preset</label>
+                <select onchange="if(this.value) document.getElementById('extendTrialDaysInput').value=this.value">
+                  <option value="">-- Chunein --</option>
+                  <option value="7">+7 Days</option>
+                  <option value="15" selected>+15 Days</option>
+                  <option value="30">+30 Days</option>
+                  <option value="90">+90 Days</option>
+                  <option value="365">+365 Days</option>
+                </select>
+              </div>
+            </div>
+            <button class="btn btn-whatsapp btn-block" onclick="applyAppAdminTrialExtension()">Free Trial Days Badhayein (Extend Now)</button>
+          </div>
+
+          <!-- All Registered Parlors & Users Directory (Searchable for Large Scale) -->
+          <div class="card">
+            <div class="section-title">
+              <span>👥 App Admin: All Registered Parlors & Users Directory</span>
+              <span class="badge badge-trial" id="totalParlorsDirectoryBadge">0 Parlors</span>
+            </div>
+            <div class="field">
+              <label>Search Parlor / User (Name, Parlor ID, User ID, City, Mobile)</label>
+              <input id="adminDirectorySearchInput" class="input" placeholder="Jaise: Glamour, Mumbai, GLAMOUR01, 9826..." oninput="renderAppAdminDirectory()" />
+            </div>
+            <div id="appAdminDirectoryList"></div>
+          </div>
+
+          <!-- App Admin Tickets Inbox -->
+          <div class="card">
+            <div class="section-title">
+              <span data-i18n="sec_admin_inbox">📥 App Admin Inbox (टिकट हल करें)</span>
+              <span class="badge badge-warn" id="openTicketCountBadge">0 Open</span>
+            </div>
+            <div id="adminTicketInboxList"></div>
+          </div>
         </div>
       </section>
     </main>
@@ -1298,52 +1459,43 @@
     </nav>
   </div>
 
-  <!-- Modal: Forgot Password via OTP + Set New ID & Password -->
+  <!-- Modal: Parlor Admin Forgot App PIN (Auto-Generate PIN) -->
   <div class="modal-backdrop" id="forgotPasswordModal">
     <div class="modal-box">
       <div class="modal-head">
-        <strong>Forgot Password (OTP Reset)</strong>
+        <strong>Parlor Admin Forgot PIN (Auto-Generate)</strong>
         <button class="close-x" onclick="closeModal('forgotPasswordModal')">✕</button>
       </div>
       <p class="item-sub" style="margin-bottom:10px;">
-        रजिस्टर्ड मोबाइल नंबर से OTP लें, Verify करें, और अपनी <strong>User ID</strong> व <strong>नया Password</strong> भविष्य के लिए सेव करें।
+        Yadi Parlor Admin apna <strong>App PIN</strong> bhool gaye hain, to <strong>App Se Naya PIN Generate Karein</strong> dabayein. App apne aap naya PIN bana kar dega—use save karein ya apni pasand ka naya PIN set karein.
       </p>
 
       <div class="field">
-        <label>रजिस्टर्ड मोबाइल नंबर *</label>
-        <input id="fpMobileInput" class="input" type="tel" maxlength="10" placeholder="10-अंकों का मोबाइल नंबर" />
+        <label>Registered Mobile Number (optional)</label>
+        <input id="fpMobileInput" class="input" type="tel" maxlength="10" placeholder="10-ankon ka mobile number" />
       </div>
 
       <div class="row-btns" style="margin-bottom:10px;">
-        <button class="btn btn-soft btn-sm" style="flex:1;" onclick="sendForgotOtp()">📲 OTP भेजें</button>
-      </div>
-
-      <div id="fpOtpBox" class="card-rose hidden" style="margin-bottom:10px;">
-        <div id="fpOtpStatusNotice" class="item-sub" style="margin-bottom:8px;color:var(--rose-dark);font-weight:700;"></div>
-        <div class="field" style="margin-bottom:8px;">
-          <label>6-अंकों का OTP दर्ज करें *</label>
-          <input id="fpOtpInput" class="input" type="text" maxlength="6" placeholder="123456" />
-        </div>
-        <button class="btn btn-whatsapp btn-sm btn-block" onclick="verifyForgotOtp()">OTP Verify करें</button>
+        <button class="btn btn-soft btn-sm btn-block" onclick="generateAdminForgotPin()">⚡ App Se Naya PIN Generate Karein</button>
       </div>
 
       <div class="field">
-        <label>User ID (Admin या Staff ID) *</label>
-        <input id="fpUserIdInput" class="input" placeholder="जैसे: Payal01 या RIYA01" style="text-transform:uppercase;" />
+        <label>Parlor Admin User ID *</label>
+        <input id="fpUserIdInput" class="input" placeholder="Jaise: Glamour01" style="text-transform:uppercase;" />
       </div>
 
       <div class="grid-2">
         <div class="field">
-          <label>नया Password / PIN *</label>
-          <input id="fpNewPinInput" class="input" type="password" placeholder="4+ अक्षर/अंक" />
+          <label>Generated / Naya App PIN *</label>
+          <input id="fpNewPinInput" class="input" type="text" placeholder="Auto PIN ya naya PIN" />
         </div>
         <div class="field">
-          <label>नया Password दोबारा डालें *</label>
-          <input id="fpConfirmPinInput" class="input" type="password" placeholder="दोबारा डालें" />
+          <label>Naya App PIN Dobara Daalein *</label>
+          <input id="fpConfirmPinInput" class="input" type="text" placeholder="Dobara daalein" />
         </div>
       </div>
 
-      <button class="btn btn-primary btn-block" onclick="saveForgotNewPassword()">नया ID और Password सेव करें</button>
+      <button class="btn btn-primary btn-block" onclick="saveForgotNewPassword()">Naya App PIN Save Karein</button>
     </div>
   </div>
 
@@ -1366,38 +1518,36 @@
       </div>
       <div class="field">
         <label>App Admin Solution / Reply *</label>
-        <textarea id="solveTicketReply" rows="3" placeholder="समाधान लिखें..."></textarea>
-      </div>
-      <div class="field">
-        <label>App Admin Password / PIN *</label>
-        <input id="solveTicketAdminPin" class="input" type="password" placeholder="Admin Password (default: 1234)" />
+        <textarea id="solveTicketReply" rows="3" placeholder="Samadhan likhein..."></textarea>
       </div>
       <button class="btn btn-primary btn-block" onclick="saveTicketSolution()">समाधान सेव करें</button>
     </div>
   </div>
 
-  <!-- Modal: Refer & Earn -->
+  <!-- Modal: Refer & Earn + 10-Day Star Monitor + Star to Days -->
   <div class="modal-backdrop" id="referModal">
     <div class="modal-box">
       <div class="modal-head">
-        <strong>Refer & Earn (+15 Days Bonus)</strong>
+        <strong>Refer & Earn · Stars (1 Star = 5 Days)</strong>
         <button class="close-x" onclick="closeModal('referModal')">✕</button>
       </div>
       <p class="item-sub">
-        अपना रेफ़रल कोड WhatsApp पर शेयर करें। APK लिंक से डाउनलोड करके नया पार्लर यह कोड डालकर रजिस्टर करेगा तो दोनों को <strong>+15 दिन बोनस</strong> मिलेगा।
+        Referred parlor <strong>10 din tak proper data entry</strong> karega to aapko <strong>1 Star (= 5 Days)</strong> milega. Plan purchase karte waqt stars days mein convert honge. (Mahine max 2, Saal max 15)
       </p>
       <div class="ref-code-box">
         <div>
           <div class="item-sub">Auto Referral Code</div>
-          <div class="ref-code-text" id="myReferralCode">BPM-PAYAL-1001</div>
+          <div class="ref-code-text" id="myReferralCode">BPM-GLAM-1001</div>
         </div>
+        <span class="ref-rem-icon" id="modalReferRemainingIcon">🎟️ M:2·Y:15</span>
         <button class="btn btn-soft btn-sm" onclick="copyReferralCode()">Copy</button>
       </div>
       <div class="row-btns" style="margin-bottom:10px;">
         <button class="btn btn-whatsapp" style="flex:1;" onclick="shareReferralOnWhatsApp()">WhatsApp Refer (APK Link)</button>
         <button class="btn btn-outline btn-sm" onclick="copyApkLink()">Copy APK</button>
       </div>
-      <div class="card-rose" style="margin-bottom:0;" id="referStatsBox"></div>
+      <div class="card-rose" style="margin-bottom:10px;" id="referStatsBox"></div>
+      <div class="card" style="margin-bottom:0;" id="monitoredReferralsBox"></div>
     </div>
   </div>
 
@@ -1493,7 +1643,7 @@
     </div>
   </div>
 
-  <!-- Modal: First-Time Parlour Setup + OTP + Admin Double Password OR Switch Parlour -->
+  <!-- Modal: First-Time Parlour Setup + Parlor Admin App PIN OR Switch Parlour -->
   <div class="modal-backdrop" id="parlorModal">
     <div class="modal-box">
       <div class="modal-head">
@@ -1502,71 +1652,58 @@
       </div>
 
       <div class="field">
-        <label>मौजूदा पार्लर चुनें</label>
+        <label>Maujooda Parlor chunein</label>
         <select id="switchParlorSelect" onchange="selectExistingParlor(this.value)"></select>
       </div>
 
       <hr style="border:none;border-top:1px solid var(--line);margin:14px 0;" />
 
-      <div class="step-pill">First-Time Setup · OTP + Admin ID & Double Password</div>
-      <div class="section-title"><span>नया पार्लर रजिस्टर करें (30 दिन फ्री ट्रायल)</span></div>
+      <div class="step-pill">First-Time Setup · Parlor Admin App PIN</div>
+      <div class="section-title"><span>Naya Parlor Register Karein (30 Din Free Trial)</span></div>
 
       <div class="field">
-        <label>पार्लर का नाम *</label>
-        <input id="newParlorName" class="input" placeholder="जैसे: Glamour Studio" />
+        <label>Parlor Ka Naam *</label>
+        <input id="newParlorName" class="input" placeholder="Jaise: Glamour" />
       </div>
       <div class="grid-2">
         <div class="field">
-          <label>शहर / पता</label>
-          <input id="newParlorCity" class="input" placeholder="Joura" />
+          <label>Shehar / Pata</label>
+          <input id="newParlorCity" class="input" placeholder="Mumbai" />
         </div>
         <div class="field">
-          <label>मोबाइल नंबर (OTP के लिए) *</label>
+          <label>Mobile Number *</label>
           <input id="newParlorMobile" class="input" type="tel" maxlength="10" placeholder="9876543210" />
         </div>
       </div>
 
-      <div class="row-btns" style="margin-bottom:10px;">
-        <button class="btn btn-soft btn-sm" style="flex:1;" id="sendSetupOtpBtn" onclick="sendSetupOtp()">📲 OTP भेजें</button>
-      </div>
-
-      <div id="otpVerifyBox" class="card-rose hidden" style="margin-bottom:10px;">
-        <div id="otpStatusNotice" class="item-sub" style="margin-bottom:8px;color:var(--rose-dark);font-weight:700;"></div>
-        <div class="field" style="margin-bottom:8px;">
-          <label>6-अंकों का OTP दर्ज करें *</label>
-          <input id="setupOtpInput" class="input" type="text" maxlength="6" placeholder="123456" />
-        </div>
-        <button class="btn btn-whatsapp btn-sm btn-block" onclick="verifySetupOtp()">OTP Verify करें</button>
-      </div>
-
       <div class="grid-2">
         <div class="field">
-          <label>आपका नाम (Admin Name) *</label>
-          <input id="newAdminName" class="input" placeholder="Pooja" />
+          <label>Parlor Admin Naam *</label>
+          <input id="newAdminName" class="input" placeholder="Glamour Admin" />
         </div>
         <div class="field">
-          <label>Admin ID *</label>
-          <input id="newAdminId" class="input" placeholder="जैसे: POOJA01" style="text-transform:uppercase;" />
+          <label>Parlor Admin ID *</label>
+          <input id="newAdminId" class="input" placeholder="Jaise: GLAMOUR01" style="text-transform:uppercase;" />
         </div>
       </div>
 
       <div class="grid-2">
         <div class="field">
-          <label>Password बनाएं (1st Time) *</label>
-          <input id="newAdminPin" class="input" type="password" placeholder="4+ अक्षर/अंक" />
+          <label>App PIN Banayein (1st Time) *</label>
+          <input id="newAdminPin" class="input" type="password" placeholder="4+ ank/akshar" />
         </div>
         <div class="field">
-          <label>Password दोबारा डालें (Confirm) *</label>
-          <input id="newAdminPinConfirm" class="input" type="password" placeholder="Password दोहराएं" />
+          <label>App PIN Dobara Daalein *</label>
+          <input id="newAdminPinConfirm" class="input" type="password" placeholder="Dohrayein" />
         </div>
       </div>
 
       <div class="field">
-        <label>रेफ़रल कोड (+15 दिन बोनस के लिए)</label>
-        <input id="newParlorRefInput" class="input" placeholder="BPM-PAYAL-1001" style="text-transform:uppercase;" />
+        <label>Referral Code (10-din monitor ke baad 1 Star = 5d · M:2, Y:15)</label>
+        <input id="newParlorRefInput" class="input" placeholder="BPM-GLAM-1001" style="text-transform:uppercase;" />
       </div>
 
-      <button class="btn btn-primary btn-block" onclick="registerNewParlor()">पार्लर बनाएं और Password सेट करें</button>
+      <button class="btn btn-primary btn-block" onclick="registerNewParlor()">Parlor Banayein aur App PIN Save Karein</button>
     </div>
   </div>
 
@@ -1574,7 +1711,8 @@
 
   <script>
     const RAZORPAY_KEY_ID = "rzp_live_U33fOg4q9BEcIY";
-    const WORKER_API_URL = "https://bpm.easywaystechno.workers.dev";
+    const DEFAULT_APP_ADMIN_ID = "ADMIN01";
+    const DEFAULT_APP_ADMIN_PIN = "BPMADMIN";
 
     const FIREBASE_CONFIG = {
       apiKey: "AIzaSyD5n8P4e4Qylr9fh02f4e9d04zyJcWE9Xw",
@@ -1591,7 +1729,11 @@
     const WEB_APP_URL = "https://easywaystechno-471.github.io/Bpm/";
     const DAY_MS = 24 * 60 * 60 * 1000;
     const TRIAL_DAYS = 30;
-    const REFERRAL_BONUS_DAYS = 15;
+    const STAR_MONITOR_DAYS = 10;
+    const DAYS_PER_STAR = 5;
+    const MIN_PROPER_ENTRIES_FOR_STAR = 3;
+    const MAX_MONTHLY_REFERRALS = 2;
+    const MAX_YEARLY_REFERRALS = 15;
 
     const PLANS = {
       monthly: { id: "monthly", label: "Monthly Plan", price: 99, days: 30 },
@@ -1609,7 +1751,7 @@
         tile_clients: "कस्टमर",
         tile_appoints: "अपॉइंटमेंट",
         tile_sync: "क्लाउड सिंक",
-        btn_new_staff: "+ स्टाफ ID / लॉगिन",
+        btn_new_staff: "+ Staff PIN / ID",
         btn_lock_pin: "PIN लॉक करें",
         sec_income: "💰 पार्लर इनकम (PIN सुरक्षित)",
         btn_unlock_income: "🔒 PIN से देखें",
@@ -1652,7 +1794,7 @@
         rem_help_txt: "तारीख आते ही यहाँ रिमाइंडर दिखेगा और नीचे बटन पर लाल (Red) ब्लिंक होगा। क्लाइंट को यहीं से Call या WhatsApp करें और रिमाइंडर पर टैप करके Check करें।",
         sec_assistant: "✨ BPM असिस्टेंट (बोलें या टाइप करें)",
         btn_ask: "पूछें",
-        sec_support: "🛟 BPM सपोर्ट टिकट (App Admin को भेजें)",
+        sec_support: "🛟 Parlor Support Ticket (App Admin को भेजें)",
         lbl_tkt_topic: "समस्या का विषय *",
         lbl_tkt_detail: "पूरी समस्या लिखें *",
         btn_send_ticket: "App Admin को टिकट भेजें",
@@ -1670,7 +1812,7 @@
         tile_clients: "Clients",
         tile_appoints: "Appoints",
         tile_sync: "Cloud Sync",
-        btn_new_staff: "+ Staff ID / Login",
+        btn_new_staff: "+ Staff PIN / ID",
         btn_lock_pin: "Lock PIN",
         sec_income: "💰 Parlor Income (PIN Protected)",
         btn_unlock_income: "🔒 Unlock with PIN",
@@ -1713,7 +1855,7 @@
         rem_help_txt: "Reminders trigger by date and blink red until checked. Call or WhatsApp directly and tap a reminder to mark it checked.",
         sec_assistant: "✨ BPM Assistant (Speak or Type)",
         btn_ask: "Ask",
-        sec_support: "🛟 BPM Support Ticket (To App Admin)",
+        sec_support: "🛟 Parlor Support Ticket (To App Admin)",
         lbl_tkt_topic: "Problem Topic *",
         lbl_tkt_detail: "Problem Details *",
         btn_send_ticket: "Send Ticket to App Admin",
@@ -1725,8 +1867,8 @@
       }
     };
 
-    const STORAGE_KEY = "bpm_state_v1";
-    const FIRST_RUN_KEY = "bpm_first_setup_done_v1";
+    const STORAGE_KEY = "bpm_state_glamour_v1";
+    const FIRST_RUN_KEY = "bpm_first_setup_glamour_v1";
     let currentLang = localStorage.getItem("bpm_lang") || "hi";
     let dbRef = null;
     let ticketsDbRef = null;
@@ -1734,15 +1876,12 @@
     let lastWrittenJson = "";
     let incomeUnlocked = false;
     let isAppLoggedIn = true;
+    let isAppAdminUnlocked = false;
     let authenticatedParlorId = "";
     let activeOfferForSend = null;
     let offerSendQueue = [];
     let offerQueueIndex = 0;
     let adminTicketsMap = {};
-    let otpVerifiedMobile = "";
-    let localFallbackOtp = "";
-    let fpOtpVerifiedMobile = "";
-    let fpFallbackOtp = "";
     let enteredParlorRoomId = "";
 
     function getLocalDateStr(d = new Date()) {
@@ -1750,6 +1889,16 @@
       const month = String(d.getMonth() + 1).padStart(2, "0");
       const day = String(d.getDate()).padStart(2, "0");
       return `${year}-${month}-${day}`;
+    }
+
+    function getCurrentMonthKey(d = new Date()) {
+      const year = d.getFullYear();
+      const month = String(d.getMonth() + 1).padStart(2, "0");
+      return `${year}-${month}`;
+    }
+
+    function getCurrentYearKey(d = new Date()) {
+      return String(d.getFullYear());
     }
 
     function formatTime12h(time24) {
@@ -1764,8 +1913,8 @@
       return `${h}:${m} ${ampm}`;
     }
 
-    function generateReferralCode(name = "PARLOR") {
-      const clean = String(name || "").replace(/[^a-zA-Z]/g, "").toUpperCase().slice(0, 5) || "BPM";
+    function generateReferralCode(name = "GLAMOUR") {
+      const clean = String(name || "").replace(/[^a-zA-Z]/g, "").toUpperCase().slice(0, 5) || "GLAM";
       const rand = Math.floor(1000 + Math.random() * 9000);
       return `BPM-${clean}-${rand}`;
     }
@@ -1774,23 +1923,33 @@
       const now = Date.now();
       const today = getLocalDateStr();
       return {
-        activeParlorId: "parlor-payal",
+        appAdmin: {
+          id: DEFAULT_APP_ADMIN_ID,
+          pin: DEFAULT_APP_ADMIN_PIN
+        },
+        activeParlorId: "parlor-glamour",
         parlors: {
-          "parlor-payal": {
-            id: "parlor-payal",
-            code: "PAYAL01",
-            name: "Payal beauty parlour",
-            city: "Joura",
+          "parlor-glamour": {
+            id: "parlor-glamour",
+            code: "GLAMOUR01",
+            name: "Glamour",
+            city: "Mumbai",
             mobile: "",
+            appPin: "1234",
             parlorPassword: "",
-            activeUser: { id: "Payal01", name: "Payal", role: "ADMIN" },
+            activeUser: { id: "Glamour01", name: "Glamour Admin", role: "ADMIN" },
             trialStartedAt: now,
             validUntil: now + TRIAL_DAYS * DAY_MS,
             planName: "30-Day Free Trial",
-            referralCode: "BPM-PAYAL-1001",
+            referralCode: "BPM-GLAM-1001",
             referredBy: "",
             referralCount: 0,
             bonusDaysEarned: 0,
+            starsEarned: 0,
+            starsRedeemed: 0,
+            referralLogs: [],
+            monitoredReferrals: [],
+            notifications: [],
             payments: [],
             consumers: [
               { id: "c1", name: "Anjali Verma", phone: "9826000001", note: "Facial" },
@@ -1816,7 +1975,7 @@
               { id: "o1", title: "Bridal & Party Glow", desc: "Complete skin & hair package" }
             ],
             staff: [
-              { id: "Payal01", name: "Payal", role: "ADMIN", pin: "1234" }
+              { id: "Glamour01", name: "Glamour Admin", role: "ADMIN", pin: "1234" }
             ],
             tickets: []
           }
@@ -1829,7 +1988,7 @@
     function normalizeParlor(p) {
       const now = Date.now();
       const safeObj = p && typeof p === "object" ? p : {};
-      const code = String(safeObj.code || "PAYAL01").trim().toUpperCase();
+      const code = String(safeObj.code || "GLAMOUR01").trim().toUpperCase();
       const validUntilNum = Number(safeObj.validUntil);
       const staffList = Array.isArray(safeObj.staff) && safeObj.staff.length
         ? safeObj.staff.map((u, idx) => ({
@@ -1838,17 +1997,19 @@
             role: String(u.role || "STAFF").trim().toUpperCase(),
             pin: String(u.pin || "1234").trim()
           }))
-        : [{ id: code, name: "Admin", role: "ADMIN", pin: "1234" }];
+        : [{ id: code, name: "Glamour Admin", role: "ADMIN", pin: "1234" }];
 
       const primaryAdmin = staffList.find((u) => u.role === "ADMIN") || staffList[0];
+      const masterAppPin = String(safeObj.appPin || primaryAdmin.pin || "1234").trim();
 
       return {
         id: safeObj.id || ("parlor-" + Math.random().toString(36).slice(2, 8)),
         code,
-        name: safeObj.name || "Beauty Parlour",
-        city: safeObj.city || "Joura",
+        name: safeObj.name || "Glamour",
+        city: safeObj.city || "Mumbai",
         mobile: String(safeObj.mobile || "").replace(/\D/g, "").slice(-10),
-        parlorPassword: String(safeObj.parlorPassword || primaryAdmin.pin || "1234").trim(),
+        appPin: masterAppPin,
+        parlorPassword: String(safeObj.parlorPassword || masterAppPin).trim(),
         activeUser: safeObj.activeUser && typeof safeObj.activeUser === "object"
           ? {
               id: String(safeObj.activeUser.id || primaryAdmin.id).trim(),
@@ -1863,6 +2024,11 @@
         referredBy: safeObj.referredBy || "",
         referralCount: Math.max(0, Number(safeObj.referralCount || 0)),
         bonusDaysEarned: Math.max(0, Number(safeObj.bonusDaysEarned || 0)),
+        starsEarned: Math.max(0, Number(safeObj.starsEarned || 0)),
+        starsRedeemed: Math.max(0, Number(safeObj.starsRedeemed || 0)),
+        referralLogs: Array.isArray(safeObj.referralLogs) ? safeObj.referralLogs : [],
+        monitoredReferrals: Array.isArray(safeObj.monitoredReferrals) ? safeObj.monitoredReferrals : [],
+        notifications: Array.isArray(safeObj.notifications) ? safeObj.notifications : [],
         payments: Array.isArray(safeObj.payments) ? safeObj.payments : [],
         consumers: Array.isArray(safeObj.consumers) ? safeObj.consumers : [],
         services: Array.isArray(safeObj.services) ? safeObj.services : [],
@@ -1878,6 +2044,11 @@
       if (!raw || typeof raw !== "object" || !raw.parlors || typeof raw.parlors !== "object") {
         return fallback;
       }
+      const rawAdmin = raw.appAdmin && typeof raw.appAdmin === "object" ? raw.appAdmin : {};
+      const appAdmin = {
+        id: String(rawAdmin.id || DEFAULT_APP_ADMIN_ID).trim().toUpperCase(),
+        pin: String(rawAdmin.pin || DEFAULT_APP_ADMIN_PIN).trim()
+      };
       const parlors = {};
       for (const [key, val] of Object.entries(raw.parlors)) {
         if (val && typeof val === "object") {
@@ -1887,7 +2058,7 @@
       const keys = Object.keys(parlors);
       if (!keys.length) return fallback;
       const activeId = parlors[raw.activeParlorId] ? raw.activeParlorId : keys[0];
-      return { activeParlorId: activeId, parlors };
+      return { appAdmin, activeParlorId: activeId, parlors };
     }
 
     function loadLocalState() {
@@ -1903,6 +2074,98 @@
         appState.activeParlorId = Object.keys(appState.parlors)[0];
       }
       return appState.parlors[appState.activeParlorId];
+    }
+
+    function getAvailableStars(parlor) {
+      return Math.max(0, Number(parlor.starsEarned || 0) - Number(parlor.starsRedeemed || 0));
+    }
+
+    function pushStarNotification(parlor, message, starDelta = 1) {
+      parlor.notifications = Array.isArray(parlor.notifications) ? parlor.notifications : [];
+      parlor.notifications.unshift({
+        id: "ntf-" + Date.now() + "-" + Math.floor(Math.random() * 100),
+        message,
+        starDelta,
+        date: getLocalDateStr(),
+        read: false
+      });
+      if (parlor.notifications.length > 25) {
+        parlor.notifications = parlor.notifications.slice(0, 25);
+      }
+      showToast(message);
+    }
+
+    function countParlorProperEntries(p) {
+      const clientsCount = Array.isArray(p.consumers) ? p.consumers.length : 0;
+      const servicesCount = Array.isArray(p.services) ? p.services.length : 0;
+      const appointCount = Array.isArray(p.appointments) ? p.appointments.length : 0;
+      const offersCount = Array.isArray(p.offers) ? p.offers.length : 0;
+      return clientsCount + servicesCount + appointCount + offersCount;
+    }
+
+    function evaluateTenDayReferralStars(forceEvaluate = false) {
+      let anyStarAwarded = false;
+      const now = Date.now();
+
+      for (const referrer of Object.values(appState.parlors || {})) {
+        const monList = Array.isArray(referrer.monitoredReferrals) ? referrer.monitoredReferrals : [];
+        for (const item of monList) {
+          if (!item || item.starAwarded) continue;
+          const targetParlor = appState.parlors[item.targetParlorId];
+          const entryCount = targetParlor ? countParlorProperEntries(targetParlor) : Number(item.entriesCount || 0);
+          const elapsedDays = (now - (Number(item.startedAt) || now)) / DAY_MS;
+
+          if ((forceEvaluate || elapsedDays >= STAR_MONITOR_DAYS) && entryCount >= MIN_PROPER_ENTRIES_FOR_STAR) {
+            item.starAwarded = true;
+            item.awardedAt = now;
+            item.entriesCount = entryCount;
+            referrer.starsEarned = Number(referrer.starsEarned || 0) + 1;
+            anyStarAwarded = true;
+
+            const msg = `Aapke referral code se ${item.targetParlorName} app ka achcha istemal kar raha hai (+1 Star = 5d)`;
+            pushStarNotification(referrer, msg, 1);
+          }
+        }
+      }
+
+      if (anyStarAwarded) {
+        persistState(true);
+      }
+    }
+
+    function getReferralQuotaStats(parlor, nowDate = new Date()) {
+      const monthKey = getCurrentMonthKey(nowDate);
+      const yearKey = getCurrentYearKey(nowDate);
+      const logs = Array.isArray(parlor.referralLogs) ? parlor.referralLogs : [];
+
+      let monthUsed = 0;
+      let yearUsed = 0;
+
+      if (logs.length) {
+        for (const entry of logs) {
+          const dt = entry && entry.ts ? new Date(Number(entry.ts)) : null;
+          const eYear = entry && entry.year ? String(entry.year) : (dt && !isNaN(dt) ? getCurrentYearKey(dt) : "");
+          const eMonth = entry && entry.month ? String(entry.month) : (dt && !isNaN(dt) ? getCurrentMonthKey(dt) : "");
+          if (eYear === yearKey) yearUsed += 1;
+          if (eMonth === monthKey) monthUsed += 1;
+        }
+      } else {
+        const fallbackCount = Math.min(MAX_YEARLY_REFERRALS, Number(parlor.referralCount || 0));
+        yearUsed = fallbackCount;
+        monthUsed = Math.min(MAX_MONTHLY_REFERRALS, fallbackCount);
+      }
+
+      const monthRemaining = Math.max(0, MAX_MONTHLY_REFERRALS - monthUsed);
+      const yearRemaining = Math.max(0, MAX_YEARLY_REFERRALS - yearUsed);
+      const effectiveRemaining = Math.min(monthRemaining, yearRemaining);
+
+      return {
+        monthUsed,
+        yearUsed,
+        monthRemaining,
+        yearRemaining,
+        effectiveRemaining
+      };
     }
 
     function setSyncStatus(mode, text) {
@@ -1936,6 +2199,7 @@
     }
 
     function manualCloudSync() {
+      evaluateTenDayReferralStars(false);
       lastWrittenJson = "";
       persistState(true);
       showToast(currentLang === "hi" ? "क्लाउड सिंक हो गया" : "Cloud synced");
@@ -1961,10 +2225,12 @@
       if (innerPassEl) innerPassEl.value = "";
       if (innerUserEl) innerUserEl.value = "";
 
+      const gatePinEl = document.getElementById("gateDevicePinInput");
       const gateCodeEl = document.getElementById("gateParlorCodeInput");
       const gatePassEl = document.getElementById("gateParlorPassInput");
       const gateUserEl = document.getElementById("gateUserIdInput");
       const gateUserPassEl = document.getElementById("gateUserPassInput");
+      if (gatePinEl) gatePinEl.value = "";
       if (gateCodeEl) gateCodeEl.value = current ? current.code : "";
       if (gatePassEl) gatePassEl.value = "";
       if (gateUserEl) gateUserEl.value = "";
@@ -1972,7 +2238,48 @@
 
       renderAuthShell();
       renderGateParlorSelect();
-      showToast("ऐप से Log Out हो गया — पहले Parlor ID + Password डालें");
+      showToast("Log Out ho gaya — Parlor PIN ya Parlor ID se kholein");
+    }
+
+    function unlockWithDevicePin() {
+      const enteredPin = String(document.getElementById("gateDevicePinInput").value || "").trim();
+      if (!enteredPin) {
+        showToast("Parlor App PIN daalein");
+        return;
+      }
+
+      const targetParlor = (authenticatedParlorId && appState.parlors[authenticatedParlorId])
+        || getCurrentParlor();
+
+      const savedAppPin = String(targetParlor.appPin || "").trim();
+      const matchedUser = (targetParlor.staff || []).find(
+        (u) => String(u.pin || "").trim() === enteredPin
+      );
+
+      if (enteredPin !== savedAppPin && !matchedUser) {
+        showToast("Galat App PIN — dobara daalein ya Forgot PIN dabayein");
+        return;
+      }
+
+      if (matchedUser) {
+        targetParlor.activeUser = {
+          id: matchedUser.id,
+          name: matchedUser.name,
+          role: matchedUser.role
+        };
+      }
+
+      appState.activeParlorId = targetParlor.id;
+      authenticatedParlorId = targetParlor.id;
+      enteredParlorRoomId = targetParlor.id;
+      isAppLoggedIn = true;
+      incomeUnlocked = String(targetParlor.activeUser.role).toUpperCase() === "ADMIN";
+      document.getElementById("gateDevicePinInput").value = "";
+
+      persistState(true);
+      renderAuthShell();
+      openSectionTab("home");
+      showToast(`${targetParlor.name} (${targetParlor.city}) khul gaya`);
     }
 
     function renderAuthShell() {
@@ -1986,6 +2293,11 @@
       } else {
         gateEl.classList.remove("hidden");
         shellEl.classList.add("hidden");
+        const p = getCurrentParlor();
+        const pinHint = document.getElementById("devicePinHint");
+        if (pinHint) {
+          pinHint.innerHTML = `Parlor: <strong>${escapeHtml(p.name)}</strong> (${escapeHtml(p.code)} · ${escapeHtml(p.city)}) — Parlor Admin dwara banaya gaya App PIN daalein.`;
+        }
         updateGateParlorLoginUI();
       }
     }
@@ -2012,10 +2324,11 @@
 
     function checkParlorCredentials(targetParlor, passInput) {
       const parlorPass = String(targetParlor.parlorPassword || "").trim();
+      const pinMatch = String(targetParlor.appPin || "").trim() === passInput;
       const adminMatch = (targetParlor.staff || []).some(
         (u) => String(u.role).toUpperCase() === "ADMIN" && String(u.pin).trim() === passInput
       );
-      return passInput === parlorPass || adminMatch;
+      return passInput === parlorPass || pinMatch || adminMatch;
     }
 
     function loginGateParlor() {
@@ -2023,7 +2336,7 @@
       const passInput = String(document.getElementById("gateParlorPassInput").value || "").trim();
 
       if (!codeInput || !passInput) {
-        showToast("Parlor ID और Parlor/Admin Password दोनों डालें");
+        showToast("Parlor ID aur Parlor/Admin Password dono daalein");
         return;
       }
 
@@ -2031,12 +2344,12 @@
         (p) => String(p.code || "").trim().toUpperCase() === codeInput
       );
       if (!targetParlor) {
-        showToast("इस Parlor ID से कोई रजिस्टर्ड पार्लर नहीं मिला");
+        showToast("Is Parlor ID se koi registered parlor nahi mila");
         return;
       }
 
       if (!checkParlorCredentials(targetParlor, passInput)) {
-        showToast("गलत Parlor / Admin Password");
+        showToast("Galat Parlor / Admin Password");
         return;
       }
 
@@ -2045,7 +2358,7 @@
       document.getElementById("gateParlorPassInput").value = "";
       updateGateParlorLoginUI();
       document.getElementById("gateUserIdInput").focus();
-      showToast(`${targetParlor.name} (${targetParlor.code}) लॉगिन हुआ — अब इस पार्लर का User ID व Password डालें`);
+      showToast(`${targetParlor.name} (${targetParlor.code}) login hua — ab is parlor ka User ID aur Password daalein`);
     }
 
     function updateGateParlorLoginUI() {
@@ -2064,7 +2377,7 @@
           activeBadge.className = "badge badge-expired";
         }
         if (hintEl) {
-          hintEl.textContent = "पहले ऊपर Parlor ID और Password डालकर पार्लर लॉगिन करें, फिर इस पार्लर के Admin/Staff की User ID व Password डालें।";
+          hintEl.textContent = "Pehle upar Parlor ID aur Password daal kar parlor login karein, phir is parlor ke Admin/Staff ki User ID aur Password daalein.";
         }
         return;
       }
@@ -2079,13 +2392,13 @@
       }
       const userIds = (authParlor.staff || []).map((u) => `${u.id} (${u.role})`).join(", ");
       if (hintEl) {
-        hintEl.innerHTML = `<strong>${escapeHtml(authParlor.name)}</strong> (${escapeHtml(authParlor.code)}) के रजिस्टर्ड यूज़र्स: <strong>${escapeHtml(userIds)}</strong> — अपना User ID और Password डालें।`;
+        hintEl.innerHTML = `<strong>${escapeHtml(authParlor.name)}</strong> (${escapeHtml(authParlor.code)}) ke registered users: <strong>${escapeHtml(userIds)}</strong> — apna User ID aur Password daalein.`;
       }
     }
 
     function loginGateUser() {
       if (!authenticatedParlorId || !appState.parlors[authenticatedParlorId]) {
-        showToast("पहले Step 1 में Parlor ID और Password डालकर पार्लर लॉगिन करें");
+        showToast("Pehle Step 1 mein Parlor ID aur Password daal kar parlor login karein");
         return;
       }
 
@@ -2094,7 +2407,7 @@
       const passInput = String(document.getElementById("gateUserPassInput").value || "").trim();
 
       if (!userIdInput || !passInput) {
-        showToast("User ID और Password दोनों डालें");
+        showToast("User ID aur Password dono daalein");
         return;
       }
 
@@ -2103,7 +2416,7 @@
       );
 
       if (!matchedUser) {
-        showToast("इस पार्लर में यह User ID या Password सही नहीं है");
+        showToast("Is parlor mein yeh User ID ya Password sahi nahi hai");
         return;
       }
 
@@ -2121,7 +2434,211 @@
       persistState(true);
       renderAuthShell();
       openSectionTab("home");
-      showToast(`${matchedUser.name} (${matchedUser.role}) लॉगिन हो गए`);
+      showToast(`${matchedUser.name} (${matchedUser.role}) login ho gaye`);
+    }
+
+    function unlockAppAdminConsole() {
+      const enteredId = String(document.getElementById("appAdminIdInput").value || "").trim().toUpperCase();
+      const enteredPin = String(document.getElementById("appAdminPinInput").value || "").trim();
+      const savedId = String((appState.appAdmin && appState.appAdmin.id) || DEFAULT_APP_ADMIN_ID).trim().toUpperCase();
+      const savedPin = String((appState.appAdmin && appState.appAdmin.pin) || DEFAULT_APP_ADMIN_PIN).trim();
+
+      if (!enteredId || !enteredPin) {
+        showToast("App Admin ID aur PIN dono daalein");
+        return;
+      }
+      if (enteredId !== savedId || enteredPin !== savedPin) {
+        showToast("Galat App Admin ID ya PIN");
+        return;
+      }
+      isAppAdminUnlocked = true;
+      document.getElementById("appAdminPinInput").value = "";
+      renderAppAdminConsole();
+      showToast("App Admin unlock ho gaya");
+    }
+
+    function lockAppAdminConsole() {
+      isAppAdminUnlocked = false;
+      renderAppAdminConsole();
+      showToast("App Admin lock ho gaya");
+    }
+
+    function toggleAppAdminSetBox() {
+      const box = document.getElementById("appAdminSetCredentialsBox");
+      if (!box) return;
+      box.classList.toggle("hidden");
+      const currentId = String((appState.appAdmin && appState.appAdmin.id) || DEFAULT_APP_ADMIN_ID);
+      const idInput = document.getElementById("setNewAppAdminId");
+      if (idInput && !idInput.value) idInput.value = currentId;
+    }
+
+    function saveAppAdminCredentials() {
+      const newId = String(document.getElementById("setNewAppAdminId").value || "").trim().toUpperCase();
+      const newPin = String(document.getElementById("setNewAppAdminPin").value || "").trim();
+      const currentPinInput = String(document.getElementById("confirmCurrentAppAdminPin").value || "").trim();
+      const savedPin = String((appState.appAdmin && appState.appAdmin.pin) || DEFAULT_APP_ADMIN_PIN).trim();
+
+      if (!currentPinInput || currentPinInput !== savedPin) {
+        showToast("Maujooda App Admin PIN galat hai");
+        return;
+      }
+      if (!newId || newId.length < 3) {
+        showToast("Kam se kam 3 akshar ki App Admin ID rakhein");
+        return;
+      }
+      if (!newPin || newPin.length < 4) {
+        showToast("Kam se kam 4 ank/akshar ka App Admin PIN rakhein");
+        return;
+      }
+
+      appState.appAdmin = { id: newId, pin: newPin };
+      isAppAdminUnlocked = true;
+      document.getElementById("appAdminIdInput").value = newId;
+      document.getElementById("appAdminPinInput").value = "";
+      document.getElementById("setNewAppAdminPin").value = "";
+      document.getElementById("confirmCurrentAppAdminPin").value = "";
+      document.getElementById("appAdminSetCredentialsBox").classList.add("hidden");
+
+      persistState(true);
+      renderAppAdminConsole();
+      showToast(`App Admin ID (${newId}) aur PIN save ho gaya — ise yaad rakhein`);
+    }
+
+    function renderAppAdminConsole() {
+      const badge = document.getElementById("appAdminStatusBadge");
+      const consoleEl = document.getElementById("appAdminMasterConsole");
+      const unlockBtn = document.getElementById("appAdminUnlockBtn");
+      const lockBtn = document.getElementById("appAdminLockBtn");
+      const infoEl = document.getElementById("appAdminActiveInfo");
+      const adminIdVal = String((appState.appAdmin && appState.appAdmin.id) || DEFAULT_APP_ADMIN_ID);
+
+      if (infoEl) {
+        infoEl.innerHTML = `App Admin ID: <strong>${escapeHtml(adminIdVal)}</strong> — apni ID aur PIN se login karein. <em>(App Admin ke liye Forgot Password/PIN ka option nahi hai.)</em>`;
+      }
+      const loginIdInput = document.getElementById("appAdminIdInput");
+      if (loginIdInput && !loginIdInput.value) loginIdInput.value = adminIdVal;
+
+      if (badge) {
+        badge.textContent = isAppAdminUnlocked ? "Unlocked (App Admin)" : "Locked";
+        badge.className = "badge " + (isAppAdminUnlocked ? "badge-active" : "badge-warn");
+      }
+      if (consoleEl) {
+        if (isAppAdminUnlocked) consoleEl.classList.remove("hidden");
+        else consoleEl.classList.add("hidden");
+      }
+      if (unlockBtn) {
+        if (isAppAdminUnlocked) unlockBtn.classList.add("hidden");
+        else unlockBtn.classList.remove("hidden");
+      }
+      if (lockBtn) {
+        if (isAppAdminUnlocked) lockBtn.classList.remove("hidden");
+        else lockBtn.classList.add("hidden");
+      }
+
+      if (!isAppAdminUnlocked) return;
+
+      const parlorsList = Object.values(appState.parlors || {});
+      const trialSelect = document.getElementById("extendTrialParlorSelect");
+      if (trialSelect) {
+        const prevVal = trialSelect.value || appState.activeParlorId;
+        trialSelect.innerHTML = parlorsList.map((p) => {
+          const daysLeft = getRemainingDays(p);
+          return `<option value="${escapeHtml(p.id)}" ${p.id === prevVal ? "selected" : ""}>${escapeHtml(p.name)} (${escapeHtml(p.code)} · ${escapeHtml(p.city)}) — ${daysLeft} Days Left</option>`;
+        }).join("");
+      }
+
+      renderAppAdminDirectory();
+      renderAdminTicketsInbox();
+    }
+
+    function applyAppAdminTrialExtension(targetParlorId = "") {
+      if (!isAppAdminUnlocked) {
+        showToast("Pehle App Admin ID aur PIN se login karein");
+        return;
+      }
+
+      const parlorId = targetParlorId || document.getElementById("extendTrialParlorSelect").value;
+      const addDays = Number(document.getElementById("extendTrialDaysInput").value);
+      const targetParlor = appState.parlors[parlorId];
+
+      if (!targetParlor) {
+        showToast("Parlor nahi mila");
+        return;
+      }
+      if (!Number.isFinite(addDays) || addDays <= 0) {
+        showToast("Kam se kam 1 din daalein");
+        return;
+      }
+
+      const now = Date.now();
+      const baseTime = Math.max(now, Number(targetParlor.validUntil) || now);
+      targetParlor.validUntil = baseTime + Math.round(addDays) * DAY_MS;
+      targetParlor.bonusDaysEarned = Number(targetParlor.bonusDaysEarned || 0) + Math.round(addDays);
+      if (!targetParlor.planName || targetParlor.planName === "Expired") {
+        targetParlor.planName = "Extended Free Trial";
+      }
+
+      persistState(true);
+      renderAppAdminConsole();
+      showToast(`${targetParlor.name} ke +${Math.round(addDays)} Free Trial Days badh gaye`);
+    }
+
+    function renderAppAdminDirectory() {
+      if (!isAppAdminUnlocked) return;
+      const listEl = document.getElementById("appAdminDirectoryList");
+      const countBadge = document.getElementById("totalParlorsDirectoryBadge");
+      const query = String((document.getElementById("adminDirectorySearchInput") && document.getElementById("adminDirectorySearchInput").value) || "")
+        .trim()
+        .toLowerCase();
+
+      const allParlors = Object.values(appState.parlors || {});
+      if (countBadge) {
+        countBadge.textContent = `${allParlors.length} Parlors`;
+      }
+
+      const filtered = query
+        ? allParlors.filter((p) => {
+            const staffStr = (p.staff || []).map((u) => `${u.id} ${u.name} ${u.role}`).join(" ").toLowerCase();
+            return (
+              String(p.name || "").toLowerCase().includes(query) ||
+              String(p.code || "").toLowerCase().includes(query) ||
+              String(p.city || "").toLowerCase().includes(query) ||
+              String(p.mobile || "").toLowerCase().includes(query) ||
+              staffStr.includes(query)
+            );
+          })
+        : allParlors;
+
+      if (!listEl) return;
+
+      if (!filtered.length) {
+        listEl.innerHTML = `<div class="item-sub">Koi matching parlor/user nahi mila.</div>`;
+        return;
+      }
+
+      listEl.innerHTML = filtered.map((p) => {
+        const daysLeft = getRemainingDays(p);
+        const usersSummary = (p.staff || []).map((u) => `${u.name} (${u.id}·${u.role})`).join(", ");
+        const qStats = getReferralQuotaStats(p);
+        const availStars = getAvailableStars(p);
+        return `
+          <div class="list-item">
+            <div style="min-width:210px;flex:1;">
+              <div class="item-title">
+                ${escapeHtml(p.name)} <span class="badge ${daysLeft > 0 ? "badge-active" : "badge-expired"}">${daysLeft} Days Left</span>
+                <span class="badge badge-trial">⭐ ${availStars}</span>
+              </div>
+              <div class="item-sub">ID: <strong>${escapeHtml(p.code)}</strong> · City: <strong>${escapeHtml(p.city)}</strong> · Mobile: <strong>${escapeHtml(p.mobile || "—")}</strong></div>
+              <div class="item-sub">Valid Till: <strong>${formatDateShort(p.validUntil)}</strong> · Ref Left: <strong>M:${qStats.monthRemaining}/2 · Y:${qStats.yearRemaining}/15</strong></div>
+              <div class="item-sub">Users: ${escapeHtml(usersSummary || "—")} · Clients: ${p.consumers.length} · Services: ${p.services.length}</div>
+            </div>
+            <div class="row-btns">
+              <button class="btn btn-soft btn-xs" onclick="applyAppAdminTrialExtension('${escapeHtml(p.id)}');">+Days</button>
+              <button class="btn btn-outline btn-xs" onclick="selectExistingParlor('${escapeHtml(p.id)}');">Switch</button>
+            </div>
+          </div>
+        `;
+      }).join("");
     }
 
     function initFirebaseLiveSync() {
@@ -2190,220 +2707,26 @@
       showToast(currentLang === "hi" ? "भाषा: हिंदी" : "Language: English");
     }
 
-    async function sendSetupOtp() {
-      const mobileDigits = String(document.getElementById("newParlorMobile").value || "").replace(/\D/g, "").slice(-10);
-      if (!/^[6-9]\d{9}$/.test(mobileDigits)) {
-        showToast("सही 10-अंकों का मोबाइल नंबर डालें");
-        return;
-      }
-
-      otpVerifiedMobile = "";
-      localFallbackOtp = "";
-      const otpInputEl = document.getElementById("setupOtpInput");
-      const statusEl = document.getElementById("otpStatusNotice");
-      if (otpInputEl) otpInputEl.value = "";
-      document.getElementById("otpVerifyBox").classList.remove("hidden");
-      if (statusEl) statusEl.textContent = "OTP भेजा जा रहा है...";
-      showToast("OTP भेजा जा रहा है...");
-
-      try {
-        const res = await fetch(WORKER_API_URL, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            action: "send_otp",
-            mobile: mobileDigits,
-            userId: "SETUP"
-          })
-        });
-        const data = await res.json().catch(() => ({}));
-        if (res.ok && data.success) {
-          const okMsg = data.message || "OTP भेज दिया गया है";
-          if (statusEl) statusEl.textContent = okMsg;
-          showToast(okMsg);
-        } else {
-          localFallbackOtp = String(Math.floor(100000 + Math.random() * 900000));
-          if (otpInputEl) otpInputEl.value = localFallbackOtp;
-          const fbMsg = "Backup OTP: " + localFallbackOtp + " (नीचे भर दिया गया है, OTP Verify करें दबाएं)";
-          if (statusEl) statusEl.textContent = fbMsg;
-          showToast("Backup OTP: " + localFallbackOtp);
-        }
-      } catch (err) {
-        localFallbackOtp = String(Math.floor(100000 + Math.random() * 900000));
-        if (otpInputEl) otpInputEl.value = localFallbackOtp;
-        const fbMsg = "Backup OTP: " + localFallbackOtp + " (नीचे भर दिया गया है, OTP Verify करें दबाएं)";
-        if (statusEl) statusEl.textContent = fbMsg;
-        showToast("Backup OTP: " + localFallbackOtp);
-      }
-    }
-
-    async function verifySetupOtp() {
-      const mobileDigits = String(document.getElementById("newParlorMobile").value || "").replace(/\D/g, "").slice(-10);
-      const otpCode = String(document.getElementById("setupOtpInput").value || "").trim();
-      const statusEl = document.getElementById("otpStatusNotice");
-
-      if (!/^[6-9]\d{9}$/.test(mobileDigits)) {
-        showToast("मोबाइल नंबर जांचें");
-        return;
-      }
-      if (!/^\d{4,6}$/.test(otpCode)) {
-        showToast("4 से 6 अंकों का OTP डालें");
-        return;
-      }
-
-      try {
-        const res = await fetch(WORKER_API_URL, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            action: "verify_and_reset",
-            mobile: mobileDigits,
-            userId: "SETUP",
-            otp: otpCode
-          })
-        });
-        const data = await res.json().catch(() => ({}));
-        if (res.ok && data.success) {
-          otpVerifiedMobile = mobileDigits;
-          if (statusEl) statusEl.textContent = "✓ OTP Verify हो गया! अब Name, Admin ID और Password सेट करें।";
-          showToast("OTP Verify हो गया! अब Name, Admin ID और Password सेट करें");
-          return;
-        }
-      } catch (err) {}
-
-      if (localFallbackOtp && otpCode === localFallbackOtp) {
-        otpVerifiedMobile = mobileDigits;
-        if (statusEl) statusEl.textContent = "✓ OTP Verify हो गया! अब Name, Admin ID और Password सेट करें।";
-        showToast("OTP Verify हो गया! अब Name, Admin ID और Password सेट करें");
-      } else {
-        if (statusEl) statusEl.textContent = "OTP गलत है या expire हो गया है—दोबारा OTP भेजें।";
-        showToast("OTP गलत है या expire हो गया है");
-      }
-    }
-
     function openForgotPasswordModal() {
       const roomParlor = (authenticatedParlorId && appState.parlors[authenticatedParlorId])
         || appState.parlors[enteredParlorRoomId]
         || getCurrentParlor();
-      const typedUserId = String(
-        (document.getElementById("gateUserIdInput") && document.getElementById("gateUserIdInput").value)
-        || document.getElementById("innerUserIdInput").value
-        || ""
-      ).trim().toUpperCase();
-
-      fpOtpVerifiedMobile = "";
-      fpFallbackOtp = "";
+      const primaryAdmin = (roomParlor.staff || []).find((u) => String(u.role || "").toUpperCase() === "ADMIN")
+        || (roomParlor.staff && roomParlor.staff[0])
+        || { id: roomParlor.code };
 
       document.getElementById("fpMobileInput").value = roomParlor.mobile || "";
-      document.getElementById("fpUserIdInput").value = typedUserId || (roomParlor.activeUser && roomParlor.activeUser.id) || "";
-      document.getElementById("fpOtpInput").value = "";
+      document.getElementById("fpUserIdInput").value = primaryAdmin.id || roomParlor.code;
       document.getElementById("fpNewPinInput").value = "";
       document.getElementById("fpConfirmPinInput").value = "";
-      document.getElementById("fpOtpBox").classList.add("hidden");
-      document.getElementById("fpOtpStatusNotice").textContent = "";
       document.getElementById("forgotPasswordModal").classList.add("open");
     }
 
-    async function sendForgotOtp() {
-      const roomParlor = (authenticatedParlorId && appState.parlors[authenticatedParlorId])
-        || appState.parlors[enteredParlorRoomId]
-        || getCurrentParlor();
-      const mobileDigits = String(document.getElementById("fpMobileInput").value || "").replace(/\D/g, "").slice(-10);
-      const userIdInput = String(document.getElementById("fpUserIdInput").value || "").trim().toUpperCase();
-
-      if (!/^[6-9]\d{9}$/.test(mobileDigits)) {
-        showToast("सही 10-अंकों का मोबाइल नंबर डालें");
-        return;
-      }
-
-      if (roomParlor.mobile && roomParlor.mobile !== mobileDigits) {
-        showToast(`इस पार्लर का रजिस्टर्ड नंबर ${roomParlor.mobile} है`);
-        return;
-      }
-
-      fpOtpVerifiedMobile = "";
-      fpFallbackOtp = "";
-      const otpInputEl = document.getElementById("fpOtpInput");
-      const statusEl = document.getElementById("fpOtpStatusNotice");
-      if (otpInputEl) otpInputEl.value = "";
-      document.getElementById("fpOtpBox").classList.remove("hidden");
-      if (statusEl) statusEl.textContent = "OTP भेजा जा रहा है...";
-      showToast("OTP भेजा जा रहा है...");
-
-      try {
-        const res = await fetch(WORKER_API_URL, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            action: "send_otp",
-            mobile: mobileDigits,
-            userId: userIdInput || roomParlor.code
-          })
-        });
-        const data = await res.json().catch(() => ({}));
-        if (res.ok && data.success) {
-          const okMsg = data.message || "OTP भेज दिया गया है";
-          if (statusEl) statusEl.textContent = okMsg;
-          showToast(okMsg);
-        } else {
-          fpFallbackOtp = String(Math.floor(100000 + Math.random() * 900000));
-          if (otpInputEl) otpInputEl.value = fpFallbackOtp;
-          const fbMsg = "Backup OTP: " + fpFallbackOtp + " (नीचे भर दिया गया है, OTP Verify करें दबाएं)";
-          if (statusEl) statusEl.textContent = fbMsg;
-          showToast("Backup OTP: " + fpFallbackOtp);
-        }
-      } catch (err) {
-        fpFallbackOtp = String(Math.floor(100000 + Math.random() * 900000));
-        if (otpInputEl) otpInputEl.value = fpFallbackOtp;
-        const fbMsg = "Backup OTP: " + fpFallbackOtp + " (नीचे भर दिया गया है, OTP Verify करें दबाएं)";
-        if (statusEl) statusEl.textContent = fbMsg;
-        showToast("Backup OTP: " + fpFallbackOtp);
-      }
-    }
-
-    async function verifyForgotOtp() {
-      const mobileDigits = String(document.getElementById("fpMobileInput").value || "").replace(/\D/g, "").slice(-10);
-      const otpCode = String(document.getElementById("fpOtpInput").value || "").trim();
-      const userIdInput = String(document.getElementById("fpUserIdInput").value || "").trim().toUpperCase();
-      const statusEl = document.getElementById("fpOtpStatusNotice");
-
-      if (!/^[6-9]\d{9}$/.test(mobileDigits)) {
-        showToast("मोबाइल नंबर जांचें");
-        return;
-      }
-      if (!/^\d{4,6}$/.test(otpCode)) {
-        showToast("4 से 6 अंकों का OTP डालें");
-        return;
-      }
-
-      try {
-        const res = await fetch(WORKER_API_URL, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            action: "verify_and_reset",
-            mobile: mobileDigits,
-            userId: userIdInput || "USER",
-            otp: otpCode
-          })
-        });
-        const data = await res.json().catch(() => ({}));
-        if (res.ok && data.success) {
-          fpOtpVerifiedMobile = mobileDigits;
-          if (statusEl) statusEl.textContent = "✓ OTP Verify हो गया! अब User ID और नया Password सेव करें।";
-          showToast("OTP Verify हो गया! अब नया Password सेव करें");
-          return;
-        }
-      } catch (err) {}
-
-      if (fpFallbackOtp && otpCode === fpFallbackOtp) {
-        fpOtpVerifiedMobile = mobileDigits;
-        if (statusEl) statusEl.textContent = "✓ OTP Verify हो गया! अब User ID और नया Password सेव करें।";
-        showToast("OTP Verify हो गया! अब नया Password सेव करें");
-      } else {
-        if (statusEl) statusEl.textContent = "OTP गलत है या expire हो गया है—दोबारा OTP भेजें।";
-        showToast("OTP गलत है या expire हो गया है");
-      }
+    function generateAdminForgotPin() {
+      const autoPin = String(Math.floor(1000 + Math.random() * 9000));
+      document.getElementById("fpNewPinInput").value = autoPin;
+      document.getElementById("fpConfirmPinInput").value = autoPin;
+      showToast(`App ne naya PIN generate kiya: ${autoPin} — ab Save karein`);
     }
 
     function saveForgotNewPassword() {
@@ -2411,51 +2734,54 @@
         || appState.parlors[enteredParlorRoomId]
         || getCurrentParlor();
       const mobileDigits = String(document.getElementById("fpMobileInput").value || "").replace(/\D/g, "").slice(-10);
-      const userIdInput = String(document.getElementById("fpUserIdInput").value || "").trim().toUpperCase();
-      const newPin = String(document.getElementById("fpNewPinInput").value || "").trim();
-      const confirmPin = String(document.getElementById("fpConfirmPinInput").value || "").trim();
+      const adminIdInput = String(document.getElementById("fpUserIdInput").value || "").trim().toUpperCase();
+      let newPin = String(document.getElementById("fpNewPinInput").value || "").trim();
+      let confirmPin = String(document.getElementById("fpConfirmPinInput").value || "").trim();
 
-      if (!/^[6-9]\d{9}$/.test(mobileDigits)) {
-        showToast("सही 10-अंकों का मोबाइल नंबर डालें");
-        return;
+      if (!newPin) {
+        newPin = String(Math.floor(1000 + Math.random() * 9000));
+        confirmPin = newPin;
+        document.getElementById("fpNewPinInput").value = newPin;
+        document.getElementById("fpConfirmPinInput").value = confirmPin;
       }
-      if (fpOtpVerifiedMobile !== mobileDigits) {
-        showToast("पहले OTP भेजकर Verify करें");
-        return;
-      }
-      if (!userIdInput) {
-        showToast("अपना User ID (Admin या Staff ID) डालें");
-        return;
-      }
-      if (!newPin || newPin.length < 4) {
-        showToast("कम से कम 4 अक्षर/अंक का नया Password डालें");
+
+      if (newPin.length < 4) {
+        showToast("Kam se kam 4 ank/akshar ka App PIN rakhein");
         return;
       }
       if (newPin !== confirmPin) {
-        showToast("दोनों Password मेल नहीं खा रहे");
+        showToast("Dono PIN mel nahi kha rahe");
         return;
       }
 
-      if (!roomParlor.mobile) {
+      if (mobileDigits && /^[6-9]\d{9}$/.test(mobileDigits)) {
         roomParlor.mobile = mobileDigits;
       }
 
-      const staffIdx = (roomParlor.staff || []).findIndex(
-        (u) => String(u.id || "").trim().toUpperCase() === userIdInput
+      roomParlor.appPin = newPin;
+      roomParlor.parlorPassword = newPin;
+
+      const adminIdx = (roomParlor.staff || []).findIndex(
+        (u) => String(u.role || "").toUpperCase() === "ADMIN" || (adminIdInput && String(u.id || "").trim().toUpperCase() === adminIdInput)
       );
 
-      if (staffIdx !== -1) {
-        roomParlor.staff[staffIdx].pin = newPin;
-        if (String(roomParlor.staff[staffIdx].role || "").toUpperCase() === "ADMIN") {
-          roomParlor.parlorPassword = newPin;
-        }
+      if (adminIdx !== -1) {
+        roomParlor.staff[adminIdx].pin = newPin;
+        if (adminIdInput) roomParlor.staff[adminIdx].id = adminIdInput;
+        roomParlor.activeUser = {
+          id: roomParlor.staff[adminIdx].id,
+          name: roomParlor.staff[adminIdx].name,
+          role: roomParlor.staff[adminIdx].role
+        };
       } else {
-        roomParlor.staff.push({
-          id: userIdInput,
-          name: userIdInput,
-          role: "STAFF",
+        const targetId = adminIdInput || roomParlor.code;
+        roomParlor.staff.unshift({
+          id: targetId,
+          name: `${roomParlor.name} Admin`,
+          role: "ADMIN",
           pin: newPin
         });
+        roomParlor.activeUser = { id: targetId, name: `${roomParlor.name} Admin`, role: "ADMIN" };
       }
 
       appState.activeParlorId = roomParlor.id;
@@ -2463,23 +2789,17 @@
       enteredParlorRoomId = roomParlor.id;
 
       document.getElementById("gateParlorCodeInput").value = roomParlor.code;
-      document.getElementById("gateUserIdInput").value = userIdInput;
-      document.getElementById("gateUserPassInput").value = newPin;
-      document.getElementById("innerUserIdInput").value = userIdInput;
-      document.getElementById("innerUserPassInput").value = newPin;
-
-      fpOtpVerifiedMobile = "";
-      fpFallbackOtp = "";
+      document.getElementById("gateDevicePinInput").value = newPin;
 
       persistState(true);
       updateGateParlorLoginUI();
       closeModal("forgotPasswordModal");
-      showToast(`${userIdInput} का नया Password सेव हो गया — अब लॉगिन करें`);
+      showToast(`Parlor Admin ka naya App PIN (${newPin}) save ho gaya`);
     }
 
     function registerNewParlor() {
       const name = document.getElementById("newParlorName").value.trim();
-      const city = document.getElementById("newParlorCity").value.trim() || "Joura";
+      const city = document.getElementById("newParlorCity").value.trim() || "Mumbai";
       const mobile = String(document.getElementById("newParlorMobile").value || "").replace(/\D/g, "").slice(-10);
       const adminName = document.getElementById("newAdminName").value.trim();
       const adminIdRaw = document.getElementById("newAdminId").value.trim().toUpperCase();
@@ -2488,66 +2808,90 @@
       const refCodeInput = document.getElementById("newParlorRefInput").value.trim().toUpperCase();
 
       if (!name) {
-        showToast("पार्लर का नाम लिखें");
-        return;
-      }
-      if (!/^[6-9]\d{9}$/.test(mobile)) {
-        showToast("सही 10-अंकों का मोबाइल नंबर डालें");
-        return;
-      }
-      if (otpVerifiedMobile !== mobile) {
-        showToast("पहले मोबाइल नंबर पर OTP भेजकर Verify करें");
+        showToast("Parlor ka naam likhein");
         return;
       }
       if (!adminName || !adminIdRaw) {
-        showToast("अपना नाम और Admin ID लिखें");
+        showToast("Parlor Admin ka naam aur ID likhein");
         return;
       }
       if (!pass1 || pass1.length < 4) {
-        showToast("कम से कम 4 अक्षर/अंक का Password बनाएं");
+        showToast("Kam se kam 4 ank/akshar ka App PIN banayein");
         return;
       }
       if (pass1 !== pass2) {
-        showToast("दोनों Password मेल नहीं खा रहे—दोबारा सही भरें");
+        showToast("Dono App PIN mel nahi kha rahe—dobara sahi bharein");
         return;
       }
 
-      const now = Date.now();
+      const nowDate = new Date();
+      const now = nowDate.getTime();
+      const monthKey = getCurrentMonthKey(nowDate);
+      const yearKey = getCurrentYearKey(nowDate);
       const newId = "parlor-" + now.toString(36);
-      const baseCode = name.replace(/[^a-zA-Z0-9]/g, "").toUpperCase().slice(0, 6) || "PARLOR";
+      const baseCode = name.replace(/[^a-zA-Z0-9]/g, "").toUpperCase().slice(0, 7) || "GLAMOUR";
       const code = `${baseCode}01`;
 
-      let bonusForNewParlor = 0;
       let matchedReferrer = null;
+      let referralStatusMsg = "";
+      let acceptedReferralCode = "";
+
       if (refCodeInput) {
         matchedReferrer = Object.values(appState.parlors).find(
           (p) => String(p.referralCode || "").trim().toUpperCase() === refCodeInput
         );
         if (matchedReferrer) {
-          bonusForNewParlor = REFERRAL_BONUS_DAYS;
-          const refBase = Math.max(now, Number(matchedReferrer.validUntil) || now);
-          matchedReferrer.validUntil = refBase + REFERRAL_BONUS_DAYS * DAY_MS;
-          matchedReferrer.referralCount = Number(matchedReferrer.referralCount || 0) + 1;
-          matchedReferrer.bonusDaysEarned = Number(matchedReferrer.bonusDaysEarned || 0) + REFERRAL_BONUS_DAYS;
+          const quota = getReferralQuotaStats(matchedReferrer, nowDate);
+          if (quota.monthRemaining <= 0) {
+            referralStatusMsg = ` · Mahine ki ${MAX_MONTHLY_REFERRALS} referral limit poori`;
+          } else if (quota.yearRemaining <= 0) {
+            referralStatusMsg = ` · Saal ki ${MAX_YEARLY_REFERRALS} referral limit poori`;
+          } else {
+            acceptedReferralCode = matchedReferrer.referralCode;
+            matchedReferrer.referralCount = Number(matchedReferrer.referralCount || 0) + 1;
+            matchedReferrer.referralLogs = Array.isArray(matchedReferrer.referralLogs) ? matchedReferrer.referralLogs : [];
+            matchedReferrer.referralLogs.push({
+              toParlorCode: code,
+              toParlorName: name,
+              month: monthKey,
+              year: yearKey,
+              ts: now
+            });
+            matchedReferrer.monitoredReferrals = Array.isArray(matchedReferrer.monitoredReferrals)
+              ? matchedReferrer.monitoredReferrals
+              : [];
+            matchedReferrer.monitoredReferrals.unshift({
+              targetParlorId: newId,
+              targetParlorName: name,
+              targetParlorCode: code,
+              startedAt: now,
+              monitorEndAt: now + STAR_MONITOR_DAYS * DAY_MS,
+              entriesCount: 0,
+              starAwarded: false
+            });
+            referralStatusMsg = ` · 10-din monitor shuru (1 Star = 5d)`;
+          }
         }
       }
 
-      const totalInitialDays = TRIAL_DAYS + bonusForNewParlor;
       appState.parlors[newId] = normalizeParlor({
         id: newId,
         code,
         name,
         city,
         mobile,
+        appPin: pass1,
         parlorPassword: pass1,
         activeUser: { id: adminIdRaw, name: adminName, role: "ADMIN" },
         trialStartedAt: now,
-        validUntil: now + totalInitialDays * DAY_MS,
-        planName: bonusForNewParlor > 0 ? "30-Day Trial + Bonus" : "30-Day Free Trial",
+        validUntil: now + TRIAL_DAYS * DAY_MS,
+        planName: "30-Day Free Trial",
         referralCode: generateReferralCode(name),
-        referredBy: matchedReferrer ? matchedReferrer.referralCode : "",
+        referredBy: acceptedReferralCode,
         referralCount: 0,
-        bonusDaysEarned: bonusForNewParlor,
+        bonusDaysEarned: 0,
+        starsEarned: 0,
+        starsRedeemed: 0,
         staff: [{ id: adminIdRaw, name: adminName, role: "ADMIN", pin: pass1 }]
       });
 
@@ -2561,21 +2905,16 @@
       document.getElementById("newParlorName").value = "";
       document.getElementById("newParlorCity").value = "";
       document.getElementById("newParlorMobile").value = "";
-      document.getElementById("setupOtpInput").value = "";
       document.getElementById("newAdminName").value = "";
       document.getElementById("newAdminId").value = "";
       document.getElementById("newAdminPin").value = "";
       document.getElementById("newAdminPinConfirm").value = "";
       document.getElementById("newParlorRefInput").value = "";
-      const statusEl = document.getElementById("otpStatusNotice");
-      if (statusEl) statusEl.textContent = "";
-      otpVerifiedMobile = "";
-      localFallbackOtp = "";
 
       persistState(true);
       renderAuthShell();
       closeModal("parlorModal");
-      showToast(`पार्लर (${code}) व Admin (${adminIdRaw}) तैयार!`);
+      showToast(`${name} (${city}) save ho gaya${referralStatusMsg}`);
     }
 
     function enterParlorRoom() {
@@ -2583,7 +2922,7 @@
       const passInput = document.getElementById("staffLoginParlorPass").value.trim();
 
       if (!codeInput || !passInput) {
-        showToast("Parlor ID और Password दोनों डालें");
+        showToast("Parlor ID aur Password dono daalein");
         return;
       }
 
@@ -2591,12 +2930,12 @@
         (p) => String(p.code || "").trim().toUpperCase() === codeInput
       );
       if (!targetParlor) {
-        showToast("इस Parlor ID से कोई पार्लर नहीं मिला");
+        showToast("Is Parlor ID se koi parlor nahi mila");
         return;
       }
 
       if (!checkParlorCredentials(targetParlor, passInput)) {
-        showToast("गलत Parlor Password");
+        showToast("Galat Parlor Password");
         return;
       }
 
@@ -2604,7 +2943,7 @@
       authenticatedParlorId = targetParlor.id;
       document.getElementById("staffLoginParlorPass").value = "";
       renderInnerParlorRoom();
-      showToast(`${targetParlor.name} (${targetParlor.code}) की अंदर की स्क्रीन खुल गई`);
+      showToast(`${targetParlor.name} (${targetParlor.code}) ki andar ki screen khul gayi`);
     }
 
     function renderInnerParlorRoom() {
@@ -2612,7 +2951,7 @@
       const roomParlor = appState.parlors[enteredParlorRoomId] || current;
       document.getElementById("enteredParlorBadge").textContent = roomParlor.code;
       document.getElementById("enteredParlorInfo").innerHTML =
-        `Parlor: <strong>${escapeHtml(roomParlor.name)}</strong> (${escapeHtml(roomParlor.city)}) — अब अपना User ID और Password डालें।`;
+        `Parlor: <strong>${escapeHtml(roomParlor.name)}</strong> (${escapeHtml(roomParlor.city)}) — ab apna User ID aur Password daalein.`;
     }
 
     function loginInnerUser() {
@@ -2621,7 +2960,7 @@
       const passInput = document.getElementById("innerUserPassInput").value.trim();
 
       if (!userIdInput || !passInput) {
-        showToast("User ID और Password दोनों डालें");
+        showToast("User ID aur Password dono daalein");
         return;
       }
 
@@ -2630,7 +2969,7 @@
       );
 
       if (!matchedUser) {
-        showToast("User ID या Password गलत है");
+        showToast("User ID ya Password galat hai");
         return;
       }
 
@@ -2648,7 +2987,7 @@
       persistState(true);
       renderAuthShell();
       openSectionTab("home");
-      showToast(`${matchedUser.name} (${matchedUser.role}) लॉगिन हो गए`);
+      showToast(`${matchedUser.name} (${matchedUser.role}) login ho gaye`);
     }
 
     function getDateTriggeredReminders() {
@@ -2666,7 +3005,7 @@
             sub: `सर्विस: ${s.name} · Promise Date: ${s.promiseDate}`,
             phone: s.consumerPhone || "",
             checked: Boolean(s.reminderChecked),
-            waMsg: `नमस्ते *${s.consumerName}* जी, *${parlor.name}* से याद दिलाना था कि आपकी सर्विस (${s.name}) के *₹${Math.round(dueAmt)}* आज (${s.promiseDate}) जमा होने हैं। धन्यवाद!`
+            waMsg: `नमस्ते *${s.consumerName}* जी, *${parlor.name}* (${parlor.city}) से याद दिलाना था कि आपकी सर्विस (${s.name}) के *₹${Math.round(dueAmt)}* आज (${s.promiseDate}) जमा होने हैं। धन्यवाद!`
           });
         }
       }
@@ -2681,7 +3020,7 @@
             sub: `तारीख: ${a.date} · समय: ${timeLbl}`,
             phone: a.phone || "",
             checked: Boolean(a.reminderChecked),
-            waMsg: `नमस्ते *${a.clientName}* जी, *${parlor.name}* में आज (${a.date}) *${timeLbl}* पर आपका *${a.serviceType}* अपॉइंटमेंट है। कृपया समय से पधारें!`
+            waMsg: `नमस्ते *${a.clientName}* जी, *${parlor.name}* (${parlor.city}) में आज (${a.date}) *${timeLbl}* पर आपका *${a.serviceType}* अपॉइंटमेंट है। कृपया समय से पधारें!`
           });
         }
       }
@@ -2751,6 +3090,33 @@
       }).join("");
     }
 
+    function renderStarNotifications() {
+      const parlor = getCurrentParlor();
+      const cardEl = document.getElementById("starNotificationsCard");
+      const listEl = document.getElementById("starNotificationsList");
+      const badgeEl = document.getElementById("starNotifCountBadge");
+      const list = Array.isArray(parlor.notifications) ? parlor.notifications : [];
+
+      if (!cardEl || !listEl) return;
+      if (!list.length) {
+        cardEl.classList.add("hidden");
+        return;
+      }
+
+      cardEl.classList.remove("hidden");
+      if (badgeEl) badgeEl.textContent = String(list.length);
+
+      listEl.innerHTML = list.slice(0, 4).map((n) => `
+        <div class="list-item" style="margin-bottom:6px;padding:9px 11px;">
+          <div>
+            <div class="item-title" style="font-size:13px;">⭐ ${escapeHtml(n.message)}</div>
+            <div class="item-sub">📅 ${escapeHtml(n.date || "")}</div>
+          </div>
+          <span class="badge badge-active">+${Number(n.starDelta || 1)} Star</span>
+        </div>
+      `).join("");
+    }
+
     function initAssistantWelcome() {
       const box = document.getElementById("assistantChatBox");
       if (box && !box.children.length) {
@@ -2798,7 +3164,7 @@
         if (!incomeUnlocked) {
           return "आपकी इनकम PIN से लॉक है। पहले ऊपर 'PIN इनकम' टाइल दबाकर PIN डालें, फिर मैं पूरी इनकम बता दूंगा।";
         }
-        return `💰 ${parlor.name} की इनकम:\n• आज (Daily): ₹${Math.round(totals.daily)}\n• इस महीने: ₹${Math.round(totals.monthly)}\n• कुल (All-Time): ₹${Math.round(totals.alltime)}`;
+        return `💰 ${parlor.name} (${parlor.city}) की इनकम:\n• आज (Daily): ₹${Math.round(totals.daily)}\n• इस महीने: ₹${Math.round(totals.monthly)}\n• कुल (All-Time): ₹${Math.round(totals.alltime)}`;
       }
 
       if (q.includes("due") || q.includes("बाकी") || q.includes("उधार") || q.includes("baki") || q.includes("baaki")) {
@@ -2833,7 +3199,7 @@
         return `🎁 एक्टिव ऑफ़र्स:\n${offs.map((o) => `• ${o.title}: ${o.desc || ""}`).join("\n")}`;
       }
 
-      return `पार्लर: ${parlor.name} (${parlor.code})\n• कुल कस्टमर: ${parlor.consumers.length}\n• कुल सर्विस: ${parlor.services.length}\n• बाकी पेमेंट्स: ${(parlor.services || []).filter((s) => !s.settled && Number(s.dueAmount || 0) > 0).length}\n• अपॉइंटमेंट्स: ${(parlor.appointments || []).length}`;
+      return `पार्लर: ${parlor.name} (${parlor.city} · ${parlor.code})\n• कुल कस्टमर: ${parlor.consumers.length}\n• कुल सर्विस: ${parlor.services.length}\n• बाकी पेमेंट्स: ${(parlor.services || []).filter((s) => !s.settled && Number(s.dueAmount || 0) > 0).length}\n• अपॉइंटमेंट्स: ${(parlor.appointments || []).length}`;
     }
 
     function speakReplyIfSupported(text) {
@@ -2943,6 +3309,10 @@
     }
 
     function openSolveTicketModal(ticketKey) {
+      if (!isAppAdminUnlocked) {
+        showToast("Pehle App Admin ID aur PIN se login karein");
+        return;
+      }
       const list = getAllInboxTickets();
       const tkt = list.find((item) => item._key === ticketKey);
       if (!tkt) return;
@@ -2955,21 +3325,18 @@
       `;
       document.getElementById("solveTicketStatus").value = tkt.status === "Open" ? "Resolved" : (tkt.status || "Resolved");
       document.getElementById("solveTicketReply").value = tkt.adminReply || "";
-      document.getElementById("solveTicketAdminPin").value = "";
       document.getElementById("solveTicketModal").classList.add("open");
     }
 
     function saveTicketSolution() {
-      const parlor = getCurrentParlor();
+      if (!isAppAdminUnlocked) {
+        showToast("Pehle App Admin ID aur PIN se login karein");
+        return;
+      }
       const ticketKey = document.getElementById("solvingTicketKey").value;
       const status = document.getElementById("solveTicketStatus").value;
       const reply = document.getElementById("solveTicketReply").value.trim();
-      const adminPin = document.getElementById("solveTicketAdminPin").value.trim();
 
-      if (!isValidBpmAdminPin(parlor, adminPin)) {
-        showToast("गलत Admin Password/PIN (default: 1234)");
-        return;
-      }
       if (!reply) {
         showToast("समाधान लिखें");
         return;
@@ -3035,12 +3402,13 @@
       }).join("");
     }
 
-    function isValidBpmAdminPin(parlor, enteredPin) {
+    function isValidParlorAdminPin(parlor, enteredPin) {
       const pin = String(enteredPin || "").trim();
       if (!pin) return false;
+      if (String(parlor.appPin || "").trim() === pin) return true;
       const adminUsers = (parlor.staff || []).filter((u) => String(u.role || "").toUpperCase() === "ADMIN");
       if (adminUsers.some((u) => String(u.pin).trim() === pin)) return true;
-      return pin === "1234";
+      return false;
     }
 
     function startEditStaff(staffId) {
@@ -3054,7 +3422,7 @@
       document.getElementById("stfRole").value = member.role || "STAFF";
       document.getElementById("stfPin").value = member.pin || "";
       document.getElementById("cancelEditStaffBtn").classList.remove("hidden");
-      showToast("Admin Password डालकर Save करें");
+      showToast("Parlor Admin PIN daal kar naya PIN badlein");
     }
 
     function cancelStaffEdit() {
@@ -3076,11 +3444,11 @@
       const adminAuthPin = document.getElementById("stfAdminAuthPin").value.trim();
 
       if (!customUserId || !name || !pin) {
-        showToast("Staff User ID, नाम और Password डालें");
+        showToast("Staff User ID, naam aur PIN/Password daalein");
         return;
       }
-      if (!isValidBpmAdminPin(parlor, adminAuthPin)) {
-        showToast("सिर्फ Admin Password/PIN से ही सेव/एडिट होगा");
+      if (!isValidParlorAdminPin(parlor, adminAuthPin)) {
+        showToast("Sirf Parlor Admin PIN se hi staff PIN banega ya badlega");
         return;
       }
 
@@ -3088,21 +3456,25 @@
         const idx = parlor.staff.findIndex((u) => u.id === editId);
         if (idx !== -1) {
           parlor.staff[idx] = { ...parlor.staff[idx], id: customUserId, name, role, pin };
+          if (String(role).toUpperCase() === "ADMIN") {
+            parlor.appPin = pin;
+            parlor.parlorPassword = pin;
+          }
           if (parlor.activeUser && parlor.activeUser.id === editId) {
             parlor.activeUser.id = customUserId;
             parlor.activeUser.name = name;
             parlor.activeUser.role = role;
           }
-          showToast("स्टाफ ID/Password अपडेट हो गया");
+          showToast(`${name} (${customUserId}) ka naya PIN update ho gaya`);
         }
       } else {
         const duplicate = (parlor.staff || []).some((u) => String(u.id).toUpperCase() === customUserId);
         if (duplicate) {
-          showToast("यह User ID पहले से मौजूद है—दूसरी ID लिखें");
+          showToast("Yeh User ID pehle se maujood hai—dusri ID likhein");
           return;
         }
         parlor.staff.push({ id: customUserId, name, role, pin });
-        showToast(`स्टाफ (${customUserId}) की ID और Password बन गई`);
+        showToast(`Staff (${customUserId}) ki ID aur PIN ban gayi`);
       }
 
       cancelStaffEdit();
@@ -3113,12 +3485,12 @@
     function deleteStaffMember(staffId) {
       const parlor = getCurrentParlor();
       if ((parlor.staff || []).length <= 1) {
-        showToast("कम से कम 1 एडमिन/यूज़र रहना ज़रूरी है");
+        showToast("Kam se kam 1 Parlor Admin rehna zaroori hai");
         return;
       }
-      const adminPin = prompt("स्टाफ डिलीट करने के लिए Admin Password/PIN डालें:");
-      if (!isValidBpmAdminPin(parlor, adminPin)) {
-        showToast("गलत Admin Password/PIN");
+      const adminPin = prompt("Staff delete karne ke liye Parlor Admin PIN daalein:");
+      if (!isValidParlorAdminPin(parlor, adminPin)) {
+        showToast("Galat Parlor Admin PIN");
         return;
       }
       parlor.staff = parlor.staff.filter((u) => u.id !== staffId);
@@ -3127,7 +3499,7 @@
         parlor.activeUser = { id: fb.id, name: fb.name, role: fb.role };
       }
       persistState(true);
-      showToast("स्टाफ डिलीट हो गया");
+      showToast("Staff delete ho gaya");
     }
 
     function syncDueInputs() {
@@ -3239,7 +3611,7 @@
         .map((w) => w[0])
         .join("")
         .toUpperCase()
-        .slice(0, 3) || "BPM";
+        .slice(0, 3) || "GLA";
 
       ctx.fillStyle = "#ffffff";
       ctx.font = "800 54px sans-serif";
@@ -3273,12 +3645,12 @@
         doc.setFont("helvetica", "bold");
         doc.setFontSize(15);
         doc.setTextColor(136, 14, 79);
-        doc.text(String(parlor.name || "Beauty Parlour"), 38, 17);
+        doc.text(String(parlor.name || "Glamour"), 38, 17);
 
         doc.setFont("helvetica", "normal");
         doc.setFontSize(10);
         doc.setTextColor(90, 75, 85);
-        doc.text(`${parlor.city || ""} · Receipt No: ${s.id.slice(-6).toUpperCase()}`, 38, 23);
+        doc.text(`${parlor.city || "Mumbai"} · Receipt No: ${s.id.slice(-6).toUpperCase()}`, 38, 23);
         doc.text(`Service Date: ${s.date || getLocalDateStr()}`, 38, 29);
 
         doc.setDrawColor(235, 195, 215);
@@ -3490,13 +3862,75 @@
       document.getElementById("offerQueueBar").classList.add("hidden");
     }
 
-    function openReferModal() {
+    function renderReferralQuotaBadges() {
       const parlor = getCurrentParlor();
+      const q = getReferralQuotaStats(parlor);
+      const stars = getAvailableStars(parlor);
+
+      const stuckStarEl = document.getElementById("stuckStarBadge");
+      if (stuckStarEl) {
+        stuckStarEl.textContent = `⭐ ${stars} (${stars * DAYS_PER_STAR}d)`;
+      }
+
+      const labelText = q.effectiveRemaining <= 0
+        ? "🎟️ 0 Left"
+        : `🎟️ M:${q.monthRemaining}·Y:${q.yearRemaining}`;
+
+      const topIcon = document.getElementById("referRemainingIcon");
+      if (topIcon) {
+        topIcon.textContent = labelText;
+        topIcon.className = "ref-rem-icon" + (q.effectiveRemaining <= 0 ? " limit-done" : "");
+      }
+
+      const modalIcon = document.getElementById("modalReferRemainingIcon");
+      if (modalIcon) {
+        modalIcon.textContent = labelText;
+        modalIcon.className = "ref-rem-icon" + (q.effectiveRemaining <= 0 ? " limit-done" : "");
+      }
+
+      const subEl = document.getElementById("referPillSub");
+      if (subEl) {
+        subEl.textContent = `1★=5d · M:${q.monthRemaining}/2, Y:${q.yearRemaining}/15`;
+      }
+    }
+
+    function openReferModal() {
+      evaluateTenDayReferralStars(false);
+      const parlor = getCurrentParlor();
+      const q = getReferralQuotaStats(parlor);
+      const stars = getAvailableStars(parlor);
+      const monList = Array.isArray(parlor.monitoredReferrals) ? parlor.monitoredReferrals : [];
+
       document.getElementById("myReferralCode").textContent = parlor.referralCode;
+      renderReferralQuotaBadges();
       document.getElementById("referStatsBox").innerHTML = `
-        <div class="item-title">Referral Summary</div>
-        <div class="item-sub">Referrals: <strong>${parlor.referralCount}</strong> · Bonus Days: <strong>+${parlor.bonusDaysEarned} Days</strong></div>
+        <div class="item-title">Stars & Limit Summary</div>
+        <div class="item-sub">Available Stars: <strong>⭐ ${stars}</strong> (= <strong>+${stars * DAYS_PER_STAR} Days</strong> on plan purchase)</div>
+        <div class="item-sub">Bache Huye Referrals: <strong>Mahina ${q.monthRemaining}/${MAX_MONTHLY_REFERRALS}</strong> · <strong>Saal ${q.yearRemaining}/${MAX_YEARLY_REFERRALS}</strong></div>
+        <div class="item-sub">Total Referrals: <strong>${parlor.referralCount}</strong> · Redeemed Stars: <strong>${parlor.starsRedeemed}</strong></div>
       `;
+
+      const monBox = document.getElementById("monitoredReferralsBox");
+      if (!monList.length) {
+        monBox.innerHTML = `<div class="item-sub">Abhi koi referred parlor 10-din monitor mein nahi hai.</div>`;
+      } else {
+        monBox.innerHTML = `<div class="section-title" style="margin-bottom:6px;"><span>10-Day Referral Monitor</span><button class="btn btn-soft btn-xs" onclick="evaluateTenDayReferralStars(true);openReferModal();">Check Now</button></div>` +
+          monList.map((m) => {
+            const pObj = appState.parlors[m.targetParlorId];
+            const entries = pObj ? countParlorProperEntries(pObj) : Number(m.entriesCount || 0);
+            const daysPassed = Math.min(STAR_MONITOR_DAYS, Math.max(0, Math.floor((Date.now() - (Number(m.startedAt) || Date.now())) / DAY_MS)));
+            return `
+              <div class="list-item" style="margin-bottom:6px;padding:8px 10px;">
+                <div>
+                  <div class="item-title" style="font-size:12.5px;">${escapeHtml(m.targetParlorName)} (${escapeHtml(m.targetParlorCode)})</div>
+                  <div class="item-sub">Day ${daysPassed}/${STAR_MONITOR_DAYS} · Entries: <strong>${entries}/${MIN_PROPER_ENTRIES_FOR_STAR}</strong></div>
+                </div>
+                <span class="badge ${m.starAwarded ? "badge-active" : "badge-warn"}">${m.starAwarded ? "⭐ +1 Star" : "Monitoring"}</span>
+              </div>
+            `;
+          }).join("");
+      }
+
       document.getElementById("referModal").classList.add("open");
     }
 
@@ -3529,10 +3963,13 @@
       const key = document.getElementById("planSelect").value;
       const plan = PLANS[key] || PLANS.yearly;
       const parlor = getCurrentParlor();
+      const stars = getAvailableStars(parlor);
+      const starBonusDays = stars * DAYS_PER_STAR;
+      const totalDays = plan.days + starBonusDays;
 
       document.getElementById("planSummaryBox").innerHTML = `
-        <div class="item-title">${escapeHtml(plan.label)} — ₹${plan.price} (${plan.days} Days)</div>
-        <div class="item-sub">Parlor: <strong>${escapeHtml(parlor.name)}</strong> · Valid till: <strong>${formatDateShort(parlor.validUntil)}</strong></div>
+        <div class="item-title">${escapeHtml(plan.label)} — ₹${plan.price} (${plan.days}d + ${starBonusDays}d ⭐ = <strong>${totalDays} Days</strong>)</div>
+        <div class="item-sub">Available Stars: <strong>⭐ ${stars}</strong> (1 Star = 5 Days) · Valid till: <strong>${formatDateShort(parlor.validUntil)}</strong></div>
       `;
 
       const histEl = document.getElementById("paymentHistoryBox");
@@ -3568,7 +4005,7 @@
         amount: plan.price * 100,
         currency: "INR",
         name: "Beauty Parlour Management",
-        description: `${plan.label} (${plan.days} Days) - ${parlor.name}`,
+        description: `${plan.label} - ${parlor.name}`,
         prefill: { name: parlor.activeUser.name || parlor.name, contact: phone || "" },
         notes: { parlor_id: parlor.id, parlor_name: parlor.name, plan_id: plan.id },
         theme: { color: "#c2185b" },
@@ -3577,16 +4014,21 @@
           const now = Date.now();
           const currentParlor = getCurrentParlor();
           const baseTime = Math.max(now, Number(currentParlor.validUntil) || now);
+          const starsToConvert = getAvailableStars(currentParlor);
+          const convertedBonusDays = starsToConvert * DAYS_PER_STAR;
+          const totalDaysAdded = plan.days + convertedBonusDays;
 
-          currentParlor.validUntil = baseTime + plan.days * DAY_MS;
+          currentParlor.validUntil = baseTime + totalDaysAdded * DAY_MS;
           currentParlor.planName = plan.label;
+          currentParlor.starsRedeemed = Number(currentParlor.starsRedeemed || 0) + starsToConvert;
+          currentParlor.bonusDaysEarned = Number(currentParlor.bonusDaysEarned || 0) + convertedBonusDays;
           currentParlor.payments = Array.isArray(currentParlor.payments) ? currentParlor.payments : [];
           currentParlor.payments.unshift({
             paymentId,
             planId: plan.id,
             planLabel: plan.label,
             amount: plan.price,
-            daysAdded: plan.days,
+            daysAdded: totalDaysAdded,
             date: getLocalDateStr()
           });
 
@@ -3597,7 +4039,8 @@
               paymentId,
               planId: plan.id,
               amount: plan.price,
-              daysAdded: plan.days,
+              daysAdded: totalDaysAdded,
+              starsConverted: starsToConvert,
               createdAt: now
             }).catch(() => {});
           }
@@ -3605,7 +4048,11 @@
           persistState(true);
           updatePlanSummary();
           closeModal("plansModal");
-          showToast(`Payment Successful! +${plan.days} Days Active`);
+          showToast(
+            starsToConvert > 0
+              ? `Payment Successful! ${plan.days}d + ${starsToConvert} Star (${convertedBonusDays}d) = +${totalDaysAdded} Days`
+              : `Payment Successful! +${plan.days} Days Active`
+          );
         },
         modal: { ondismiss: function () { showToast("Payment cancelled"); } }
       };
@@ -3654,9 +4101,10 @@
 
     function shareReferralOnWhatsApp() {
       const parlor = getCurrentParlor();
+      const q = getReferralQuotaStats(parlor);
       const msg = [
-        `✨ *${parlor.name}* ने आपको *Beauty Parlour Management* ऐप भेजा है!`,
-        `🎁 *30 दिन फ्री ट्रायल* और रेफ़रल कोड *${parlor.referralCode}* डालकर *+${REFERRAL_BONUS_DAYS} दिन बोनस* पाएं।`,
+        `✨ *${parlor.name}* (${parlor.city}) ne aapko *Beauty Parlour Management* app bheja hai!`,
+        `🎁 *30 din free trial* aur referral code *${parlor.referralCode}* se 10-din active use par *1 Star = 5 din bonus* (Bache M:${q.monthRemaining}/2, Y:${q.yearRemaining}/15).`,
         `📲 *APK Download Link:* ${APK_DIRECT_URL}`,
         `🌐 Web: ${WEB_APP_URL}`
       ].join("\n");
@@ -3682,21 +4130,21 @@
       incomeUnlocked = false;
       persistState(true);
       closeModal("parlorModal");
-      showToast(`Switched to ${appState.parlors[id].name}`);
+      showToast(`Switched to ${appState.parlors[id].name} (${appState.parlors[id].city})`);
     }
 
     function promptIncomeUnlock() {
       const parlor = getCurrentParlor();
-      const pin = prompt(currentLang === "hi" ? "इनकम देखने के लिए Password/PIN डालें:" : "Enter Password/PIN to view income:");
+      const pin = prompt(currentLang === "hi" ? "इनकम देखने के लिए App PIN / Password डालें:" : "Enter App PIN / Password to view income:");
       if (!pin) return;
       const cleanPin = pin.trim();
       const validUser = parlor.staff.find((u) => String(u.pin).trim() === cleanPin);
-      if (validUser || cleanPin === "1234") {
+      if (validUser || String(parlor.appPin || "").trim() === cleanPin) {
         incomeUnlocked = true;
         renderIncome();
         showToast(currentLang === "hi" ? "इनकम अनलॉक हो गई" : "Income unlocked");
       } else {
-        showToast(currentLang === "hi" ? "गलत Password/PIN" : "Wrong Password/PIN");
+        showToast(currentLang === "hi" ? "गलत App PIN / Password" : "Wrong App PIN / Password");
       }
     }
 
@@ -3794,24 +4242,27 @@
         .map((w) => w[0])
         .join("")
         .toUpperCase()
-        .slice(0, 3) || "BPM";
+        .slice(0, 3) || "GLA";
 
       document.getElementById("parlorAvatar").textContent = initials;
       document.getElementById("parlorTitle").textContent = parlor.name;
       document.getElementById("parlorSub").textContent = `${parlor.city} · ${parlor.activeUser.name} (${parlor.activeUser.role})`;
 
       document.getElementById("sessionUserLine").textContent = `👑 ${parlor.activeUser.name} · ID: ${parlor.activeUser.id || parlor.code} (${parlor.activeUser.role})`;
-      document.getElementById("sessionParlorLine").textContent = `Parlor: ${parlor.name} (${parlor.code})`;
+      document.getElementById("sessionParlorLine").textContent = `Parlor: ${parlor.name} (${parlor.city} · ${parlor.code}) · App PIN: ${parlor.appPin || "1234"}`;
 
       document.getElementById("planNameLabel").textContent = daysLeft > 0 ? `⏳ ${daysLeft} Days Left` : "Expired";
       document.getElementById("validityDateText").textContent = `Valid: ${formatDateShort(parlor.validUntil)}`;
 
+      renderReferralQuotaBadges();
+      renderStarNotifications();
       document.getElementById("staffLoginCodeHint").textContent = `ID: ${parlor.code}`;
       const loginCodeInput = document.getElementById("staffLoginParlorCode");
       if (loginCodeInput && !loginCodeInput.value) loginCodeInput.value = parlor.code;
       renderInnerParlorRoom();
       renderGateParlorSelect();
       renderAuthShell();
+      renderAppAdminConsole();
 
       document.getElementById("statConsumers").textContent = String(parlor.consumers.length);
       document.getElementById("statServices").textContent = String(parlor.services.length);
@@ -3825,10 +4276,10 @@
             <div class="list-item">
               <div>
                 <div class="item-title">${escapeHtml(u.name)} <span class="badge badge-trial">${escapeHtml(u.role)}</span></div>
-                <div class="item-sub">User ID: <strong>${escapeHtml(u.id)}</strong> · Parlor ID: <strong>${escapeHtml(parlor.code)}</strong> · Password: <strong>${escapeHtml(u.pin)}</strong></div>
+                <div class="item-sub">User ID: <strong>${escapeHtml(u.id)}</strong> · Parlor ID: <strong>${escapeHtml(parlor.code)}</strong> · PIN/Pass: <strong>${escapeHtml(u.pin)}</strong></div>
               </div>
               <div class="row-btns">
-                <button class="btn btn-soft btn-sm" onclick="startEditStaff('${escapeHtml(u.id)}')">Edit</button>
+                <button class="btn btn-soft btn-sm" onclick="startEditStaff('${escapeHtml(u.id)}')">PIN Badlein</button>
                 <button class="btn btn-danger btn-sm" onclick="deleteStaffMember('${escapeHtml(u.id)}')">Delete</button>
               </div>
             </div>
@@ -3930,6 +4381,7 @@
       if (navMatch) navMatch.classList.add("active");
 
       if (tabName === "assistant") initAssistantWelcome();
+      if (tabName === "support") renderAppAdminConsole();
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
@@ -3956,6 +4408,7 @@
     }
 
     applyLanguage();
+    evaluateTenDayReferralStars(false);
     renderAll();
     initFirebaseLiveSync();
 
