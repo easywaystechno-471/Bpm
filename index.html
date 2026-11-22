@@ -15,6 +15,9 @@
   <!-- Razorpay Checkout SDK -->
   <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
+  <!-- jsPDF for Logo + Receipt PDF Generation -->
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+
   <style>
     :root {
       --bg: #fdf7fa;
@@ -47,14 +50,14 @@
       background: var(--bg);
       color: var(--ink);
       min-height: 100vh;
-      padding-top: 4px;
-      padding-bottom: 88px;
+      padding-top: 6px;
+      padding-bottom: 92px;
     }
 
     .container {
-      max-width: 680px;
+      max-width: 720px;
       margin: 0 auto;
-      padding: 12px 14px 14px;
+      padding: 10px 14px 14px;
     }
 
     .parlor-banner {
@@ -143,6 +146,20 @@
       margin-bottom: 14px;
     }
 
+    .alert-banner {
+      background: #fff8e7;
+      border: 1.5px solid #f59e0b;
+      border-radius: var(--radius);
+      padding: 13px 14px;
+      margin-bottom: 14px;
+      box-shadow: var(--shadow);
+    }
+
+    .alert-banner.due-alert {
+      background: #fff1f2;
+      border-color: #e11d48;
+    }
+
     .section-title {
       font-size: 15px;
       font-weight: 800;
@@ -152,6 +169,7 @@
       align-items: center;
       justify-content: space-between;
       gap: 8px;
+      flex-wrap: wrap;
     }
 
     .badge {
@@ -172,6 +190,11 @@
     .badge-active {
       background: var(--ok-bg);
       color: var(--ok);
+    }
+
+    .badge-warn {
+      background: var(--warn-bg);
+      color: var(--warn);
     }
 
     .badge-expired {
@@ -317,6 +340,7 @@
       align-items: center;
       justify-content: center;
       gap: 6px;
+      text-decoration: none;
       transition: opacity 0.15s ease;
     }
 
@@ -336,6 +360,11 @@
 
     .btn-whatsapp {
       background: #16a34a;
+      color: #fff;
+    }
+
+    .btn-call {
+      background: #0284c7;
       color: #fff;
     }
 
@@ -364,6 +393,12 @@
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
     }
 
     .field {
@@ -398,6 +433,7 @@
       align-items: center;
       justify-content: space-between;
       gap: 10px;
+      flex-wrap: wrap;
     }
 
     .item-title {
@@ -411,6 +447,25 @@
       margin-top: 2px;
     }
 
+    .check-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border: 1px solid #f2d9e6;
+      background: #fff;
+      border-radius: 11px;
+      padding: 9px 12px;
+      margin-bottom: 7px;
+      cursor: pointer;
+    }
+
+    .check-row input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--rose);
+      flex-shrink: 0;
+    }
+
     .bottom-nav {
       position: fixed;
       bottom: 0;
@@ -421,7 +476,7 @@
       border-top: 1px solid var(--line);
       display: grid;
       grid-template-columns: repeat(6, 1fr);
-      padding: 6px 4px;
+      padding: 6px 2px;
       box-shadow: 0 -4px 16px rgba(36, 19, 28, 0.08);
     }
 
@@ -446,7 +501,7 @@
     }
 
     .nav-ico {
-      font-size: 16px;
+      font-size: 15px;
       line-height: 1;
     }
 
@@ -467,7 +522,7 @@
 
     .modal-box {
       width: 100%;
-      max-width: 440px;
+      max-width: 460px;
       background: #fff;
       border-radius: 18px;
       padding: 18px;
@@ -526,7 +581,7 @@
     <!-- Active Parlor Status Strip -->
     <section class="parlor-banner">
       <div class="parlor-meta">
-        <div class="parlor-avatar" id="parlorAvatar">BPM</div>
+        <div class="parlor-avatar" id="parlorAvatar">PBP</div>
         <div style="min-width:0;">
           <div class="parlor-name" id="parlorTitle">Payal beauty parlour</div>
           <div class="parlor-sub" id="parlorSub">Joura · User: Payal (ADMIN)</div>
@@ -534,6 +589,10 @@
       </div>
       <div class="sync-pill" id="syncBadge">Cloud Synced ✓</div>
     </section>
+
+    <!-- Morning 8 AM Appointment Alert & Payment Due Alert Banner -->
+    <section id="morningAlertBanner" class="alert-banner hidden"></section>
+    <section id="duePaymentAlertBanner" class="alert-banner due-alert hidden"></section>
 
     <!-- TAB 1: HOME -->
     <section id="tab-home" class="tab-view">
@@ -544,6 +603,7 @@
         <div class="row-btns">
           <button class="btn btn-soft btn-sm" onclick="lockAppSession()">Lock PIN</button>
           <button class="btn btn-soft btn-sm" onclick="manualCloudSync()">Cloud Sync</button>
+          <button class="btn btn-soft btn-sm" onclick="requestAlertPermission()">🔔 Alert Enable</button>
           <button class="btn btn-soft btn-sm" onclick="openParlorModal()">Switch / Logout</button>
         </div>
         <div class="item-sub" id="cloudLiveSubline" style="margin-top:8px;">Cloud Live ✓ (PAYAL01)</div>
@@ -602,7 +662,7 @@
         </div>
       </div>
 
-      <!-- Refer & Earn (Auto Referral Code + WhatsApp APK Share) -->
+      <!-- Refer & Earn -->
       <div class="card">
         <div class="section-title">
           <span>Refer & Earn</span>
@@ -681,13 +741,13 @@
         </div>
       </div>
 
-      <!-- Appointments & Reminders -->
+      <!-- Today & Upcoming Appointments -->
       <div class="card-rose">
         <div class="section-title">
           <span>📅 Today & Upcoming Appointments</span>
           <span class="badge badge-trial" id="upcomingCountBadge">0</span>
         </div>
-        <div id="homeRemindersList" class="item-sub">कोई आगामी Appointment / Reminder नहीं है।</div>
+        <div id="homeAppointmentsList" class="item-sub">कोई आगामी Appointment नहीं है।</div>
       </div>
     </section>
 
@@ -716,60 +776,101 @@
       </div>
     </section>
 
-    <!-- TAB 3: SERVICES -->
+    <!-- TAB 3: SERVICES & DUE / RECEIPT PDF -->
     <section id="tab-services" class="tab-view hidden">
       <div class="card">
-        <div class="section-title"><span>Record Service / Billing</span></div>
+        <div class="section-title"><span>Record Service / Billing & Due Date</span></div>
         <div class="field">
           <label>Consumer *</label>
           <select id="srvConsumer"></select>
         </div>
         <div class="field">
           <label>Service Name *</label>
-          <input id="srvName" class="input" placeholder="e.g. Facial / Hair Spa / Bridal Makeup" />
+          <input id="srvName" class="input" placeholder="e.g. Bridal Makeup / Facial / Hair Spa" />
         </div>
-        <div class="field">
-          <label>Amount (₹) *</label>
-          <input id="srvAmount" class="input" type="number" min="1" step="any" placeholder="e.g. 800" />
+        <div class="grid-2">
+          <div class="field">
+            <label>Total Amount (₹) *</label>
+            <input id="srvAmount" class="input" type="number" min="1" step="any" placeholder="e.g. 1500" oninput="syncDueInputs()" />
+          </div>
+          <div class="field">
+            <label>Paid Now (₹)</label>
+            <input id="srvPaidNow" class="input" type="number" min="0" step="any" placeholder="0 if baad me denge" oninput="syncDueInputs()" />
+          </div>
         </div>
-        <button class="btn btn-primary btn-block" onclick="addServiceRecord()">Save Service & Sync</button>
+        <div class="grid-2">
+          <div class="field">
+            <label>Payment Status</label>
+            <select id="srvPayMode" onchange="onPayModeChange()">
+              <option value="PAID">Full Paid</option>
+              <option value="LATER">Baad Mein Denge (Full Due)</option>
+              <option value="PARTIAL">Thoda Paid / Baaki Later</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Promise Date (Kab Denge)</label>
+            <input id="srvPromiseDate" class="input" type="date" />
+          </div>
+        </div>
+        <button class="btn btn-primary btn-block" onclick="addServiceRecord()">Save Service, Due & Sync</button>
       </div>
 
       <div class="card">
-        <div class="section-title"><span>Recent Services</span></div>
+        <div class="section-title">
+          <span>Baaki Paise (Due / Promise Alerts)</span>
+          <span class="badge badge-warn" id="dueCountBadge">0</span>
+        </div>
+        <div id="duePaymentsList"></div>
+      </div>
+
+      <div class="card">
+        <div class="section-title"><span>Recent Services & Logo PDF Receipts</span></div>
         <div id="servicesList"></div>
       </div>
     </section>
 
-    <!-- TAB 4: REMINDERS -->
-    <section id="tab-reminders" class="tab-view hidden">
+    <!-- TAB 4: DEDICATED APPOINTMENTS (8 AM ALERT + DATE/TIME WHATSAPP + CALL) -->
+    <section id="tab-appointments" class="tab-view hidden">
       <div class="card">
-        <div class="section-title"><span>Add Appointment / Reminder</span></div>
-        <div class="field">
-          <label>Client / Title *</label>
-          <input id="remTitle" class="input" placeholder="e.g. Pooja — Bridal Trial" />
+        <div class="section-title">
+          <span>📅 New Appointment (Bridal / Client)</span>
+          <span class="badge badge-trial">8:00 AM Alert</span>
         </div>
         <div class="field">
-          <label>Phone (for Direct Call)</label>
-          <input id="remPhone" class="input" type="tel" placeholder="e.g. 9876543210" />
+          <label>Client Name *</label>
+          <input id="appClientName" class="input" placeholder="e.g. Priya Verma" />
         </div>
         <div class="field">
-          <label>Date *</label>
-          <input id="remDate" class="input" type="date" />
+          <label>Mobile Number *</label>
+          <input id="appClientPhone" class="input" type="tel" placeholder="e.g. 9876543210" />
         </div>
-        <button class="btn btn-primary btn-block" onclick="addReminder()">Save Reminder</button>
+        <div class="field">
+          <label>Service / Package *</label>
+          <input id="appServiceType" class="input" placeholder="e.g. Bridal Makeup / Engagement / Hair Styling" />
+        </div>
+        <div class="grid-2">
+          <div class="field">
+            <label>Appointment Date *</label>
+            <input id="appDate" class="input" type="date" />
+          </div>
+          <div class="field">
+            <label>Appointment Time *</label>
+            <input id="appTime" class="input" type="time" />
+          </div>
+        </div>
+        <button class="btn btn-primary btn-block" onclick="addAppointment()">Save Appointment & Send Date/Time</button>
       </div>
 
       <div class="card">
-        <div class="section-title"><span>All Reminders</span></div>
-        <div id="remindersList"></div>
+        <div class="section-title"><span>Scheduled Appointments</span></div>
+        <div id="appointmentsList"></div>
       </div>
     </section>
 
-    <!-- TAB 5: OFFERS -->
+    <!-- TAB 5: OFFERS (ALL OR TICK SELECT BROADCAST) -->
     <section id="tab-offers" class="tab-view hidden">
       <div class="card">
-        <div class="section-title"><span>Offers & Packages</span></div>
+        <div class="section-title"><span>Create Offer & Send to Consumers</span></div>
         <div class="field">
           <label>Offer Title *</label>
           <input id="offTitle" class="input" placeholder="e.g. Festive Glow Combo" />
@@ -782,7 +883,10 @@
       </div>
 
       <div class="card">
-        <div class="section-title"><span>Active Offers</span></div>
+        <div class="section-title">
+          <span>Active Offers</span>
+          <span class="badge badge-trial">All / Tick Select</span>
+        </div>
         <div id="offersList"></div>
       </div>
     </section>
@@ -816,7 +920,7 @@
     </section>
   </main>
 
-  <!-- Bottom Navigation -->
+  <!-- Bottom Navigation (6 Tabs) -->
   <nav class="bottom-nav">
     <button class="nav-btn active" data-tab="home" onclick="switchTab('home', this)">
       <span class="nav-ico">🏠</span><span>Home</span>
@@ -827,16 +931,50 @@
     <button class="nav-btn" data-tab="services" onclick="switchTab('services', this)">
       <span class="nav-ico">💆‍♀️</span><span>Services</span>
     </button>
-    <button class="nav-btn" data-tab="reminders" onclick="switchTab('reminders', this)">
-      <span class="nav-ico">⏰</span><span>Reminders</span>
+    <button class="nav-btn" data-tab="appointments" onclick="switchTab('appointments', this)">
+      <span class="nav-ico">📅</span><span>Appoints</span>
     </button>
     <button class="nav-btn" data-tab="offers" onclick="switchTab('offers', this)">
-      <span class="nav-ico">🎁</span><span>Offers/PDF</span>
+      <span class="nav-ico">🎁</span><span>Offers</span>
     </button>
     <button class="nav-btn" data-tab="staff" onclick="switchTab('staff', this)">
       <span class="nav-ico">👩‍💼</span><span>Staff</span>
     </button>
   </nav>
+
+  <!-- Modal: Send Offer to All or Tick-Selected Consumers -->
+  <div class="modal-backdrop" id="sendOfferModal">
+    <div class="modal-box">
+      <div class="modal-head">
+        <strong>Send Offer on WhatsApp</strong>
+        <button class="close-x" onclick="closeModal('sendOfferModal')">✕</button>
+      </div>
+
+      <div class="card-rose" style="margin-bottom:10px;">
+        <div class="item-title" id="broadcastOfferTitle">Offer Title</div>
+        <div class="item-sub" id="broadcastOfferDesc">Offer Details</div>
+      </div>
+
+      <div class="row-btns" style="margin-bottom:10px;">
+        <button class="btn btn-soft btn-sm" style="flex:1;" onclick="toggleAllOfferConsumers(true)">☑ Select All (Sabko)</button>
+        <button class="btn btn-outline btn-sm" style="flex:1;" onclick="toggleAllOfferConsumers(false)">☐ Unselect All</button>
+      </div>
+
+      <div id="offerConsumerChecklist" style="max-height:220px;overflow-y:auto;margin-bottom:12px;"></div>
+
+      <div id="offerQueueBar" class="card-rose hidden" style="margin-bottom:10px;">
+        <div class="item-title" id="offerQueueStatus">Queue Ready</div>
+        <div class="row-btns" style="margin-top:8px;">
+          <button class="btn btn-whatsapp btn-sm" style="flex:1;" onclick="sendNextQueuedOffer()">Send Next on WhatsApp</button>
+          <button class="btn btn-outline btn-sm" onclick="resetOfferQueue()">Reset</button>
+        </div>
+      </div>
+
+      <button class="btn btn-whatsapp btn-block" onclick="startOfferBroadcastQueue()">
+        🚀 Start Sending to Selected (<span id="selectedConsumerCount">0</span>)
+      </button>
+    </div>
+  </div>
 
   <!-- Modal: Parlor Switch / Register with Referral Code -->
   <div class="modal-backdrop" id="parlorModal">
@@ -914,8 +1052,10 @@
   <div class="toast" id="toast"></div>
 
   <script>
-    // Razorpay Test Key ID (Secret Key kabhi frontend mein na rakhein)
-    const RAZORPAY_KEY_ID = "rzp_test_U33IsCW4CKN2KJ";
+    // =========================================================================
+    // 1. RAZORPAY LIVE KEY & FIREBASE CONFIG
+    // =========================================================================
+    const RAZORPAY_KEY_ID = "rzp_live_U33fOg4q9BEcIY";
 
     const FIREBASE_CONFIG = {
       apiKey: "AIzaSyD5n8P4e4Qylr9fh02f4e9d04zyJcWE9Xw",
@@ -946,12 +1086,27 @@
     let isRemoteApplying = false;
     let lastWrittenJson = "";
     let incomeUnlocked = false;
+    let activeOfferForSend = null;
+    let offerSendQueue = [];
+    let offerQueueIndex = 0;
 
     function getLocalDateStr(d = new Date()) {
       const year = d.getFullYear();
       const month = String(d.getMonth() + 1).padStart(2, "0");
       const day = String(d.getDate()).padStart(2, "0");
       return `${year}-${month}-${day}`;
+    }
+
+    function formatTime12h(time24) {
+      if (!time24 || typeof time24 !== "string") return "";
+      const parts = time24.split(":");
+      if (parts.length < 2) return time24;
+      let h = Number(parts[0]);
+      const m = parts[1].slice(0, 2);
+      if (!Number.isFinite(h)) return time24;
+      const ampm = h >= 12 ? "PM" : "AM";
+      h = h % 12 || 12;
+      return `${h}:${m} ${ampm}`;
     }
 
     function generateReferralCode(name = "PARLOR") {
@@ -985,10 +1140,34 @@
               { id: "c2", name: "Meera Tiwari", phone: "9826000002", note: "Hair Spa" }
             ],
             services: [
-              { id: "s1", consumerName: "Anjali Verma", name: "Gold Facial", amount: 650, date: today },
-              { id: "s2", consumerName: "Meera Tiwari", name: "Keratin Spa", amount: 950, date: today }
+              {
+                id: "s1",
+                consumerId: "c1",
+                consumerName: "Anjali Verma",
+                consumerPhone: "9826000001",
+                name: "Gold Facial",
+                amount: 650,
+                paidAmount: 650,
+                dueAmount: 0,
+                promiseDate: "",
+                settled: true,
+                date: today
+              },
+              {
+                id: "s2",
+                consumerId: "c2",
+                consumerName: "Meera Tiwari",
+                consumerPhone: "9826000002",
+                name: "Keratin Spa",
+                amount: 950,
+                paidAmount: 950,
+                dueAmount: 0,
+                promiseDate: "",
+                settled: true,
+                date: today
+              }
             ],
-            reminders: [],
+            appointments: [],
             offers: [
               { id: "o1", title: "Bridal & Party Glow", desc: "Complete skin & hair package" }
             ],
@@ -1029,7 +1208,7 @@
         payments: Array.isArray(safeObj.payments) ? safeObj.payments : [],
         consumers: Array.isArray(safeObj.consumers) ? safeObj.consumers : [],
         services: Array.isArray(safeObj.services) ? safeObj.services : [],
-        reminders: Array.isArray(safeObj.reminders) ? safeObj.reminders : [],
+        appointments: Array.isArray(safeObj.appointments) ? safeObj.appointments : [],
         offers: Array.isArray(safeObj.offers) ? safeObj.offers : [],
         staff: Array.isArray(safeObj.staff) && safeObj.staff.length
           ? safeObj.staff
@@ -1152,6 +1331,515 @@
       }
     }
 
+    // =========================================================================
+    // 2. ALERTS: 8:00 AM APPOINTMENT ALERT & DUE PAYMENT PROMISE ALERT
+    // =========================================================================
+    function requestAlertPermission() {
+      if (!("Notification" in window)) {
+        showToast("In-app 8 AM & Due alerts active");
+        return;
+      }
+      if (Notification.permission === "granted") {
+        showToast("Notifications enabled");
+        triggerSystemAlertIfNeeded();
+      } else {
+        Notification.requestPermission().then((perm) => {
+          showToast(perm === "granted" ? "Notifications enabled" : "In-app alerts active");
+        }).catch(() => {});
+      }
+    }
+
+    function triggerSystemAlertIfNeeded() {
+      const parlor = getCurrentParlor();
+      const today = getLocalDateStr();
+      const now = new Date();
+      const after8AM = now.getHours() >= 8;
+
+      const todayApps = (parlor.appointments || []).filter((a) => a.date === today);
+      const dueTodayOrPast = (parlor.services || []).filter(
+        (s) => !s.settled && Number(s.dueAmount || 0) > 0 && s.promiseDate && s.promiseDate <= today
+      );
+
+      if (!("Notification" in window) || Notification.permission !== "granted") return;
+
+      const notifyKey = `bpm_sys_notif_${parlor.id}_${today}`;
+      if (sessionStorage.getItem(notifyKey)) return;
+
+      if (after8AM && todayApps.length > 0) {
+        sessionStorage.setItem(notifyKey, "1");
+        try {
+          new Notification(`${parlor.name} — Aaj Ki Appointments`, {
+            body: `${todayApps.length} client appointment(s) aaj scheduled hain. Call ya WhatsApp karein.`
+          });
+        } catch (e) {}
+      } else if (dueTodayOrPast.length > 0) {
+        sessionStorage.setItem(notifyKey, "1");
+        try {
+          new Notification(`${parlor.name} — Payment Promise Alert`, {
+            body: `${dueTodayOrPast.length} customer ka payment promise date aa chuka hai.`
+          });
+        } catch (e) {}
+      }
+    }
+
+    function renderAlertBanners() {
+      const parlor = getCurrentParlor();
+      const today = getLocalDateStr();
+      const now = new Date();
+      const after8AM = now.getHours() >= 8;
+
+      const morningEl = document.getElementById("morningAlertBanner");
+      const todayApps = (parlor.appointments || []).filter((a) => a.date === today);
+
+      if (after8AM && todayApps.length > 0) {
+        morningEl.classList.remove("hidden");
+        morningEl.innerHTML = `
+          <div class="section-title" style="margin-bottom:6px;">
+            <span>🌅 Subah 8:00 Baje Ka Appointment Alert (${todayApps.length})</span>
+            <span class="badge badge-warn">Today</span>
+          </div>
+          ${todayApps.map((a) => {
+            const phone = sanitizeWhatsAppPhone(a.phone);
+            const msg = `Namaste *${a.clientName}* ji, yaad dilana tha ki aaj *${formatTime12h(a.time) || a.time}* par *${parlor.name}* mein aapka *${a.serviceType}* appointment hai. Kripya time se pahunch jayein.`;
+            return `
+              <div class="list-item" style="margin-bottom:6px;">
+                <div>
+                  <div class="item-title">${escapeHtml(a.clientName)} · ${escapeHtml(formatTime12h(a.time) || a.time)}</div>
+                  <div class="item-sub">${escapeHtml(a.serviceType)} · ${escapeHtml(a.phone)}</div>
+                </div>
+                <div class="row-btns">
+                  ${a.phone ? `<a class="btn btn-call btn-sm" href="tel:${escapeHtml(a.phone)}">Call</a>` : ""}
+                  ${phone ? `<a class="btn btn-whatsapp btn-sm" target="_blank" rel="noopener noreferrer" href="https://wa.me/${phone}?text=${encodeURIComponent(msg)}">WhatsApp</a>` : ""}
+                </div>
+              </div>
+            `;
+          }).join("")}
+        `;
+      } else {
+        morningEl.classList.add("hidden");
+        morningEl.innerHTML = "";
+      }
+
+      const dueEl = document.getElementById("duePaymentAlertBanner");
+      const dueList = (parlor.services || []).filter(
+        (s) => !s.settled && Number(s.dueAmount || 0) > 0 && s.promiseDate && s.promiseDate <= today
+      );
+
+      if (dueList.length > 0) {
+        dueEl.classList.remove("hidden");
+        dueEl.innerHTML = `
+          <div class="section-title" style="margin-bottom:6px;">
+            <span>⏰ Baaki Paise Ki Promise Date Alert (${dueList.length})</span>
+            <span class="badge badge-expired">Call Due</span>
+          </div>
+          ${dueList.map((s) => `
+            <div class="list-item" style="margin-bottom:6px;">
+              <div>
+                <div class="item-title">${escapeHtml(s.consumerName)} — Baaki ₹${Math.round(Number(s.dueAmount)).toLocaleString("en-IN")}</div>
+                <div class="item-sub">Service: ${escapeHtml(s.name)} · Promise Date: <strong>${escapeHtml(s.promiseDate)}</strong></div>
+              </div>
+              <div class="row-btns">
+                ${s.consumerPhone ? `<a class="btn btn-call btn-sm" href="tel:${escapeHtml(s.consumerPhone)}">Call</a>` : ""}
+                <button class="btn btn-soft btn-sm" onclick="markServiceSettled('${escapeHtml(s.id)}')">Received</button>
+              </div>
+            </div>
+          `).join("")}
+        `;
+      } else {
+        dueEl.classList.add("hidden");
+        dueEl.innerHTML = "";
+      }
+
+      triggerSystemAlertIfNeeded();
+    }
+
+    // =========================================================================
+    // 3. SERVICES, DUE PROMISE DATE & LOGO PDF RECEIPT (jsPDF)
+    // =========================================================================
+    function syncDueInputs() {
+      const total = Math.max(0, Number(document.getElementById("srvAmount").value) || 0);
+      const mode = document.getElementById("srvPayMode").value;
+      const paidEl = document.getElementById("srvPaidNow");
+
+      if (mode === "PAID") {
+        paidEl.value = total > 0 ? String(total) : "";
+      } else if (mode === "LATER") {
+        paidEl.value = "0";
+      }
+    }
+
+    function onPayModeChange() {
+      const mode = document.getElementById("srvPayMode").value;
+      const total = Math.max(0, Number(document.getElementById("srvAmount").value) || 0);
+      const paidEl = document.getElementById("srvPaidNow");
+      const promiseEl = document.getElementById("srvPromiseDate");
+
+      if (mode === "PAID") {
+        paidEl.value = total > 0 ? String(total) : "";
+      } else if (mode === "LATER") {
+        paidEl.value = "0";
+        if (!promiseEl.value) promiseEl.value = getLocalDateStr();
+      } else if (mode === "PARTIAL") {
+        if (!promiseEl.value) promiseEl.value = getLocalDateStr();
+      }
+    }
+
+    function addServiceRecord() {
+      const parlor = getCurrentParlor();
+      const selectedVal = document.getElementById("srvConsumer").value;
+      const matchedConsumer = (parlor.consumers || []).find((c) => c.name === selectedVal);
+      const consumerName = matchedConsumer ? matchedConsumer.name : (selectedVal || "Walk-in Client");
+      const consumerPhone = matchedConsumer ? matchedConsumer.phone : "";
+
+      const name = document.getElementById("srvName").value.trim();
+      const amount = Number(document.getElementById("srvAmount").value);
+      const mode = document.getElementById("srvPayMode").value;
+      let paidAmount = Number(document.getElementById("srvPaidNow").value);
+      const promiseDate = document.getElementById("srvPromiseDate").value;
+
+      if (!name || !Number.isFinite(amount) || amount <= 0) {
+        showToast("Service aur valid Total Amount daalein");
+        return;
+      }
+
+      if (!Number.isFinite(paidAmount) || paidAmount < 0) paidAmount = 0;
+      if (mode === "PAID") paidAmount = amount;
+      if (mode === "LATER") paidAmount = 0;
+      if (paidAmount > amount) paidAmount = amount;
+
+      const dueAmount = Math.max(0, amount - paidAmount);
+      if (dueAmount > 0 && !promiseDate) {
+        showToast("Baaki paise ke liye Promise Date (kab degi) select karein");
+        return;
+      }
+
+      const newRecord = {
+        id: "s-" + Date.now(),
+        consumerName,
+        consumerPhone,
+        name,
+        amount,
+        paidAmount,
+        dueAmount,
+        promiseDate: dueAmount > 0 ? promiseDate : "",
+        settled: dueAmount === 0,
+        date: getLocalDateStr()
+      };
+
+      parlor.services.unshift(newRecord);
+
+      document.getElementById("srvName").value = "";
+      document.getElementById("srvAmount").value = "";
+      document.getElementById("srvPaidNow").value = "";
+      document.getElementById("srvPromiseDate").value = "";
+      document.getElementById("srvPayMode").value = "PAID";
+
+      persistState(true);
+      showToast(dueAmount > 0 ? `Saved with Due ₹${dueAmount} (${promiseDate})` : "Service & payment saved");
+    }
+
+    function markServiceSettled(serviceId) {
+      const parlor = getCurrentParlor();
+      const s = (parlor.services || []).find((item) => item.id === serviceId);
+      if (!s) return;
+      s.paidAmount = Number(s.amount || 0);
+      s.dueAmount = 0;
+      s.settled = true;
+      persistState(true);
+      showToast("Due payment marked as received");
+    }
+
+    function createParlorLogoDataUrl(parlor) {
+      const canvas = document.createElement("canvas");
+      canvas.width = 180;
+      canvas.height = 180;
+      const ctx = canvas.getContext("2d");
+
+      const grad = ctx.createLinearGradient(0, 0, 180, 180);
+      grad.addColorStop(0, "#d81b60");
+      grad.addColorStop(1, "#7b1fa2");
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.roundRect(0, 0, 180, 180, 36);
+      ctx.fill();
+
+      const initials = parlor.name
+        .split(/\s+/)
+        .filter(Boolean)
+        .map((w) => w[0])
+        .join("")
+        .toUpperCase()
+        .slice(0, 3) || "BPM";
+
+      ctx.fillStyle = "#ffffff";
+      ctx.font = "800 54px sans-serif";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(initials, 90, 86);
+
+      ctx.font = "700 18px sans-serif";
+      ctx.fillStyle = "#fce7f3";
+      ctx.fillText("BPM PARLOUR", 90, 134);
+
+      return canvas.toDataURL("image/png");
+    }
+
+    function generateReceiptPdf(serviceId) {
+      const parlor = getCurrentParlor();
+      const s = (parlor.services || []).find((item) => item.id === serviceId);
+      if (!s) return;
+
+      if (!window.jspdf || !window.jspdf.jsPDF) {
+        showToast("PDF library load nahi hui");
+        return;
+      }
+
+      try {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF({ unit: "mm", format: "a5" });
+        const logoDataUrl = createParlorLogoDataUrl(parlor);
+
+        // Header with Clear Logo
+        doc.addImage(logoDataUrl, "PNG", 12, 10, 22, 22);
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(15);
+        doc.setTextColor(136, 14, 79);
+        doc.text(String(parlor.name || "Beauty Parlour"), 38, 17);
+
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(10);
+        doc.setTextColor(90, 75, 85);
+        doc.text(`${parlor.city || ""} · Receipt No: ${s.id.slice(-6).toUpperCase()}`, 38, 23);
+        doc.text(`Service Date: ${s.date || getLocalDateStr()}`, 38, 29);
+
+        doc.setDrawColor(235, 195, 215);
+        doc.line(12, 36, 136, 36);
+
+        // Client & Service Details
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(11);
+        doc.setTextColor(36, 19, 28);
+        doc.text("Customer Details", 12, 44);
+
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(10);
+        doc.text(`Name: ${s.consumerName || "Client"}`, 12, 50);
+        if (s.consumerPhone) doc.text(`Phone: ${s.consumerPhone}`, 12, 56);
+
+        doc.setFont("helvetica", "bold");
+        doc.text("Service & Payment Summary", 12, 66);
+
+        const totalAmt = Number(s.amount || 0);
+        const paidAmt = Number(s.paidAmount || 0);
+        const dueAmt = Math.max(0, Number(s.dueAmount || 0));
+
+        doc.setFont("helvetica", "normal");
+        doc.text(`Service: ${s.name}`, 12, 73);
+        doc.text(`Total Amount: Rs. ${totalAmt}`, 12, 79);
+        doc.text(`Paid Amount: Rs. ${paidAmt}`, 12, 85);
+
+        if (dueAmt > 0) {
+          doc.setFont("helvetica", "bold");
+          doc.setTextColor(185, 28, 28);
+          doc.text(`Balance Due (Baad Mein Denge): Rs. ${dueAmt}`, 12, 93);
+          doc.text(`Payment Promise Date: ${s.promiseDate || "Not Set"}`, 12, 99);
+        } else {
+          doc.setFont("helvetica", "bold");
+          doc.setTextColor(21, 128, 61);
+          doc.text("Payment Status: PAID IN FULL", 12, 93);
+        }
+
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(9);
+        doc.setTextColor(110, 85, 99);
+        doc.text("Thank you for visiting! Please keep this receipt for reference.", 12, 115);
+
+        const fileName = `Receipt_${(s.consumerName || "Client").replace(/\s+/g, "_")}_${s.date}.pdf`;
+        doc.save(fileName);
+        showToast("Logo PDF Receipt downloaded");
+      } catch (err) {
+        console.error("PDF error:", err);
+        showToast("PDF banane mein error aaya");
+      }
+    }
+
+    // =========================================================================
+    // 4. DEDICATED APPOINTMENTS (DATE & TIME WHATSAPP + CALL + 8 AM ALERT)
+    // =========================================================================
+    function addAppointment() {
+      const parlor = getCurrentParlor();
+      const clientName = document.getElementById("appClientName").value.trim();
+      const phone = document.getElementById("appClientPhone").value.trim();
+      const serviceType = document.getElementById("appServiceType").value.trim();
+      const date = document.getElementById("appDate").value;
+      const time = document.getElementById("appTime").value;
+
+      if (!clientName || !phone || !serviceType || !date || !time) {
+        showToast("Client Name, Phone, Service, Date aur Time sab daalein");
+        return;
+      }
+
+      const newApp = {
+        id: "a-" + Date.now(),
+        clientName,
+        phone,
+        serviceType,
+        date,
+        time
+      };
+
+      parlor.appointments.unshift(newApp);
+
+      document.getElementById("appClientName").value = "";
+      document.getElementById("appClientPhone").value = "";
+      document.getElementById("appServiceType").value = "";
+      document.getElementById("appDate").value = "";
+      document.getElementById("appTime").value = "";
+
+      persistState(true);
+      showToast("Appointment saved");
+      sendAppointmentWhatsApp(newApp.id);
+    }
+
+    function sendAppointmentWhatsApp(appId) {
+      const parlor = getCurrentParlor();
+      const a = (parlor.appointments || []).find((item) => item.id === appId);
+      if (!a) return;
+
+      const phoneDigits = sanitizeWhatsAppPhone(a.phone);
+      const timeLabel = formatTime12h(a.time) || a.time;
+      const msg = [
+        `✨ Namaste *${a.clientName}* ji, *${parlor.name}* (${parlor.city}) mein aapka appointment confirm hai:`,
+        `💆‍♀️ Service: *${a.serviceType}*`,
+        `📅 Date: *${a.date}*`,
+        `⏰ Time: *${timeLabel}*`,
+        `Kripya samay se pahunchne ki kripa karein. Dhanyawad!`
+      ].join("\n");
+
+      if (phoneDigits.length >= 10) {
+        window.open(`https://wa.me/${phoneDigits}?text=${encodeURIComponent(msg)}`, "_blank", "noopener,noreferrer");
+      } else {
+        showToast("Valid mobile number nahi mila");
+      }
+    }
+
+    // =========================================================================
+    // 5. OFFER BROADCAST (ALL OR TICK-SELECTED CONSUMERS)
+    // =========================================================================
+    function openSendOfferModal(offerId, selectAllByDefault = false) {
+      const parlor = getCurrentParlor();
+      const offer = (parlor.offers || []).find((o) => o.id === offerId);
+      if (!offer) return;
+
+      activeOfferForSend = offer;
+      offerSendQueue = [];
+      offerQueueIndex = 0;
+      document.getElementById("offerQueueBar").classList.add("hidden");
+
+      document.getElementById("broadcastOfferTitle").textContent = offer.title;
+      document.getElementById("broadcastOfferDesc").textContent = offer.desc || "Special Parlour Offer";
+
+      const listEl = document.getElementById("offerConsumerChecklist");
+      if (!parlor.consumers.length) {
+        listEl.innerHTML = `<div class="item-sub">Pehle Consumers tab mein customer add karein.</div>`;
+      } else {
+        listEl.innerHTML = parlor.consumers.map((c, idx) => `
+          <label class="check-row">
+            <input type="checkbox" class="offer-con-check" data-index="${idx}" ${selectAllByDefault ? "checked" : ""} onchange="updateSelectedConsumerCount()" />
+            <div style="min-width:0;">
+              <div class="item-title">${escapeHtml(c.name)}</div>
+              <div class="item-sub">${escapeHtml(c.phone)}</div>
+            </div>
+          </label>
+        `).join("");
+      }
+
+      updateSelectedConsumerCount();
+      document.getElementById("sendOfferModal").classList.add("open");
+    }
+
+    function toggleAllOfferConsumers(checked) {
+      document.querySelectorAll(".offer-con-check").forEach((cb) => {
+        cb.checked = checked;
+      });
+      updateSelectedConsumerCount();
+    }
+
+    function updateSelectedConsumerCount() {
+      const count = document.querySelectorAll(".offer-con-check:checked").length;
+      const el = document.getElementById("selectedConsumerCount");
+      if (el) el.textContent = String(count);
+    }
+
+    function sanitizeWhatsAppPhone(phone) {
+      let digits = String(phone || "").replace(/\D/g, "");
+      if (digits.length === 10) digits = "91" + digits;
+      return digits;
+    }
+
+    function buildOfferMessage(parlor, consumerName, offer) {
+      return [
+        `✨ Namaste *${consumerName}* ji, *${parlor.name}* (${parlor.city}) ka special offer:`,
+        `🎁 *${offer.title}*`,
+        offer.desc ? `📋 ${offer.desc}` : "",
+        `Booking ya jaankari ke liye abhi reply karein!`
+      ].filter(Boolean).join("\n");
+    }
+
+    function startOfferBroadcastQueue() {
+      if (!activeOfferForSend) return;
+      const parlor = getCurrentParlor();
+      const checkedBoxes = Array.from(document.querySelectorAll(".offer-con-check:checked"));
+
+      if (!checkedBoxes.length) {
+        showToast("Kam se kam 1 consumer tick karein ya Select All dabayein");
+        return;
+      }
+
+      offerSendQueue = checkedBoxes
+        .map((cb) => parlor.consumers[Number(cb.dataset.index)])
+        .filter((c) => c && sanitizeWhatsAppPhone(c.phone).length >= 10);
+
+      if (!offerSendQueue.length) {
+        showToast("Selected consumers ke valid mobile numbers nahi mile");
+        return;
+      }
+
+      offerQueueIndex = 0;
+      document.getElementById("offerQueueBar").classList.remove("hidden");
+      sendNextQueuedOffer();
+    }
+
+    function sendNextQueuedOffer() {
+      if (!activeOfferForSend || !offerSendQueue.length) return;
+      if (offerQueueIndex >= offerSendQueue.length) {
+        document.getElementById("offerQueueStatus").textContent = "Sabhi selected consumers ko offer bheja ja chuka hai!";
+        showToast("Offer sending completed");
+        return;
+      }
+
+      const parlor = getCurrentParlor();
+      const target = offerSendQueue[offerQueueIndex];
+      const phoneDigits = sanitizeWhatsAppPhone(target.phone);
+      const msg = buildOfferMessage(parlor, target.name, activeOfferForSend);
+
+      offerQueueIndex += 1;
+      const remaining = offerSendQueue.length - offerQueueIndex;
+      document.getElementById("offerQueueStatus").textContent =
+        `Sent to ${target.name} (${offerQueueIndex}/${offerSendQueue.length}) · Remaining: ${remaining}`;
+
+      window.open(`https://wa.me/${phoneDigits}?text=${encodeURIComponent(msg)}`, "_blank", "noopener,noreferrer");
+    }
+
+    function resetOfferQueue() {
+      offerSendQueue = [];
+      offerQueueIndex = 0;
+      document.getElementById("offerQueueBar").classList.add("hidden");
+    }
+
+    // =========================================================================
+    // 6. RAZORPAY CHECKOUT, REFERRAL, PARLOR & INCOME
+    // =========================================================================
     function getRemainingDays(parlor) {
       const diff = (Number(parlor.validUntil) || Date.now()) - Date.now();
       return Math.max(0, Math.ceil(diff / DAY_MS));
@@ -1453,7 +2141,7 @@
       let daily = 0, monthly = 0, quarterly = 0, annually = 0, alltime = 0;
 
       for (const s of services || []) {
-        const amt = Number(s.amount || 0);
+        const amt = Number(s.paidAmount !== undefined ? s.paidAmount : s.amount || 0);
         if (!Number.isFinite(amt) || amt <= 0) continue;
         alltime += amt;
         const dt = parseServiceDateLocal(s.date);
@@ -1484,45 +2172,6 @@
       document.getElementById("conNote").value = "";
       persistState(true);
       showToast("Consumer saved");
-    }
-
-    function addServiceRecord() {
-      const consumerName = document.getElementById("srvConsumer").value || "Walk-in Client";
-      const name = document.getElementById("srvName").value.trim();
-      const amount = Number(document.getElementById("srvAmount").value);
-      if (!name || !Number.isFinite(amount) || amount <= 0) {
-        showToast("Service aur valid Amount daalein");
-        return;
-      }
-      const parlor = getCurrentParlor();
-      parlor.services.unshift({
-        id: "s-" + Date.now(),
-        consumerName,
-        name,
-        amount,
-        date: getLocalDateStr()
-      });
-      document.getElementById("srvName").value = "";
-      document.getElementById("srvAmount").value = "";
-      persistState(true);
-      showToast("Service recorded");
-    }
-
-    function addReminder() {
-      const title = document.getElementById("remTitle").value.trim();
-      const phone = document.getElementById("remPhone").value.trim();
-      const date = document.getElementById("remDate").value;
-      if (!title || !date) {
-        showToast("Title aur Date daalein");
-        return;
-      }
-      const parlor = getCurrentParlor();
-      parlor.reminders.unshift({ id: "r-" + Date.now(), title, phone, date });
-      document.getElementById("remTitle").value = "";
-      document.getElementById("remPhone").value = "";
-      document.getElementById("remDate").value = "";
-      persistState(true);
-      showToast("Reminder saved");
     }
 
     function addOffer() {
@@ -1608,46 +2257,116 @@
       document.getElementById("statConsumers").textContent = String(parlor.consumers.length);
       document.getElementById("statServices").textContent = String(parlor.services.length);
 
-      const remBadge = document.getElementById("upcomingCountBadge");
-      remBadge.textContent = String(parlor.reminders.length);
-      document.getElementById("homeRemindersList").innerHTML = parlor.reminders.length
-        ? parlor.reminders
-            .slice(0, 4)
-            .map((r) => `<div class="list-item"><div><div class="item-title">${escapeHtml(r.title)}</div><div class="item-sub">${escapeHtml(r.date)} ${r.phone ? "· " + escapeHtml(r.phone) : ""}</div></div></div>`)
-            .join("")
-        : "कोई आगामी Appointment / Reminder नहीं है।";
+      // Home Appointments summary
+      const apps = parlor.appointments || [];
+      document.getElementById("upcomingCountBadge").textContent = String(apps.length);
+      document.getElementById("homeAppointmentsList").innerHTML = apps.length
+        ? apps.slice(0, 4).map((a) => `
+            <div class="list-item">
+              <div>
+                <div class="item-title">${escapeHtml(a.clientName)} · ${escapeHtml(a.date)} (${escapeHtml(formatTime12h(a.time) || a.time)})</div>
+                <div class="item-sub">${escapeHtml(a.serviceType)} · ${escapeHtml(a.phone)}</div>
+              </div>
+              <div class="row-btns">
+                ${a.phone ? `<a class="btn btn-call btn-sm" href="tel:${escapeHtml(a.phone)}">Call</a>` : ""}
+                <button class="btn btn-whatsapp btn-sm" onclick="sendAppointmentWhatsApp('${escapeHtml(a.id)}')">WhatsApp</button>
+              </div>
+            </div>
+          `).join("")
+        : "कोई आगामी Appointment नहीं है।";
 
       renderIncome();
+      renderAlertBanners();
 
+      // Consumers tab & dropdown
       const srvSelect = document.getElementById("srvConsumer");
       srvSelect.innerHTML = parlor.consumers.length
         ? parlor.consumers.map((c) => `<option value="${escapeHtml(c.name)}">${escapeHtml(c.name)} (${escapeHtml(c.phone)})</option>`).join("")
         : `<option value="Walk-in Client">Walk-in Client</option>`;
 
       document.getElementById("consumersList").innerHTML = parlor.consumers.length
-        ? parlor.consumers
-            .map((c) => `<div class="list-item"><div><div class="item-title">${escapeHtml(c.name)}</div><div class="item-sub">${escapeHtml(c.phone)} ${c.note ? "· " + escapeHtml(c.note) : ""}</div></div></div>`)
-            .join("")
+        ? parlor.consumers.map((c) => `
+            <div class="list-item">
+              <div>
+                <div class="item-title">${escapeHtml(c.name)}</div>
+                <div class="item-sub">${escapeHtml(c.phone)} ${c.note ? "· " + escapeHtml(c.note) : ""}</div>
+              </div>
+              ${c.phone ? `<a class="btn btn-call btn-sm" href="tel:${escapeHtml(c.phone)}">Call</a>` : ""}
+            </div>
+          `).join("")
         : `<div class="item-sub">No consumers yet.</div>`;
 
+      // Due payments list
+      const dueItems = (parlor.services || []).filter((s) => !s.settled && Number(s.dueAmount || 0) > 0);
+      document.getElementById("dueCountBadge").textContent = String(dueItems.length);
+      document.getElementById("duePaymentsList").innerHTML = dueItems.length
+        ? dueItems.map((s) => `
+            <div class="list-item">
+              <div>
+                <div class="item-title">${escapeHtml(s.consumerName)} — Baaki ₹${Math.round(Number(s.dueAmount)).toLocaleString("en-IN")}</div>
+                <div class="item-sub">Service: ${escapeHtml(s.name)} · Promise Date: <strong>${escapeHtml(s.promiseDate || "—")}</strong></div>
+              </div>
+              <div class="row-btns">
+                ${s.consumerPhone ? `<a class="btn btn-call btn-sm" href="tel:${escapeHtml(s.consumerPhone)}">Call</a>` : ""}
+                <button class="btn btn-soft btn-sm" onclick="generateReceiptPdf('${escapeHtml(s.id)}')">Logo PDF</button>
+                <button class="btn btn-whatsapp btn-sm" onclick="markServiceSettled('${escapeHtml(s.id)}')">Paid</button>
+              </div>
+            </div>
+          `).join("")
+        : `<div class="item-sub">Koi baaki payment nahi hai.</div>`;
+
+      // Services list with Logo PDF Receipt
       document.getElementById("servicesList").innerHTML = parlor.services.length
-        ? parlor.services
-            .map((s) => `<div class="list-item"><div><div class="item-title">${escapeHtml(s.name)} — ₹${Number(s.amount || 0).toLocaleString("en-IN")}</div><div class="item-sub">${escapeHtml(s.consumerName)} · ${escapeHtml(s.date)}</div></div></div>`)
-            .join("")
+        ? parlor.services.map((s) => {
+            const dueAmt = Math.max(0, Number(s.dueAmount || 0));
+            const subLine = dueAmt > 0
+              ? `${escapeHtml(s.consumerName)} · ${escapeHtml(s.date)} · <strong style="color:#b91c1c;">Due ₹${dueAmt} (Promise: ${escapeHtml(s.promiseDate || "—")})</strong>`
+              : `${escapeHtml(s.consumerName)} · ${escapeHtml(s.date)} · <span style="color:#15803d;font-weight:700;">Paid</span>`;
+            return `
+              <div class="list-item">
+                <div>
+                  <div class="item-title">${escapeHtml(s.name)} — ₹${Number(s.amount || 0).toLocaleString("en-IN")}</div>
+                  <div class="item-sub">${subLine}</div>
+                </div>
+                <button class="btn btn-primary btn-sm" onclick="generateReceiptPdf('${escapeHtml(s.id)}')">Receipt PDF</button>
+              </div>
+            `;
+          }).join("")
         : `<div class="item-sub">No services recorded yet.</div>`;
 
-      document.getElementById("remindersList").innerHTML = parlor.reminders.length
-        ? parlor.reminders
-            .map((r) => `<div class="list-item"><div><div class="item-title">${escapeHtml(r.title)}</div><div class="item-sub">${escapeHtml(r.date)}</div></div>${r.phone ? `<a class="btn btn-soft btn-sm" style="text-decoration:none;" href="tel:${escapeHtml(r.phone)}">Call</a>` : ""}</div>`)
-            .join("")
-        : `<div class="item-sub">No reminders set.</div>`;
+      // Appointments tab list
+      document.getElementById("appointmentsList").innerHTML = apps.length
+        ? apps.map((a) => `
+            <div class="list-item">
+              <div>
+                <div class="item-title">${escapeHtml(a.clientName)} — ${escapeHtml(a.serviceType)}</div>
+                <div class="item-sub">📅 ${escapeHtml(a.date)} · ⏰ ${escapeHtml(formatTime12h(a.time) || a.time)} · 📞 ${escapeHtml(a.phone)}</div>
+              </div>
+              <div class="row-btns">
+                ${a.phone ? `<a class="btn btn-call btn-sm" href="tel:${escapeHtml(a.phone)}">Call</a>` : ""}
+                <button class="btn btn-whatsapp btn-sm" onclick="sendAppointmentWhatsApp('${escapeHtml(a.id)}')">WhatsApp</button>
+              </div>
+            </div>
+          `).join("")
+        : `<div class="item-sub">No appointments scheduled yet.</div>`;
 
+      // Offers tab list
       document.getElementById("offersList").innerHTML = parlor.offers.length
-        ? parlor.offers
-            .map((o) => `<div class="list-item"><div><div class="item-title">${escapeHtml(o.title)}</div><div class="item-sub">${escapeHtml(o.desc || "")}</div></div></div>`)
-            .join("")
+        ? parlor.offers.map((o) => `
+            <div class="list-item">
+              <div style="min-width:180px;flex:1;">
+                <div class="item-title">${escapeHtml(o.title)}</div>
+                <div class="item-sub">${escapeHtml(o.desc || "")}</div>
+              </div>
+              <div class="row-btns">
+                <button class="btn btn-whatsapp btn-sm" onclick="openSendOfferModal('${escapeHtml(o.id)}', true)">Sabko Bhejein</button>
+                <button class="btn btn-soft btn-sm" onclick="openSendOfferModal('${escapeHtml(o.id)}', false)">Tick Karke Bhejein</button>
+              </div>
+            </div>
+          `).join("")
         : `<div class="item-sub">No offers added.</div>`;
 
+      // Staff tab list
       document.getElementById("staffList").innerHTML = parlor.staff
         .map((u) => `<div class="list-item"><div><div class="item-title">${escapeHtml(u.name)}</div><div class="item-sub">Role: ${escapeHtml(u.role)}</div></div><span class="badge badge-trial">PIN Set</span></div>`)
         .join("");
