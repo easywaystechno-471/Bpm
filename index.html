@@ -940,7 +940,6 @@
 
     <!-- TAB 2: STAFF & TWO-STEP PARLOR + USER LOGIN -->
     <section id="tab-staff" class="tab-view hidden">
-      <!-- Step A: Parlor Entry (Parlor ID + Parlor/Admin Password) -->
       <div class="card">
         <div class="section-title">
           <span>🏢 1. पार्लर में प्रवेश करें (Parlor ID + Password)</span>
@@ -959,7 +958,6 @@
         <button class="btn btn-soft btn-block" onclick="enterParlorRoom()">पार्लर स्क्रीन खोलें</button>
       </div>
 
-      <!-- Step B: Inner Screen User Login (Admin or Staff User ID + Password) -->
       <div class="card-rose">
         <div class="section-title">
           <span>🔑 2. अंदर की स्क्रीन लॉगिन (User ID + Password)</span>
@@ -981,7 +979,6 @@
         <button class="btn btn-primary btn-block" onclick="loginInnerUser()">User ID और Password से लॉगिन करें</button>
       </div>
 
-      <!-- Admin Creates / Edits Staff ID & Password -->
       <div class="card">
         <div class="section-title">
           <span id="staffFormHeading">👑 एडमिन: स्टाफ की ID और Password बनाएं</span>
@@ -1381,6 +1378,7 @@
       </div>
 
       <div id="otpVerifyBox" class="card-rose hidden" style="margin-bottom:10px;">
+        <div id="otpStatusNotice" class="item-sub" style="margin-bottom:8px;color:var(--rose-dark);font-weight:700;"></div>
         <div class="field" style="margin-bottom:8px;">
           <label>6-अंकों का OTP दर्ज करें *</label>
           <input id="setupOtpInput" class="input" type="text" maxlength="6" placeholder="123456" />
@@ -1864,8 +1862,10 @@
       otpVerifiedMobile = "";
       localFallbackOtp = "";
       const otpInputEl = document.getElementById("setupOtpInput");
+      const statusEl = document.getElementById("otpStatusNotice");
       if (otpInputEl) otpInputEl.value = "";
       document.getElementById("otpVerifyBox").classList.remove("hidden");
+      if (statusEl) statusEl.textContent = "OTP भेजा जा रहा है...";
       showToast("OTP भेजा जा रहा है...");
 
       try {
@@ -1880,22 +1880,29 @@
         });
         const data = await res.json().catch(() => ({}));
         if (res.ok && data.success) {
-          showToast(data.message || "OTP भेज दिया गया है");
+          const okMsg = data.message || "OTP भेज दिया गया है";
+          if (statusEl) statusEl.textContent = okMsg;
+          showToast(okMsg);
         } else {
           localFallbackOtp = String(Math.floor(100000 + Math.random() * 900000));
           if (otpInputEl) otpInputEl.value = localFallbackOtp;
-          showToast("Backup OTP: " + localFallbackOtp + " (OTP Verify करें दबाएं)");
+          const fbMsg = "Backup OTP: " + localFallbackOtp + " (नीचे भर दिया गया है, OTP Verify करें दबाएं)";
+          if (statusEl) statusEl.textContent = fbMsg;
+          showToast("Backup OTP: " + localFallbackOtp);
         }
       } catch (err) {
         localFallbackOtp = String(Math.floor(100000 + Math.random() * 900000));
         if (otpInputEl) otpInputEl.value = localFallbackOtp;
-        showToast("Backup OTP: " + localFallbackOtp + " (OTP Verify करें दबाएं)");
+        const fbMsg = "Backup OTP: " + localFallbackOtp + " (नीचे भर दिया गया है, OTP Verify करें दबाएं)";
+        if (statusEl) statusEl.textContent = fbMsg;
+        showToast("Backup OTP: " + localFallbackOtp);
       }
     }
 
     async function verifySetupOtp() {
       const mobileDigits = String(document.getElementById("newParlorMobile").value || "").replace(/\D/g, "").slice(-10);
       const otpCode = String(document.getElementById("setupOtpInput").value || "").trim();
+      const statusEl = document.getElementById("otpStatusNotice");
 
       if (!/^[6-9]\d{9}$/.test(mobileDigits)) {
         showToast("मोबाइल नंबर जांचें");
@@ -1920,6 +1927,7 @@
         const data = await res.json().catch(() => ({}));
         if (res.ok && data.success) {
           otpVerifiedMobile = mobileDigits;
+          if (statusEl) statusEl.textContent = "✓ OTP Verify हो गया! अब Name, Admin ID और Password सेट करें।";
           showToast("OTP Verify हो गया! अब Name, Admin ID और Password सेट करें");
           return;
         }
@@ -1927,8 +1935,10 @@
 
       if (localFallbackOtp && otpCode === localFallbackOtp) {
         otpVerifiedMobile = mobileDigits;
+        if (statusEl) statusEl.textContent = "✓ OTP Verify हो गया! अब Name, Admin ID और Password सेट करें।";
         showToast("OTP Verify हो गया! अब Name, Admin ID और Password सेट करें");
       } else {
+        if (statusEl) statusEl.textContent = "OTP गलत है या expire हो गया है—दोबारा OTP भेजें।";
         showToast("OTP गलत है या expire हो गया है");
       }
     }
@@ -2021,7 +2031,10 @@
       document.getElementById("newAdminPin").value = "";
       document.getElementById("newAdminPinConfirm").value = "";
       document.getElementById("newParlorRefInput").value = "";
+      const statusEl = document.getElementById("otpStatusNotice");
+      if (statusEl) statusEl.textContent = "";
       otpVerifiedMobile = "";
+      localFallbackOtp = "";
 
       persistState(true);
       closeModal("parlorModal");
