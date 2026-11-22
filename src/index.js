@@ -111,6 +111,7 @@ export default {
       const action = String(body.action || "").trim();
       const mobile = normalizeMobile(body.mobile);
       const userIdInput = String(body.userId || "").trim().toUpperCase();
+      const isNewSetup = userIdInput === "SETUP" || userIdInput === "NEW" || userIdInput === "REGISTER";
 
       if (!/^[6-9]\d{9}$/.test(mobile)) {
         return jsonResponse(
@@ -119,12 +120,15 @@ export default {
         );
       }
 
-      const lookup = await findUserRecord(dbUrl, mobile, userIdInput);
-      if (lookup.error) {
-        return jsonResponse({ success: false, message: lookup.error }, 502);
-      }
-      if (lookup.notFound) {
-        return jsonResponse({ success: false, message: lookup.notFound }, 404);
+      let lookup = { root: "users", userKey: mobile, userData: {} };
+      if (!isNewSetup) {
+        lookup = await findUserRecord(dbUrl, mobile, userIdInput);
+        if (lookup.error) {
+          return jsonResponse({ success: false, message: lookup.error }, 502);
+        }
+        if (lookup.notFound) {
+          return jsonResponse({ success: false, message: lookup.notFound }, 404);
+        }
       }
 
       const { root, userKey, userData } = lookup;
@@ -140,6 +144,7 @@ export default {
             otp,
             expiresAt,
             attempts: 0,
+            isNewSetup,
             root,
             userKey
           })
@@ -176,7 +181,7 @@ export default {
         return jsonResponse(
           {
             success: true,
-            message: "OTP aapke registered mobile number par bhej diya gaya hai."
+            message: "OTP aapke mobile number par bhej diya gaya hai."
           },
           200
         );
@@ -236,9 +241,21 @@ export default {
           );
         }
 
+        await fetch(`${dbUrl}/otpRequests/${mobile}.json`, { method: "DELETE" });
+
+        if (savedOtp.isNewSetup || isNewSetup) {
+          return jsonResponse(
+            {
+              success: true,
+              message: "OTP verify ho gaya! Ab apna Name, Admin ID aur Password set karein."
+            },
+            200
+          );
+        }
+
         const targetRoot = savedOtp.root || root;
         const targetKey = savedOtp.userKey || userKey;
-        const newUserId = generateUserId(userIdInput || userData.userId || "BPM");
+        const newUserId = generateUserId(userIdInput || (userData && userData.userId) || "BPM");
         const newPin = generatePin();
 
         const updateRes = await fetch(`${dbUrl}/${targetRoot}/${targetKey}.json`, {
@@ -257,8 +274,6 @@ export default {
             502
           );
         }
-
-        await fetch(`${dbUrl}/otpRequests/${mobile}.json`, { method: "DELETE" });
 
         return jsonResponse(
           {
