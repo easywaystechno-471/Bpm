@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>BPM — Beauty Parlour Management</title>
+  <title>Beauty Parlour Management</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -50,52 +50,83 @@
       background: var(--bg);
       color: var(--ink);
       min-height: 100vh;
-      padding-top: 6px;
-      padding-bottom: 92px;
+      padding-top: 8px;
+      padding-bottom: 108px;
     }
 
     .container {
       max-width: 720px;
       margin: 0 auto;
-      padding: 10px 14px 14px;
+      padding: 8px 14px 14px;
+    }
+
+    .center-brand {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      margin-bottom: 10px;
+      padding-top: 2px;
+    }
+
+    .center-app-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      background: var(--accent-grad);
+      color: #fff;
+      display: grid;
+      place-items: center;
+      font-size: 20px;
+      box-shadow: 0 6px 16px rgba(194, 24, 91, 0.25);
+      margin-bottom: 5px;
+    }
+
+    .center-app-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--rose-dark);
+      letter-spacing: 0.2px;
     }
 
     .parlor-banner {
       background: var(--surface);
       border: 1px solid var(--line);
       border-radius: var(--radius);
-      padding: 12px 14px;
+      padding: 11px 12px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 10px;
+      gap: 8px;
       box-shadow: var(--shadow);
-      margin-bottom: 14px;
+      margin-bottom: 12px;
     }
 
     .parlor-meta {
       display: flex;
       align-items: center;
-      gap: 11px;
+      gap: 10px;
       min-width: 0;
+      flex: 1;
     }
 
     .parlor-avatar {
-      width: 48px;
-      height: 48px;
-      border-radius: 13px;
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
       background: var(--accent-grad);
       color: #fff;
       display: grid;
       place-items: center;
       font-weight: 800;
-      font-size: 13px;
+      font-size: 12px;
       flex-shrink: 0;
     }
 
     .parlor-name {
-      font-size: 15px;
-      font-weight: 700;
+      font-size: 14px;
+      font-weight: 800;
       color: var(--rose-dark);
       white-space: nowrap;
       overflow: hidden;
@@ -103,20 +134,30 @@
     }
 
     .parlor-sub {
-      font-size: 12px;
+      font-size: 11px;
       color: var(--muted);
       margin-top: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .banner-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 5px;
+      flex-shrink: 0;
     }
 
     .sync-pill {
-      padding: 6px 11px;
+      padding: 4px 9px;
       border-radius: 999px;
-      font-size: 12px;
+      font-size: 10px;
       font-weight: 700;
       background: var(--ok-bg);
       color: var(--ok);
       white-space: nowrap;
-      flex-shrink: 0;
     }
 
     .sync-pill.syncing {
@@ -129,12 +170,32 @@
       color: var(--bad);
     }
 
+    .trial-top-btn {
+      width: 100%;
+      background: linear-gradient(120deg, #fff0f6 0%, #f8e6ff 100%);
+      border: 1.5px solid #e9b8d1;
+      border-radius: 15px;
+      padding: 12px 14px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      cursor: pointer;
+      text-align: left;
+      box-shadow: var(--shadow);
+    }
+
+    .trial-top-btn:active {
+      transform: scale(0.99);
+    }
+
     .card {
       background: var(--surface);
       border: 1px solid var(--line);
       border-radius: var(--radius);
-      padding: 15px;
-      margin-bottom: 14px;
+      padding: 14px;
+      margin-bottom: 12px;
       box-shadow: var(--shadow);
     }
 
@@ -143,15 +204,15 @@
       border: 1px solid #f7d6e6;
       border-radius: var(--radius);
       padding: 14px;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
     }
 
     .alert-banner {
       background: #fff8e7;
       border: 1.5px solid #f59e0b;
       border-radius: var(--radius);
-      padding: 13px 14px;
-      margin-bottom: 14px;
+      padding: 12px 14px;
+      margin-bottom: 12px;
       box-shadow: var(--shadow);
     }
 
@@ -161,7 +222,7 @@
     }
 
     .section-title {
-      font-size: 15px;
+      font-size: 14px;
       font-weight: 800;
       color: var(--ink);
       margin-bottom: 10px;
@@ -175,7 +236,7 @@
     .badge {
       display: inline-flex;
       align-items: center;
-      gap: 5px;
+      gap: 4px;
       padding: 4px 10px;
       border-radius: 999px;
       font-size: 11px;
@@ -206,18 +267,13 @@
       background: #fff2f8;
       border: 1px solid #f6d5e5;
       border-radius: 12px;
-      padding: 12px 14px;
-      margin-bottom: 10px;
+      padding: 11px 14px;
+      margin-bottom: 9px;
       cursor: pointer;
-      transition: transform 0.12s ease;
     }
 
     .income-row:last-child {
       margin-bottom: 0;
-    }
-
-    .income-row:active {
-      transform: scale(0.99);
     }
 
     .income-label {
@@ -229,7 +285,7 @@
     .income-val {
       font-size: 17px;
       font-weight: 800;
-      margin-top: 4px;
+      margin-top: 3px;
     }
 
     .dots-rose {
@@ -262,24 +318,11 @@
       margin-top: 4px;
     }
 
-    .trial-strip {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      background: linear-gradient(120deg, #fff0f6 0%, #f9e8ff 100%);
-      border: 1px solid #f2c9de;
-      border-radius: 14px;
-      padding: 12px 14px;
-      margin-bottom: 12px;
-    }
-
     .plan-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 10px;
-      margin-top: 10px;
+      margin-top: 8px;
     }
 
     .plan-card {
@@ -373,6 +416,11 @@
       color: var(--rose-dark);
     }
 
+    .btn-danger {
+      background: #fee2e2;
+      color: #b91c1c;
+    }
+
     .btn-outline {
       background: #fff;
       color: var(--ink);
@@ -383,6 +431,12 @@
       padding: 7px 11px;
       font-size: 12px;
       border-radius: 9px;
+    }
+
+    .btn-xs {
+      padding: 5px 9px;
+      font-size: 11px;
+      border-radius: 8px;
     }
 
     .btn-block {
@@ -447,6 +501,17 @@
       margin-top: 2px;
     }
 
+    .reply-box {
+      width: 100%;
+      margin-top: 6px;
+      padding: 8px 10px;
+      border-radius: 10px;
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      font-size: 12px;
+      color: #166534;
+    }
+
     .check-row {
       display: flex;
       align-items: center;
@@ -475,7 +540,7 @@
       background: #fff;
       border-top: 1px solid var(--line);
       display: grid;
-      grid-template-columns: repeat(6, 1fr);
+      grid-template-columns: repeat(7, 1fr);
       padding: 6px 2px;
       box-shadow: 0 -4px 16px rgba(36, 19, 28, 0.08);
     }
@@ -484,9 +549,9 @@
       background: transparent;
       border: none;
       color: var(--muted);
-      font-size: 10px;
+      font-size: 9.5px;
       font-weight: 700;
-      padding: 5px 2px;
+      padding: 5px 1px;
       border-radius: 10px;
       cursor: pointer;
       display: flex;
@@ -578,7 +643,13 @@
 </head>
 <body>
   <main class="container">
-    <!-- Active Parlor Status Strip -->
+    <!-- Center App Icon & Title -->
+    <div class="center-brand">
+      <div class="center-app-icon" id="centerAppIcon">✂️</div>
+      <div class="center-app-title">Beauty Parlour Management</div>
+    </div>
+
+    <!-- Top Strip: Left Parlour Logo + Name, Right Refer & Earn + Sync -->
     <section class="parlor-banner">
       <div class="parlor-meta">
         <div class="parlor-avatar" id="parlorAvatar">PBP</div>
@@ -587,8 +658,23 @@
           <div class="parlor-sub" id="parlorSub">Joura · User: Payal (ADMIN)</div>
         </div>
       </div>
-      <div class="sync-pill" id="syncBadge">Cloud Synced ✓</div>
+      <div class="banner-right">
+        <button class="btn btn-primary btn-xs" onclick="openReferModal()">🎁 Refer & Earn</button>
+        <div class="sync-pill" id="syncBadge">Cloud Synced ✓</div>
+      </div>
     </section>
+
+    <!-- Free Trial / Remaining Days Top Button -->
+    <button class="trial-top-btn" onclick="openPlansModal('yearly')">
+      <div>
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+          <strong style="font-size:14px;color:var(--rose-dark);" id="planNameLabel">30-Day Free Trial</strong>
+          <span class="badge badge-trial" id="daysLeftBadge">30 Days Left</span>
+        </div>
+        <div class="item-sub" id="validityDateText">Tap here to view & buy plans</div>
+      </div>
+      <span class="btn btn-primary btn-sm">Plans</span>
+    </button>
 
     <!-- Morning 8 AM Appointment Alert & Payment Due Alert Banner -->
     <section id="morningAlertBanner" class="alert-banner hidden"></section>
@@ -596,99 +682,18 @@
 
     <!-- TAB 1: HOME -->
     <section id="tab-home" class="tab-view">
-      <!-- User & Quick Session Card -->
       <div class="card">
         <div class="item-title" id="sessionUserLine">👑 Payal · ID: Payal01 (ADMIN)</div>
         <div class="item-sub" id="sessionParlorLine" style="margin-bottom:10px;">Parlor: Payal beauty parlour (PAYAL01)</div>
         <div class="row-btns">
           <button class="btn btn-soft btn-sm" onclick="lockAppSession()">Lock PIN</button>
           <button class="btn btn-soft btn-sm" onclick="manualCloudSync()">Cloud Sync</button>
-          <button class="btn btn-soft btn-sm" onclick="requestAlertPermission()">🔔 Alert Enable</button>
+          <button class="btn btn-soft btn-sm" onclick="requestAlertPermission()">🔔 Alerts</button>
           <button class="btn btn-soft btn-sm" onclick="openParlorModal()">Switch / Logout</button>
         </div>
         <div class="item-sub" id="cloudLiveSubline" style="margin-top:8px;">Cloud Live ✓ (PAYAL01)</div>
       </div>
 
-      <!-- Trial & Subscription Status -->
-      <div class="card">
-        <div class="trial-strip">
-          <div>
-            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-              <strong id="planNameLabel">30-Day Free Trial</strong>
-              <span class="badge badge-trial" id="daysLeftBadge">30 Days Left</span>
-            </div>
-            <div class="item-sub" id="validityDateText">Validity status loading...</div>
-          </div>
-          <button class="btn btn-primary btn-sm" onclick="openPlansModal()">Upgrade Plan</button>
-        </div>
-
-        <div class="section-title">
-          <span>Subscription Plans (Razorpay)</span>
-          <span class="badge badge-active">+15d Referral Bonus</span>
-        </div>
-        <div class="plan-grid">
-          <div class="plan-card">
-            <div>
-              <div class="item-title">Monthly Plan</div>
-              <div class="plan-price">₹99</div>
-              <div class="plan-meta">30 Days Full Access</div>
-            </div>
-            <button class="btn btn-razorpay btn-sm btn-block" onclick="openPlansModal('monthly')">Pay ₹99</button>
-          </div>
-          <div class="plan-card">
-            <div>
-              <div class="item-title">Quarterly Plan</div>
-              <div class="plan-price">₹199</div>
-              <div class="plan-meta">90 Days Full Access</div>
-            </div>
-            <button class="btn btn-razorpay btn-sm btn-block" onclick="openPlansModal('quarterly')">Pay ₹199</button>
-          </div>
-          <div class="plan-card popular">
-            <div>
-              <div class="item-title">Half-Yearly Plan</div>
-              <div class="plan-price">₹399</div>
-              <div class="plan-meta">180 Days Full Access</div>
-            </div>
-            <button class="btn btn-razorpay btn-sm btn-block" onclick="openPlansModal('halfyearly')">Pay ₹399</button>
-          </div>
-          <div class="plan-card">
-            <div>
-              <div class="item-title">Yearly Plan</div>
-              <div class="plan-price">₹499</div>
-              <div class="plan-meta">365 Days Full Access</div>
-            </div>
-            <button class="btn btn-primary btn-sm btn-block" onclick="openPlansModal('yearly')">Pay ₹499</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Refer & Earn -->
-      <div class="card">
-        <div class="section-title">
-          <span>Refer & Earn</span>
-          <span class="badge badge-trial">+15 Days Bonus</span>
-        </div>
-        <p class="item-sub">
-          Apna Auto Referral Code share karein. WhatsApp link par tap karte hi <strong>app-release.apk</strong> download/install ka option aayega, aur naya parlor register hone par <strong>+15 Days</strong> bonus milega.
-        </p>
-
-        <div class="ref-code-box">
-          <div>
-            <div class="item-sub">Your Auto Referral Code</div>
-            <div class="ref-code-text" id="myReferralCode">BPM-PAYAL-1001</div>
-          </div>
-          <button class="btn btn-soft btn-sm" onclick="copyReferralCode()">Copy Code</button>
-        </div>
-
-        <div class="row-btns">
-          <button class="btn btn-whatsapp" style="flex:1;" onclick="shareReferralOnWhatsApp()">
-            WhatsApp Refer (APK Link)
-          </button>
-          <button class="btn btn-outline btn-sm" onclick="copyApkLink()">Copy APK Link</button>
-        </div>
-      </div>
-
-      <!-- PIN-Locked Income -->
       <div class="card-rose">
         <div class="section-title" style="margin-bottom:8px;">
           <span>💰 Parlor Income (PIN Protected)</span>
@@ -727,7 +732,6 @@
         </div>
       </div>
 
-      <!-- Consumers & Services Summary -->
       <div class="card-rose">
         <div class="stat-grid">
           <div class="stat-box">
@@ -741,7 +745,6 @@
         </div>
       </div>
 
-      <!-- Today & Upcoming Appointments -->
       <div class="card-rose">
         <div class="section-title">
           <span>📅 Today & Upcoming Appointments</span>
@@ -751,7 +754,87 @@
       </div>
     </section>
 
-    <!-- TAB 2: CONSUMERS -->
+    <!-- TAB 2: STAFF -->
+    <section id="tab-staff" class="tab-view hidden">
+      <div class="card">
+        <div class="section-title">
+          <span>🔑 Staff Login (Parlor ID + PIN)</span>
+          <span class="badge badge-trial" id="staffLoginCodeHint">ID: PAYAL01</span>
+        </div>
+        <div class="grid-2">
+          <div class="field">
+            <label>Parlor Code / ID *</label>
+            <input id="staffLoginParlorCode" class="input" placeholder="e.g. PAYAL01" style="text-transform:uppercase;" />
+          </div>
+          <div class="field">
+            <label>Staff / User PIN *</label>
+            <input id="staffLoginPin" class="input" type="password" placeholder="e.g. 1234" />
+          </div>
+        </div>
+        <button class="btn btn-primary btn-block" onclick="loginWithParlorIdAndPin()">Login to Parlor</button>
+      </div>
+
+      <div class="card">
+        <div class="section-title">
+          <span id="staffFormHeading">Add Staff / User (Admin PIN Required)</span>
+          <button class="btn btn-outline btn-xs hidden" id="cancelEditStaffBtn" onclick="cancelStaffEdit()">Cancel Edit</button>
+        </div>
+        <input type="hidden" id="editingStaffId" value="" />
+        <div class="field">
+          <label>Staff / User Name *</label>
+          <input id="stfName" class="input" placeholder="e.g. Riya" />
+        </div>
+        <div class="grid-2">
+          <div class="field">
+            <label>Role</label>
+            <select id="stfRole">
+              <option value="STAFF">STAFF</option>
+              <option value="ADMIN">ADMIN</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Staff PIN *</label>
+            <input id="stfPin" class="input" type="text" maxlength="8" placeholder="e.g. 2222" />
+          </div>
+        </div>
+        <div class="field">
+          <label>BPM Admin PIN (Save / Edit / Delete ke liye) *</label>
+          <input id="stfAdminAuthPin" class="input" type="password" maxlength="8" placeholder="Admin PIN (default: 1234)" />
+        </div>
+        <button class="btn btn-primary btn-block" id="saveStaffBtn" onclick="saveStaffMember()">Save Staff User</button>
+      </div>
+
+      <div class="card">
+        <div class="section-title"><span>Registered Staff & Admin Users</span></div>
+        <div id="staffList"></div>
+      </div>
+    </section>
+
+    <!-- TAB 3: OFFERS -->
+    <section id="tab-offers" class="tab-view hidden">
+      <div class="card">
+        <div class="section-title"><span>Create Offer & Send to Consumers</span></div>
+        <div class="field">
+          <label>Offer Title *</label>
+          <input id="offTitle" class="input" placeholder="e.g. Festive Glow Combo" />
+        </div>
+        <div class="field">
+          <label>Details / Price</label>
+          <input id="offDesc" class="input" placeholder="e.g. Facial + Threading + Hair Wash @ ₹999" />
+        </div>
+        <button class="btn btn-primary btn-block" onclick="addOffer()">Add Offer</button>
+      </div>
+
+      <div class="card">
+        <div class="section-title">
+          <span>Active Offers</span>
+          <span class="badge badge-trial">All / Tick Select</span>
+        </div>
+        <div id="offersList"></div>
+      </div>
+    </section>
+
+    <!-- TAB 4: CONSUMERS -->
     <section id="tab-consumers" class="tab-view hidden">
       <div class="card">
         <div class="section-title"><span>Add Consumer</span></div>
@@ -776,7 +859,7 @@
       </div>
     </section>
 
-    <!-- TAB 3: SERVICES & DUE / RECEIPT PDF -->
+    <!-- TAB 5: SERVICES & DUE / RECEIPT PDF -->
     <section id="tab-services" class="tab-view hidden">
       <div class="card">
         <div class="section-title"><span>Record Service / Billing & Due Date</span></div>
@@ -829,7 +912,7 @@
       </div>
     </section>
 
-    <!-- TAB 4: DEDICATED APPOINTMENTS (8 AM ALERT + DATE/TIME WHATSAPP + CALL) -->
+    <!-- TAB 6: DEDICATED APPOINTMENTS -->
     <section id="tab-appointments" class="tab-view hidden">
       <div class="card">
         <div class="section-title">
@@ -867,66 +950,53 @@
       </div>
     </section>
 
-    <!-- TAB 5: OFFERS (ALL OR TICK SELECT BROADCAST) -->
-    <section id="tab-offers" class="tab-view hidden">
+    <!-- TAB 7: SUPPORT TICKET (In-App To App Admin + Admin Solve Inbox) -->
+    <section id="tab-support" class="tab-view hidden">
       <div class="card">
-        <div class="section-title"><span>Create Offer & Send to Consumers</span></div>
+        <div class="section-title">
+          <span>🛟 BPM Support Ticket</span>
+          <span class="badge badge-trial">Sent to App Admin</span>
+        </div>
+        <p class="item-sub" style="margin-bottom:10px;">
+          Apni problem likh kar ticket bhejein—yeh seedha <strong>App Admin</strong> ko in-app send hogi aur aap neeche <strong>App Admin Inbox</strong> se ise solve kar paayenge.
+        </p>
         <div class="field">
-          <label>Offer Title *</label>
-          <input id="offTitle" class="input" placeholder="e.g. Festive Glow Combo" />
+          <label>Problem Topic *</label>
+          <input id="tktSubject" class="input" placeholder="e.g. Razorpay / Cloud Sync / Staff PIN / Receipt PDF" />
         </div>
         <div class="field">
-          <label>Details / Price</label>
-          <input id="offDesc" class="input" placeholder="e.g. Facial + Threading + Hair Wash @ ₹999" />
+          <label>Problem Details *</label>
+          <textarea id="tktMessage" rows="3" placeholder="Apni problem detail mein likhein..."></textarea>
         </div>
-        <button class="btn btn-primary btn-block" onclick="addOffer()">Add Offer</button>
+        <button class="btn btn-primary btn-block" onclick="submitTicketToAppAdmin()">Send Ticket to App Admin</button>
       </div>
 
       <div class="card">
         <div class="section-title">
-          <span>Active Offers</span>
-          <span class="badge badge-trial">All / Tick Select</span>
+          <span>📥 App Admin Inbox (Solve Tickets)</span>
+          <span class="badge badge-warn" id="openTicketCountBadge">0 Open</span>
         </div>
-        <div id="offersList"></div>
-      </div>
-    </section>
-
-    <!-- TAB 6: STAFF -->
-    <section id="tab-staff" class="tab-view hidden">
-      <div class="card">
-        <div class="section-title"><span>Staff & Admin PIN</span></div>
-        <div class="field">
-          <label>Staff / User Name *</label>
-          <input id="stfName" class="input" placeholder="e.g. Riya" />
+        <div class="item-sub" style="margin-bottom:10px;">
+          Yahan se aap (App Admin) kisi bhi ticket par <strong>Solve / Reply</strong> dabakar Admin PIN se solution likh aur status <strong>Resolved</strong> kar sakte hain.
         </div>
-        <div class="field">
-          <label>Role</label>
-          <select id="stfRole">
-            <option value="STAFF">STAFF</option>
-            <option value="ADMIN">ADMIN</option>
-          </select>
-        </div>
-        <div class="field">
-          <label>4-Digit PIN *</label>
-          <input id="stfPin" class="input" type="password" maxlength="6" placeholder="e.g. 1234" />
-        </div>
-        <button class="btn btn-primary btn-block" onclick="addStaffMember()">Add User</button>
-      </div>
-
-      <div class="card">
-        <div class="section-title"><span>Registered Users</span></div>
-        <div id="staffList"></div>
+        <div id="adminTicketInboxList"></div>
       </div>
     </section>
   </main>
 
-  <!-- Bottom Navigation (6 Tabs) -->
+  <!-- Fixed Bottom Navigation Bar -->
   <nav class="bottom-nav">
     <button class="nav-btn active" data-tab="home" onclick="switchTab('home', this)">
       <span class="nav-ico">🏠</span><span>Home</span>
     </button>
+    <button class="nav-btn" data-tab="staff" onclick="switchTab('staff', this)">
+      <span class="nav-ico">👩‍💼</span><span>Staff</span>
+    </button>
+    <button class="nav-btn" data-tab="offers" onclick="switchTab('offers', this)">
+      <span class="nav-ico">🎁</span><span>Offers</span>
+    </button>
     <button class="nav-btn" data-tab="consumers" onclick="switchTab('consumers', this)">
-      <span class="nav-ico">👩</span><span>Consumers</span>
+      <span class="nav-ico">👩</span><span>Clients</span>
     </button>
     <button class="nav-btn" data-tab="services" onclick="switchTab('services', this)">
       <span class="nav-ico">💆‍♀️</span><span>Services</span>
@@ -934,13 +1004,140 @@
     <button class="nav-btn" data-tab="appointments" onclick="switchTab('appointments', this)">
       <span class="nav-ico">📅</span><span>Appoints</span>
     </button>
-    <button class="nav-btn" data-tab="offers" onclick="switchTab('offers', this)">
-      <span class="nav-ico">🎁</span><span>Offers</span>
-    </button>
-    <button class="nav-btn" data-tab="staff" onclick="switchTab('staff', this)">
-      <span class="nav-ico">👩‍💼</span><span>Staff</span>
+    <button class="nav-btn" data-tab="support" onclick="switchTab('support', this)">
+      <span class="nav-ico">🛟</span><span>Support</span>
     </button>
   </nav>
+
+  <!-- Modal: App Admin Solve / Reply Ticket -->
+  <div class="modal-backdrop" id="solveTicketModal">
+    <div class="modal-box">
+      <div class="modal-head">
+        <strong>Solve Ticket (App Admin)</strong>
+        <button class="close-x" onclick="closeModal('solveTicketModal')">✕</button>
+      </div>
+      <input type="hidden" id="solvingTicketKey" value="" />
+      <div class="card-rose" id="solvingTicketSummary" style="margin-bottom:10px;"></div>
+      <div class="field">
+        <label>Ticket Status</label>
+        <select id="solveTicketStatus">
+          <option value="Resolved">Resolved (Solved)</option>
+          <option value="In Progress">In Progress</option>
+          <option value="Open">Open</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>App Admin Solution / Reply *</label>
+        <textarea id="solveTicketReply" rows="3" placeholder="User ko solution / update likhein..."></textarea>
+      </div>
+      <div class="field">
+        <label>App Admin PIN *</label>
+        <input id="solveTicketAdminPin" class="input" type="password" placeholder="Admin PIN (default: 1234)" />
+      </div>
+      <button class="btn btn-primary btn-block" onclick="saveTicketSolution()">Save Solution & Update Ticket</button>
+    </div>
+  </div>
+
+  <!-- Modal: Refer & Earn -->
+  <div class="modal-backdrop" id="referModal">
+    <div class="modal-box">
+      <div class="modal-head">
+        <strong>Refer & Earn (+15 Days Benefit)</strong>
+        <button class="close-x" onclick="closeModal('referModal')">✕</button>
+      </div>
+
+      <p class="item-sub">
+        Apna auto-generated referral code WhatsApp par bhejein. Download link se install karke jo naya parlor/user yeh code daal kar register karega, usko aur aapko <strong>+15 Days bonus</strong> ka benefit milega.
+      </p>
+
+      <div class="ref-code-box">
+        <div>
+          <div class="item-sub">Auto Generated Referral Code</div>
+          <div class="ref-code-text" id="myReferralCode">BPM-PAYAL-1001</div>
+        </div>
+        <button class="btn btn-soft btn-sm" onclick="copyReferralCode()">Copy</button>
+      </div>
+
+      <div class="row-btns" style="margin-bottom:10px;">
+        <button class="btn btn-whatsapp" style="flex:1;" onclick="shareReferralOnWhatsApp()">
+          WhatsApp Refer (APK Link)
+        </button>
+        <button class="btn btn-outline btn-sm" onclick="copyApkLink()">Copy APK Link</button>
+      </div>
+
+      <div class="card-rose" style="margin-bottom:0;" id="referStatsBox"></div>
+    </div>
+  </div>
+
+  <!-- Modal: Purchase Plans -->
+  <div class="modal-backdrop" id="plansModal">
+    <div class="modal-box">
+      <div class="modal-head">
+        <strong>Purchase Plans (Razorpay)</strong>
+        <button class="close-x" onclick="closeModal('plansModal')">✕</button>
+      </div>
+
+      <div class="plan-grid">
+        <div class="plan-card">
+          <div>
+            <div class="item-title">Monthly Plan</div>
+            <div class="plan-price">₹99</div>
+            <div class="plan-meta">30 Days Full Access</div>
+          </div>
+          <button class="btn btn-razorpay btn-sm btn-block" onclick="selectPlanAndPay('monthly')">Pay ₹99</button>
+        </div>
+        <div class="plan-card">
+          <div>
+            <div class="item-title">Quarterly Plan</div>
+            <div class="plan-price">₹199</div>
+            <div class="plan-meta">90 Days Full Access</div>
+          </div>
+          <button class="btn btn-razorpay btn-sm btn-block" onclick="selectPlanAndPay('quarterly')">Pay ₹199</button>
+        </div>
+        <div class="plan-card popular">
+          <div>
+            <div class="item-title">Half-Yearly Plan</div>
+            <div class="plan-price">₹399</div>
+            <div class="plan-meta">180 Days Full Access</div>
+          </div>
+          <button class="btn btn-razorpay btn-sm btn-block" onclick="selectPlanAndPay('halfyearly')">Pay ₹399</button>
+        </div>
+        <div class="plan-card">
+          <div>
+            <div class="item-title">Yearly Plan</div>
+            <div class="plan-price">₹499</div>
+            <div class="plan-meta">365 Days Full Access</div>
+          </div>
+          <button class="btn btn-primary btn-sm btn-block" onclick="selectPlanAndPay('yearly')">Pay ₹499</button>
+        </div>
+      </div>
+
+      <hr style="border:none;border-top:1px solid var(--line);margin:14px 0;" />
+
+      <div class="field">
+        <label>Selected Plan</label>
+        <select id="planSelect" onchange="updatePlanSummary()">
+          <option value="monthly">Monthly — ₹99 (30 Days)</option>
+          <option value="quarterly">Quarterly — ₹199 (90 Days)</option>
+          <option value="halfyearly">Half-Yearly — ₹399 (180 Days)</option>
+          <option value="yearly" selected>Yearly — ₹499 (365 Days)</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Mobile Number (for Razorpay Receipt)</label>
+        <input id="payerPhoneInput" class="input" type="tel" placeholder="10-digit mobile number" />
+      </div>
+
+      <div class="card-rose" id="planSummaryBox" style="margin-bottom:12px;"></div>
+
+      <button class="btn btn-razorpay btn-block" style="padding:12px;" onclick="startRazorpayCheckout()">
+        💳 Pay Now with Razorpay
+      </button>
+
+      <div id="paymentHistoryBox" style="margin-top:10px;"></div>
+    </div>
+  </div>
 
   <!-- Modal: Send Offer to All or Tick-Selected Consumers -->
   <div class="modal-backdrop" id="sendOfferModal">
@@ -1009,52 +1206,16 @@
         <input id="newAdminPin" class="input" type="password" placeholder="e.g. 1111" />
       </div>
       <div class="field">
-        <label>Referral Code (Optional — +15 Days Bonus)</label>
+        <label>Referral Code (Daal kar +15 Days Benefit Paayein)</label>
         <input id="newParlorRefInput" class="input" placeholder="e.g. BPM-PAYAL-1001" style="text-transform:uppercase;" />
       </div>
-      <button class="btn btn-primary btn-block" onclick="registerNewParlor()">Create Parlor & Apply Referral</button>
-    </div>
-  </div>
-
-  <!-- Modal: Razorpay Subscription Payment & Activation -->
-  <div class="modal-backdrop" id="plansModal">
-    <div class="modal-box">
-      <div class="modal-head">
-        <strong>Razorpay Subscription Payment</strong>
-        <button class="close-x" onclick="closeModal('plansModal')">✕</button>
-      </div>
-
-      <div class="field">
-        <label>Choose Plan</label>
-        <select id="planSelect" onchange="updatePlanSummary()">
-          <option value="monthly">Monthly — ₹99 (30 Days)</option>
-          <option value="quarterly">Quarterly — ₹199 (90 Days)</option>
-          <option value="halfyearly">Half-Yearly — ₹399 (180 Days)</option>
-          <option value="yearly" selected>Yearly — ₹499 (365 Days)</option>
-        </select>
-      </div>
-
-      <div class="field">
-        <label>Mobile Number (for Razorpay Receipt)</label>
-        <input id="payerPhoneInput" class="input" type="tel" placeholder="10-digit mobile number" />
-      </div>
-
-      <div class="card-rose" id="planSummaryBox" style="margin-bottom:12px;"></div>
-
-      <button class="btn btn-razorpay btn-block" style="margin-bottom:10px;padding:12px;" onclick="startRazorpayCheckout()">
-        💳 Pay Now with Razorpay (Instant Activation)
-      </button>
-
-      <div id="paymentHistoryBox" style="margin-top:10px;"></div>
+      <button class="btn btn-primary btn-block" onclick="registerNewParlor()">Create Parlor & Claim Referral Benefit</button>
     </div>
   </div>
 
   <div class="toast" id="toast"></div>
 
   <script>
-    // =========================================================================
-    // 1. RAZORPAY LIVE KEY & FIREBASE CONFIG
-    // =========================================================================
     const RAZORPAY_KEY_ID = "rzp_live_U33fOg4q9BEcIY";
 
     const FIREBASE_CONFIG = {
@@ -1083,12 +1244,14 @@
 
     const STORAGE_KEY = "bpm_state_v1";
     let dbRef = null;
+    let ticketsDbRef = null;
     let isRemoteApplying = false;
     let lastWrittenJson = "";
     let incomeUnlocked = false;
     let activeOfferForSend = null;
     let offerSendQueue = [];
     let offerQueueIndex = 0;
+    let adminTicketsMap = {};
 
     function getLocalDateStr(d = new Date()) {
       const year = d.getFullYear();
@@ -1173,7 +1336,8 @@
             ],
             staff: [
               { id: "Payal01", name: "Payal", role: "ADMIN", pin: "1234" }
-            ]
+            ],
+            tickets: []
           }
         }
       };
@@ -1212,7 +1376,8 @@
         offers: Array.isArray(safeObj.offers) ? safeObj.offers : [],
         staff: Array.isArray(safeObj.staff) && safeObj.staff.length
           ? safeObj.staff
-          : [{ id: code, name: "Admin", role: "ADMIN", pin: "1234" }]
+          : [{ id: code, name: "Admin", role: "ADMIN", pin: "1234" }],
+        tickets: Array.isArray(safeObj.tickets) ? safeObj.tickets : []
       };
     }
 
@@ -1298,6 +1463,7 @@
         }
         const db = firebase.database();
         dbRef = db.ref("bpm_cloud_state");
+        ticketsDbRef = db.ref("bpm_support_tickets");
 
         dbRef.on("value", (snapshot) => {
           const remoteVal = snapshot.val();
@@ -1325,6 +1491,12 @@
         }, () => {
           setSyncStatus("offline", "Local Mode");
         });
+
+        ticketsDbRef.on("value", (snap) => {
+          const val = snap.val();
+          adminTicketsMap = val && typeof val === "object" ? val : {};
+          renderAdminTicketsInbox();
+        }, () => {});
       } catch (err) {
         console.warn("Firebase init error:", err);
         setSyncStatus("offline", "Local Mode");
@@ -1332,7 +1504,328 @@
     }
 
     // =========================================================================
-    // 2. ALERTS: 8:00 AM APPOINTMENT ALERT & DUE PAYMENT PROMISE ALERT
+    // IN-APP TICKET TO APP ADMIN + ADMIN SOLVE WORKFLOW
+    // =========================================================================
+    function submitTicketToAppAdmin() {
+      const parlor = getCurrentParlor();
+      const subject = document.getElementById("tktSubject").value.trim();
+      const message = document.getElementById("tktMessage").value.trim();
+
+      if (!subject || !message) {
+        showToast("Problem Topic aur Details dono likhein");
+        return;
+      }
+
+      const ticketId = "TKT-" + Math.floor(100000 + Math.random() * 900000);
+      const ticketObj = {
+        id: ticketId,
+        parlorId: parlor.id,
+        parlorCode: parlor.code,
+        parlorName: parlor.name,
+        userName: parlor.activeUser.name,
+        subject,
+        message,
+        status: "Open",
+        adminReply: "",
+        date: getLocalDateStr(),
+        createdAt: Date.now()
+      };
+
+      if (ticketsDbRef) {
+        const pushed = ticketsDbRef.push();
+        const firebaseKey = pushed.key || ticketId;
+        ticketObj.firebaseKey = firebaseKey;
+        adminTicketsMap[firebaseKey] = ticketObj;
+        pushed.set(ticketObj).catch(() => {});
+      } else {
+        adminTicketsMap[ticketId] = ticketObj;
+      }
+
+      parlor.tickets = Array.isArray(parlor.tickets) ? parlor.tickets : [];
+      parlor.tickets.unshift(ticketObj);
+
+      document.getElementById("tktSubject").value = "";
+      document.getElementById("tktMessage").value = "";
+
+      persistState(true);
+      renderAdminTicketsInbox();
+      showToast(`Ticket ${ticketId} App Admin ko send ho gaya`);
+    }
+
+    function getAllInboxTickets() {
+      const parlor = getCurrentParlor();
+      const merged = [];
+      const seenIds = new Set();
+
+      for (const [fbKey, tkt] of Object.entries(adminTicketsMap || {})) {
+        if (tkt && typeof tkt === "object") {
+          const key = tkt.firebaseKey || fbKey;
+          seenIds.add(key);
+          merged.push({ ...tkt, _key: key });
+        }
+      }
+
+      for (const tkt of (parlor.tickets || [])) {
+        const key = tkt.firebaseKey || tkt.id;
+        if (!seenIds.has(key)) {
+          seenIds.add(key);
+          merged.push({ ...tkt, _key: key });
+        }
+      }
+
+      return merged.sort((a, b) => (Number(b.createdAt) || 0) - (Number(a.createdAt) || 0));
+    }
+
+    function openSolveTicketModal(ticketKey) {
+      const list = getAllInboxTickets();
+      const tkt = list.find((item) => item._key === ticketKey);
+      if (!tkt) return;
+
+      document.getElementById("solvingTicketKey").value = ticketKey;
+      document.getElementById("solvingTicketSummary").innerHTML = `
+        <div class="item-title">${escapeHtml(tkt.id)} · ${escapeHtml(tkt.subject)}</div>
+        <div class="item-sub">Parlor: <strong>${escapeHtml(tkt.parlorName)}</strong> (${escapeHtml(tkt.parlorCode)}) · User: ${escapeHtml(tkt.userName)}</div>
+        <div class="item-sub" style="margin-top:4px;color:var(--ink);">Problem: ${escapeHtml(tkt.message)}</div>
+      `;
+      document.getElementById("solveTicketStatus").value = tkt.status === "Open" ? "Resolved" : (tkt.status || "Resolved");
+      document.getElementById("solveTicketReply").value = tkt.adminReply || "";
+      document.getElementById("solveTicketAdminPin").value = "";
+      document.getElementById("solveTicketModal").classList.add("open");
+    }
+
+    function saveTicketSolution() {
+      const parlor = getCurrentParlor();
+      const ticketKey = document.getElementById("solvingTicketKey").value;
+      const status = document.getElementById("solveTicketStatus").value;
+      const reply = document.getElementById("solveTicketReply").value.trim();
+      const adminPin = document.getElementById("solveTicketAdminPin").value.trim();
+
+      if (!isValidBpmAdminPin(parlor, adminPin)) {
+        showToast("Galat App Admin PIN (default: 1234)");
+        return;
+      }
+      if (!reply) {
+        showToast("Solution / Reply likhein");
+        return;
+      }
+
+      const patch = {
+        status,
+        adminReply: reply,
+        solvedAt: getLocalDateStr()
+      };
+
+      if (adminTicketsMap[ticketKey]) {
+        adminTicketsMap[ticketKey] = { ...adminTicketsMap[ticketKey], ...patch };
+      }
+
+      if (ticketsDbRef && ticketKey) {
+        ticketsDbRef.child(ticketKey).update(patch).catch(() => {});
+      }
+
+      for (const p of Object.values(appState.parlors)) {
+        if (Array.isArray(p.tickets)) {
+          p.tickets = p.tickets.map((t) => {
+            const k = t.firebaseKey || t.id;
+            return k === ticketKey ? { ...t, ...patch } : t;
+          });
+        }
+      }
+
+      persistState(true);
+      renderAdminTicketsInbox();
+      closeModal("solveTicketModal");
+      showToast(`Ticket ${status} updated`);
+    }
+
+    function renderAdminTicketsInbox() {
+      const el = document.getElementById("adminTicketInboxList");
+      const badge = document.getElementById("openTicketCountBadge");
+      if (!el) return;
+
+      const list = getAllInboxTickets();
+      const openCount = list.filter((t) => t.status !== "Resolved").length;
+      if (badge) {
+        badge.textContent = `${openCount} Open`;
+        badge.className = "badge " + (openCount > 0 ? "badge-warn" : "badge-active");
+      }
+
+      if (!list.length) {
+        el.innerHTML = `<div class="item-sub">Abhi App Admin Inbox mein koi ticket nahi aayi hai.</div>`;
+        return;
+      }
+
+      el.innerHTML = list.map((tkt) => {
+        const isResolved = tkt.status === "Resolved";
+        const badgeCls = isResolved ? "badge-active" : (tkt.status === "In Progress" ? "badge-trial" : "badge-warn");
+        return `
+          <div class="list-item">
+            <div style="min-width:190px;flex:1;">
+              <div class="item-title">
+                ${escapeHtml(tkt.id)} · ${escapeHtml(tkt.subject)}
+                <span class="badge ${badgeCls}">${escapeHtml(tkt.status || "Open")}</span>
+              </div>
+              <div class="item-sub">
+                🏪 ${escapeHtml(tkt.parlorName)} (${escapeHtml(tkt.parlorCode)}) · 👤 ${escapeHtml(tkt.userName)} · 📅 ${escapeHtml(tkt.date || "")}
+              </div>
+              <div class="item-sub" style="color:var(--ink);margin-top:4px;">${escapeHtml(tkt.message)}</div>
+              ${tkt.adminReply ? `<div class="reply-box"><strong>App Admin Solution:</strong> ${escapeHtml(tkt.adminReply)}</div>` : ""}
+            </div>
+            <button class="btn btn-primary btn-sm" onclick="openSolveTicketModal('${escapeHtml(tkt._key)}')">
+              ${isResolved ? "Edit Reply" : "Solve / Reply"}
+            </button>
+          </div>
+        `;
+      }).join("");
+    }
+
+    // =========================================================================
+    // STAFF PARLOR-ID LOGIN & ADMIN PIN EDIT / SAVE / DELETE
+    // =========================================================================
+    function isValidBpmAdminPin(parlor, enteredPin) {
+      const pin = String(enteredPin || "").trim();
+      if (!pin) return false;
+      const adminUsers = (parlor.staff || []).filter((u) => String(u.role || "").toUpperCase() === "ADMIN");
+      if (adminUsers.some((u) => String(u.pin) === pin)) return true;
+      return pin === "1234";
+    }
+
+    function loginWithParlorIdAndPin() {
+      const codeInput = document.getElementById("staffLoginParlorCode").value.trim().toUpperCase();
+      const pinInput = document.getElementById("staffLoginPin").value.trim();
+
+      if (!codeInput || !pinInput) {
+        showToast("Parlor Code/ID aur PIN dono daalein");
+        return;
+      }
+
+      const targetParlor = Object.values(appState.parlors).find(
+        (p) => String(p.code || "").trim().toUpperCase() === codeInput
+      );
+
+      if (!targetParlor) {
+        showToast("Is Parlor ID se koi parlor nahi mila");
+        return;
+      }
+
+      const matchedStaff = (targetParlor.staff || []).find((u) => String(u.pin).trim() === pinInput);
+      if (!matchedStaff) {
+        showToast("Galat PIN — login nahi ho saka");
+        return;
+      }
+
+      appState.activeParlorId = targetParlor.id;
+      targetParlor.activeUser = {
+        id: matchedStaff.id,
+        name: matchedStaff.name,
+        role: matchedStaff.role
+      };
+      incomeUnlocked = String(matchedStaff.role).toUpperCase() === "ADMIN";
+
+      document.getElementById("staffLoginPin").value = "";
+      persistState(true);
+      showToast(`${matchedStaff.name} (${matchedStaff.role}) logged in to ${targetParlor.code}`);
+    }
+
+    function startEditStaff(staffId) {
+      const parlor = getCurrentParlor();
+      const member = (parlor.staff || []).find((u) => u.id === staffId);
+      if (!member) return;
+
+      document.getElementById("editingStaffId").value = member.id;
+      document.getElementById("stfName").value = member.name;
+      document.getElementById("stfRole").value = member.role || "STAFF";
+      document.getElementById("stfPin").value = member.pin || "";
+      document.getElementById("staffFormHeading").textContent = `Edit Staff: ${member.name} (Admin PIN Required)`;
+      document.getElementById("cancelEditStaffBtn").classList.remove("hidden");
+      showToast("Staff details loaded for edit — Admin PIN daal kar Save karein");
+    }
+
+    function cancelStaffEdit() {
+      document.getElementById("editingStaffId").value = "";
+      document.getElementById("stfName").value = "";
+      document.getElementById("stfRole").value = "STAFF";
+      document.getElementById("stfPin").value = "";
+      document.getElementById("staffFormHeading").textContent = "Add Staff / User (Admin PIN Required)";
+      document.getElementById("cancelEditStaffBtn").classList.add("hidden");
+    }
+
+    function saveStaffMember() {
+      const parlor = getCurrentParlor();
+      const editId = document.getElementById("editingStaffId").value.trim();
+      const name = document.getElementById("stfName").value.trim();
+      const role = document.getElementById("stfRole").value;
+      const pin = document.getElementById("stfPin").value.trim();
+      const adminAuthPin = document.getElementById("stfAdminAuthPin").value.trim();
+
+      if (!name || !pin) {
+        showToast("Staff Name aur PIN daalein");
+        return;
+      }
+
+      if (!isValidBpmAdminPin(parlor, adminAuthPin)) {
+        showToast("Sirf BPM Admin apne PIN se Staff Save/Edit kar sakta hai");
+        return;
+      }
+
+      if (editId) {
+        const idx = parlor.staff.findIndex((u) => u.id === editId);
+        if (idx !== -1) {
+          parlor.staff[idx] = {
+            ...parlor.staff[idx],
+            name,
+            role,
+            pin
+          };
+          if (parlor.activeUser && parlor.activeUser.id === editId) {
+            parlor.activeUser.name = name;
+            parlor.activeUser.role = role;
+          }
+          showToast("Staff details updated");
+        }
+      } else {
+        parlor.staff.push({
+          id: "u-" + Date.now(),
+          name,
+          role,
+          pin
+        });
+        showToast("New staff user saved");
+      }
+
+      cancelStaffEdit();
+      document.getElementById("stfAdminAuthPin").value = "";
+      persistState(true);
+    }
+
+    function deleteStaffMember(staffId) {
+      const parlor = getCurrentParlor();
+      if ((parlor.staff || []).length <= 1) {
+        showToast("Kam se kam 1 user/admin rehna zaroori hai");
+        return;
+      }
+
+      const adminPin = prompt("Staff delete karne ke liye BPM Admin PIN daalein:");
+      if (!isValidBpmAdminPin(parlor, adminPin)) {
+        showToast("Galat Admin PIN — delete cancel");
+        return;
+      }
+
+      parlor.staff = parlor.staff.filter((u) => u.id !== staffId);
+      if (parlor.activeUser && parlor.activeUser.id === staffId) {
+        const fallbackUser = parlor.staff[0];
+        parlor.activeUser = {
+          id: fallbackUser.id,
+          name: fallbackUser.name,
+          role: fallbackUser.role
+        };
+      }
+      persistState(true);
+      showToast("Staff user deleted");
+    }
+
+    // =========================================================================
+    // ALERTS: 8:00 AM APPOINTMENT ALERT & DUE PAYMENT PROMISE ALERT
     // =========================================================================
     function requestAlertPermission() {
       if (!("Notification" in window)) {
@@ -1369,7 +1862,7 @@
         sessionStorage.setItem(notifyKey, "1");
         try {
           new Notification(`${parlor.name} — Aaj Ki Appointments`, {
-            body: `${todayApps.length} client appointment(s) aaj scheduled hain. Call ya WhatsApp karein.`
+            body: `${todayApps.length} client appointment(s) aaj scheduled hain.`
           });
         } catch (e) {}
       } else if (dueTodayOrPast.length > 0) {
@@ -1454,7 +1947,7 @@
     }
 
     // =========================================================================
-    // 3. SERVICES, DUE PROMISE DATE & LOGO PDF RECEIPT (jsPDF)
+    // SERVICES, DUE PROMISE DATE & LOGO PDF RECEIPT (jsPDF)
     // =========================================================================
     function syncDueInputs() {
       const total = Math.max(0, Number(document.getElementById("srvAmount").value) || 0);
@@ -1515,6 +2008,7 @@
 
       const newRecord = {
         id: "s-" + Date.now(),
+        consumerId: matchedConsumer ? matchedConsumer.id : "",
         consumerName,
         consumerPhone,
         name,
@@ -1599,7 +2093,6 @@
         const doc = new jsPDF({ unit: "mm", format: "a5" });
         const logoDataUrl = createParlorLogoDataUrl(parlor);
 
-        // Header with Clear Logo
         doc.addImage(logoDataUrl, "PNG", 12, 10, 22, 22);
         doc.setFont("helvetica", "bold");
         doc.setFontSize(15);
@@ -1615,7 +2108,6 @@
         doc.setDrawColor(235, 195, 215);
         doc.line(12, 36, 136, 36);
 
-        // Client & Service Details
         doc.setFont("helvetica", "bold");
         doc.setFontSize(11);
         doc.setTextColor(36, 19, 28);
@@ -1664,7 +2156,7 @@
     }
 
     // =========================================================================
-    // 4. DEDICATED APPOINTMENTS (DATE & TIME WHATSAPP + CALL + 8 AM ALERT)
+    // DEDICATED APPOINTMENTS
     // =========================================================================
     function addAppointment() {
       const parlor = getCurrentParlor();
@@ -1724,7 +2216,7 @@
     }
 
     // =========================================================================
-    // 5. OFFER BROADCAST (ALL OR TICK-SELECTED CONSUMERS)
+    // OFFER BROADCAST
     // =========================================================================
     function openSendOfferModal(offerId, selectAllByDefault = false) {
       const parlor = getCurrentParlor();
@@ -1741,7 +2233,7 @@
 
       const listEl = document.getElementById("offerConsumerChecklist");
       if (!parlor.consumers.length) {
-        listEl.innerHTML = `<div class="item-sub">Pehle Consumers tab mein customer add karein.</div>`;
+        listEl.innerHTML = `<div class="item-sub">Pehle Clients tab mein customer add karein.</div>`;
       } else {
         listEl.innerHTML = parlor.consumers.map((c, idx) => `
           <label class="check-row">
@@ -1838,8 +2330,19 @@
     }
 
     // =========================================================================
-    // 6. RAZORPAY CHECKOUT, REFERRAL, PARLOR & INCOME
+    // REFER & EARN, RAZORPAY PLANS, PARLOR & INCOME
     // =========================================================================
+    function openReferModal() {
+      const parlor = getCurrentParlor();
+      document.getElementById("myReferralCode").textContent = parlor.referralCode;
+      document.getElementById("referStatsBox").innerHTML = `
+        <div class="item-title">Referral Benefits Summary</div>
+        <div class="item-sub">Successful Referrals: <strong>${parlor.referralCount}</strong> · Bonus Days Earned: <strong>+${parlor.bonusDaysEarned} Days</strong></div>
+        <div class="item-sub" style="margin-top:4px;">Naya user/parlor aapka code <strong>${escapeHtml(parlor.referralCode)}</strong> daal kar register karega to <strong>+${REFERRAL_BONUS_DAYS} Days</strong> benefit milega.</div>
+      `;
+      document.getElementById("referModal").classList.add("open");
+    }
+
     function getRemainingDays(parlor) {
       const diff = (Number(parlor.validUntil) || Date.now()) - Date.now();
       return Math.max(0, Math.ceil(diff / DAY_MS));
@@ -1862,6 +2365,13 @@
       document.getElementById("plansModal").classList.add("open");
     }
 
+    function selectPlanAndPay(planKey) {
+      const sel = document.getElementById("planSelect");
+      if (PLANS[planKey]) sel.value = planKey;
+      updatePlanSummary();
+      startRazorpayCheckout();
+    }
+
     function updatePlanSummary() {
       const key = document.getElementById("planSelect").value;
       const plan = PLANS[key] || PLANS.yearly;
@@ -1869,8 +2379,8 @@
 
       document.getElementById("planSummaryBox").innerHTML = `
         <div class="item-title">${escapeHtml(plan.label)} — ₹${plan.price} (${plan.days} Days)</div>
-        <div class="item-sub">Parlor: <strong>${escapeHtml(parlor.name)}</strong> · Current Days Left: <strong>${getRemainingDays(parlor)}</strong></div>
-        <div class="item-sub" style="margin-top:4px;">Razorpay se payment poora hote hi <strong>+${plan.days} Days</strong> turant jud jaayenge.</div>
+        <div class="item-sub">Parlor: <strong>${escapeHtml(parlor.name)}</strong> · Valid till: <strong>${formatDateShort(parlor.validUntil)}</strong></div>
+        <div class="item-sub" style="margin-top:4px;">Payment poora hote hi <strong>+${plan.days} Days</strong> turant jud jaayenge.</div>
       `;
 
       const histEl = document.getElementById("paymentHistoryBox");
@@ -1905,7 +2415,7 @@
         key: RAZORPAY_KEY_ID,
         amount: plan.price * 100,
         currency: "INR",
-        name: "BPM — Beauty Parlour Management",
+        name: "Beauty Parlour Management",
         description: `${plan.label} (${plan.days} Days) - ${parlor.name}`,
         prefill: {
           name: parlor.activeUser.name || parlor.name,
@@ -2010,8 +2520,8 @@
     function shareReferralOnWhatsApp() {
       const parlor = getCurrentParlor();
       const msg = [
-        `✨ *${parlor.name}* ne aapko *BPM (Beauty Parlour Management)* app invite kiya hai!`,
-        `🎁 *30 Din Free Trial* shuru karein aur Referral Code *${parlor.referralCode}* daal kar *+${REFERRAL_BONUS_DAYS} Days Bonus* paayein.`,
+        `✨ *${parlor.name}* ne aapko *Beauty Parlour Management* app invite kiya hai!`,
+        `🎁 *30 Din Free Trial* shuru karein aur Referral Code *${parlor.referralCode}* daal kar *+${REFERRAL_BONUS_DAYS} Days Benefit* paayein.`,
         `📲 *Direct APK Download & Install Link:*`,
         `${APK_DIRECT_URL}`,
         `🌐 Web Link: ${WEB_APP_URL}`
@@ -2068,7 +2578,7 @@
           matchedReferrer.validUntil = refBase + REFERRAL_BONUS_DAYS * DAY_MS;
           matchedReferrer.referralCount = Number(matchedReferrer.referralCount || 0) + 1;
           matchedReferrer.bonusDaysEarned = Number(matchedReferrer.bonusDaysEarned || 0) + REFERRAL_BONUS_DAYS;
-          referralMsg = `Registered! +${REFERRAL_BONUS_DAYS} bonus days added`;
+          referralMsg = `Registered! +${REFERRAL_BONUS_DAYS} bonus days benefit added`;
         } else {
           referralMsg = "Registered (Referral code not matched)";
         }
@@ -2189,22 +2699,6 @@
       showToast("Offer added");
     }
 
-    function addStaffMember() {
-      const name = document.getElementById("stfName").value.trim();
-      const role = document.getElementById("stfRole").value;
-      const pin = document.getElementById("stfPin").value.trim();
-      if (!name || !pin) {
-        showToast("Name aur PIN daalein");
-        return;
-      }
-      const parlor = getCurrentParlor();
-      parlor.staff.push({ id: "u-" + Date.now(), name, role, pin });
-      document.getElementById("stfName").value = "";
-      document.getElementById("stfPin").value = "";
-      persistState(true);
-      showToast("Staff user added");
-    }
-
     function renderIncome() {
       const parlor = getCurrentParlor();
       const t = computeIncomeTotals(parlor.services);
@@ -2236,7 +2730,7 @@
       document.getElementById("parlorAvatar").textContent = initials;
       document.getElementById("parlorTitle").textContent = parlor.name;
       document.getElementById("parlorSub").textContent =
-        `${parlor.city} · User: ${parlor.activeUser.name} (${parlor.activeUser.role})`;
+        `${parlor.city} · ${parlor.activeUser.name} (${parlor.activeUser.role})`;
 
       document.getElementById("sessionUserLine").textContent =
         `👑 ${parlor.activeUser.name} · ID: ${parlor.activeUser.id || parlor.code} (${parlor.activeUser.role})`;
@@ -2245,19 +2739,24 @@
       document.getElementById("cloudLiveSubline").textContent =
         `Cloud Live ✓ (${parlor.code})`;
 
+      document.getElementById("staffLoginCodeHint").textContent = `ID: ${parlor.code}`;
+      const loginCodeInput = document.getElementById("staffLoginParlorCode");
+      if (loginCodeInput && !loginCodeInput.value) {
+        loginCodeInput.value = parlor.code;
+      }
+
       document.getElementById("planNameLabel").textContent = parlor.planName || "30-Day Free Trial";
       const badge = document.getElementById("daysLeftBadge");
       badge.textContent = daysLeft > 0 ? `${daysLeft} Days Left` : "Expired";
       badge.className = "badge " + (daysLeft > 7 ? "badge-trial" : daysLeft > 0 ? "badge-active" : "badge-expired");
 
       document.getElementById("validityDateText").textContent =
-        `Valid till ${formatDateShort(parlor.validUntil)} · Referrals: ${parlor.referralCount} (+${parlor.bonusDaysEarned}d bonus)`;
+        `Valid till ${formatDateShort(parlor.validUntil)} · Tap to view & buy plans`;
 
       document.getElementById("myReferralCode").textContent = parlor.referralCode;
       document.getElementById("statConsumers").textContent = String(parlor.consumers.length);
       document.getElementById("statServices").textContent = String(parlor.services.length);
 
-      // Home Appointments summary
       const apps = parlor.appointments || [];
       document.getElementById("upcomingCountBadge").textContent = String(apps.length);
       document.getElementById("homeAppointmentsList").innerHTML = apps.length
@@ -2277,8 +2776,23 @@
 
       renderIncome();
       renderAlertBanners();
+      renderAdminTicketsInbox();
 
-      // Consumers tab & dropdown
+      document.getElementById("staffList").innerHTML = parlor.staff.length
+        ? parlor.staff.map((u) => `
+            <div class="list-item">
+              <div>
+                <div class="item-title">${escapeHtml(u.name)} <span class="badge badge-trial">${escapeHtml(u.role)}</span></div>
+                <div class="item-sub">Parlor ID: <strong>${escapeHtml(parlor.code)}</strong> · PIN: <strong>${escapeHtml(u.pin)}</strong></div>
+              </div>
+              <div class="row-btns">
+                <button class="btn btn-soft btn-sm" onclick="startEditStaff('${escapeHtml(u.id)}')">Edit</button>
+                <button class="btn btn-danger btn-sm" onclick="deleteStaffMember('${escapeHtml(u.id)}')">Delete</button>
+              </div>
+            </div>
+          `).join("")
+        : `<div class="item-sub">No staff users registered.</div>`;
+
       const srvSelect = document.getElementById("srvConsumer");
       srvSelect.innerHTML = parlor.consumers.length
         ? parlor.consumers.map((c) => `<option value="${escapeHtml(c.name)}">${escapeHtml(c.name)} (${escapeHtml(c.phone)})</option>`).join("")
@@ -2296,7 +2810,6 @@
           `).join("")
         : `<div class="item-sub">No consumers yet.</div>`;
 
-      // Due payments list
       const dueItems = (parlor.services || []).filter((s) => !s.settled && Number(s.dueAmount || 0) > 0);
       document.getElementById("dueCountBadge").textContent = String(dueItems.length);
       document.getElementById("duePaymentsList").innerHTML = dueItems.length
@@ -2315,7 +2828,6 @@
           `).join("")
         : `<div class="item-sub">Koi baaki payment nahi hai.</div>`;
 
-      // Services list with Logo PDF Receipt
       document.getElementById("servicesList").innerHTML = parlor.services.length
         ? parlor.services.map((s) => {
             const dueAmt = Math.max(0, Number(s.dueAmount || 0));
@@ -2334,7 +2846,6 @@
           }).join("")
         : `<div class="item-sub">No services recorded yet.</div>`;
 
-      // Appointments tab list
       document.getElementById("appointmentsList").innerHTML = apps.length
         ? apps.map((a) => `
             <div class="list-item">
@@ -2350,7 +2861,6 @@
           `).join("")
         : `<div class="item-sub">No appointments scheduled yet.</div>`;
 
-      // Offers tab list
       document.getElementById("offersList").innerHTML = parlor.offers.length
         ? parlor.offers.map((o) => `
             <div class="list-item">
@@ -2365,11 +2875,6 @@
             </div>
           `).join("")
         : `<div class="item-sub">No offers added.</div>`;
-
-      // Staff tab list
-      document.getElementById("staffList").innerHTML = parlor.staff
-        .map((u) => `<div class="list-item"><div><div class="item-title">${escapeHtml(u.name)}</div><div class="item-sub">Role: ${escapeHtml(u.role)}</div></div><span class="badge badge-trial">PIN Set</span></div>`)
-        .join("");
     }
 
     function switchTab(tabName, btnEl) {
