@@ -60,6 +60,36 @@
       padding: 8px 14px 14px;
     }
 
+    .auth-gate-wrap {
+      max-width: 520px;
+      margin: 14px auto 24px;
+      padding: 0 14px;
+    }
+
+    .auth-brand-card {
+      background: var(--accent-grad);
+      color: #fff;
+      border-radius: 18px;
+      padding: 16px;
+      margin-bottom: 12px;
+      box-shadow: var(--shadow);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .auth-brand-title {
+      font-size: 16px;
+      font-weight: 800;
+    }
+
+    .auth-brand-sub {
+      font-size: 12px;
+      opacity: 0.92;
+      margin-top: 3px;
+    }
+
     .parlor-banner {
       background: var(--surface);
       border: 1px solid var(--line);
@@ -749,450 +779,573 @@
   </style>
 </head>
 <body>
-  <main class="container">
-    <!-- Top Parlour Strip -->
-    <section class="parlor-banner">
-      <div class="parlor-meta">
-        <div class="parlor-avatar" id="parlorAvatar">PBP</div>
-        <div style="min-width:0;">
-          <div class="parlor-name" id="parlorTitle">Payal beauty parlour</div>
-          <div class="parlor-sub" id="parlorSub">Joura · Payal (ADMIN)</div>
-        </div>
+  <!-- FULL LOG OUT / APP LOGIN GATE (Visible when logged out) -->
+  <section id="appAuthGate" class="auth-gate-wrap hidden">
+    <div class="auth-brand-card">
+      <div>
+        <div class="auth-brand-title">Beauty Parlour Management</div>
+        <div class="auth-brand-sub">पहले Parlor ID + Password से पार्लर लॉगिन करें, फिर User ID + Password से अंदर जाएं</div>
       </div>
-      <div class="banner-right">
-        <button class="lang-btn" id="langToggleBtn" onclick="toggleLanguage()">English / हिंदी</button>
-        <div class="sync-pill" id="syncBadge">Cloud Synced ✓</div>
-      </div>
-    </section>
+      <span class="sync-pill" id="gateSyncBadge">Cloud Synced ✓</span>
+    </div>
 
-    <!-- Top Side-by-Side Trial & Refer Pills -->
-    <section class="top-pills-row">
-      <button class="pill-card-btn" onclick="openPlansModal('yearly')">
-        <div>
-          <div class="pill-main-txt" id="planNameLabel">⏳ 30 Days Left</div>
-          <div class="pill-sub-txt" id="validityDateText">प्लान देखने के लिए टैप करें</div>
+    <!-- Step 1: Registered Parlor Login -->
+    <div class="card">
+      <div class="section-title">
+        <span>🏢 1. रजिस्टर्ड पार्लर लॉगिन (Parlor ID + Password)</span>
+        <span class="badge badge-trial" id="gateParlorStatusBadge">Locked</span>
+      </div>
+      <div class="field">
+        <label>रजिस्टर्ड पार्लर चुनें (या Parlor ID डालें)</label>
+        <select id="gateParlorQuickSelect" onchange="onGateParlorSelect(this.value)"></select>
+      </div>
+      <div class="grid-2">
+        <div class="field">
+          <label>Parlor ID *</label>
+          <input id="gateParlorCodeInput" class="input" placeholder="PAYAL01" style="text-transform:uppercase;" />
         </div>
-        <span class="badge badge-trial" id="plansBadgeLabel">Plans</span>
+        <div class="field">
+          <label>Parlor / Admin Password *</label>
+          <input id="gateParlorPassInput" class="input" type="password" placeholder="Parlor Password" />
+        </div>
+      </div>
+      <button class="btn btn-soft btn-block" onclick="loginGateParlor()">पार्लर लॉगिन करें (Unlock Users)</button>
+    </div>
+
+    <!-- Step 2: Users of That Specific Parlor Login -->
+    <div class="card-rose" id="gateUserLoginCard">
+      <div class="section-title">
+        <span>🔑 2. इस पार्लर के यूज़र का लॉगिन (User ID + Password)</span>
+        <span class="badge badge-warn" id="gateActiveParlorBadge">Parlor Required</span>
+      </div>
+      <div class="item-sub" id="gateActiveParlorUsersHint" style="margin-bottom:10px;">
+        पहले ऊपर Parlor ID और Password डालकर पार्लर लॉगिन करें, फिर इस पार्लर के Admin/Staff की User ID व Password डालें।
+      </div>
+      <div class="grid-2">
+        <div class="field">
+          <label>User ID (Admin या Staff ID) *</label>
+          <input id="gateUserIdInput" class="input" placeholder="जैसे: Payal01 या RIYA01" style="text-transform:uppercase;" />
+        </div>
+        <div class="field">
+          <label>User Password *</label>
+          <input id="gateUserPassInput" class="input" type="password" placeholder="Password / PIN" />
+        </div>
+      </div>
+      <div class="row-btns">
+        <button class="btn btn-primary" style="flex:1;" onclick="loginGateUser()">ऐप में लॉगिन करें</button>
+        <button class="btn btn-outline" onclick="openForgotPasswordModal()">Forgot Password?</button>
+      </div>
+    </div>
+
+    <div class="row-btns">
+      <button class="btn btn-soft btn-sm" style="flex:1;" onclick="openParlorModal('register')">+ नया पार्लर रजिस्टर करें</button>
+      <button class="btn btn-outline btn-sm" onclick="manualCloudSync()">☁️ Sync</button>
+    </div>
+  </section>
+
+  <!-- MAIN LOGGED-IN APP SHELL -->
+  <div id="mainAppShell">
+    <main class="container">
+      <!-- Top Parlour Strip -->
+      <section class="parlor-banner">
+        <div class="parlor-meta">
+          <div class="parlor-avatar" id="parlorAvatar">PBP</div>
+          <div style="min-width:0;">
+            <div class="parlor-name" id="parlorTitle">Payal beauty parlour</div>
+            <div class="parlor-sub" id="parlorSub">Joura · Payal (ADMIN)</div>
+          </div>
+        </div>
+        <div class="banner-right">
+          <button class="lang-btn" id="langToggleBtn" onclick="toggleLanguage()">English / हिंदी</button>
+          <div class="sync-pill" id="syncBadge">Cloud Synced ✓</div>
+        </div>
+      </section>
+
+      <!-- Top Side-by-Side Trial & Refer Pills -->
+      <section class="top-pills-row">
+        <button class="pill-card-btn" onclick="openPlansModal('yearly')">
+          <div>
+            <div class="pill-main-txt" id="planNameLabel">⏳ 30 Days Left</div>
+            <div class="pill-sub-txt" id="validityDateText">प्लान देखने के लिए टैप करें</div>
+          </div>
+          <span class="badge badge-trial" id="plansBadgeLabel">Plans</span>
+        </button>
+
+        <button class="pill-card-btn" onclick="openReferModal()">
+          <div>
+            <div class="pill-main-txt" id="referPillTitle">🎁 Refer & Earn</div>
+            <div class="pill-sub-txt" id="referPillSub">+15 दिन बोनस पाएं</div>
+          </div>
+          <span class="badge badge-active">APK</span>
+        </button>
+      </section>
+
+      <!-- Top Quick Action Tile Grid -->
+      <section class="tile-grid">
+        <button class="action-tile highlight" onclick="openSectionTab('staff')">
+          <span class="tile-ico">👩‍💼</span>
+          <span class="tile-lbl" data-i18n="tile_staff">स्टाफ (Staff)</span>
+        </button>
+        <button class="action-tile highlight" onclick="openSectionTab('offers')">
+          <span class="tile-ico">🎁</span>
+          <span class="tile-lbl" data-i18n="tile_offers">ऑफ़र (Offers)</span>
+        </button>
+        <button class="action-tile" onclick="openParlorModal('login')">
+          <span class="tile-ico">🔑</span>
+          <span class="tile-lbl" data-i18n="tile_parlor_id">पार्लर ID</span>
+        </button>
+        <button class="action-tile" onclick="promptIncomeUnlock()">
+          <span class="tile-ico">🔒</span>
+          <span class="tile-lbl" data-i18n="tile_pin">PIN इनकम</span>
+        </button>
+        <button class="action-tile" onclick="openSectionTab('consumers')">
+          <span class="tile-ico">👩</span>
+          <span class="tile-lbl" data-i18n="tile_clients">कस्टमर</span>
+        </button>
+        <button class="action-tile" onclick="openSectionTab('appointments')">
+          <span class="tile-ico">📅</span>
+          <span class="tile-lbl" data-i18n="tile_appoints">अपॉइंटमेंट</span>
+        </button>
+        <button class="action-tile" onclick="manualCloudSync()">
+          <span class="tile-ico">☁️</span>
+          <span class="tile-lbl" data-i18n="tile_sync">क्लाउड सिंक</span>
+        </button>
+        <button class="action-tile" onclick="logoutCurrentSession()">
+          <span class="tile-ico">🚪</span>
+          <span class="tile-lbl">Log Out</span>
+        </button>
+      </section>
+
+      <!-- TAB 1: HOME -->
+      <section id="tab-home" class="tab-view">
+        <div class="card">
+          <div class="item-title" id="sessionUserLine">👑 Payal · ID: Payal01 (ADMIN)</div>
+          <div class="item-sub" id="sessionParlorLine" style="margin-bottom:10px;">Parlor: Payal beauty parlour (PAYAL01)</div>
+          <div class="row-btns">
+            <button class="btn btn-soft btn-sm" onclick="openSectionTab('staff')" data-i18n="btn_new_staff">+ स्टाफ ID / लॉगिन</button>
+            <button class="btn btn-soft btn-sm" onclick="lockAppSession()" data-i18n="btn_lock_pin">PIN लॉक करें</button>
+            <button class="btn btn-danger btn-sm" onclick="logoutCurrentSession()">Log Out</button>
+            <button class="btn btn-soft btn-sm" onclick="openParlorModal('register')">नया पार्लर / OTP</button>
+          </div>
+        </div>
+
+        <!-- PIN-Protected Parlor Income -->
+        <div class="card-rose">
+          <div class="section-title" style="margin-bottom:8px;">
+            <span data-i18n="sec_income">💰 पार्लर इनकम (PIN सुरक्षित)</span>
+            <button class="btn btn-soft btn-xs" onclick="promptIncomeUnlock()" data-i18n="btn_unlock_income">🔒 PIN से देखें</button>
+          </div>
+
+          <div class="income-row" onclick="promptIncomeUnlock()">
+            <div class="income-label" data-i18n="inc_daily">आज की इनकम (Daily)</div>
+            <div class="income-val dots-rose" id="inc-daily">••••••</div>
+          </div>
+
+          <div class="income-row" onclick="promptIncomeUnlock()">
+            <div class="income-label" data-i18n="inc_monthly">इस महीने की इनकम (Monthly)</div>
+            <div class="income-val dots-rose" id="inc-monthly">••••••</div>
+          </div>
+
+          <div class="income-row" onclick="promptIncomeUnlock()">
+            <div class="income-label" data-i18n="inc_quarterly">तिमाही इनकम (Quarterly)</div>
+            <div class="income-val dots-rose" id="inc-quarterly">••••••</div>
+          </div>
+
+          <div class="income-row" onclick="promptIncomeUnlock()">
+            <div class="income-label" data-i18n="inc_annually">सालाना इनकम (Annually)</div>
+            <div class="income-val dots-rose" id="inc-annually">••••••</div>
+          </div>
+
+          <div class="income-row" onclick="promptIncomeUnlock()">
+            <div class="income-label" data-i18n="inc_alltime">अब तक की कुल इनकम (All-Time)</div>
+            <div class="income-val dots-green" id="inc-alltime">••••••</div>
+          </div>
+        </div>
+
+        <!-- Summary Counters -->
+        <div class="card-rose">
+          <div class="stat-grid">
+            <div class="stat-box">
+              <div class="income-label" data-i18n="stat_clients">कुल कस्टमर</div>
+              <div class="stat-num" id="statConsumers">0</div>
+            </div>
+            <div class="stat-box">
+              <div class="income-label" data-i18n="stat_services">कुल सर्विस</div>
+              <div class="stat-num" id="statServices">0</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Services & Due Section -->
+        <div class="card" id="servicesDueSection">
+          <div class="section-title">
+            <span data-i18n="sec_service_entry">💆‍♀️ सर्विस बिलिंग और बाकी पैसे (Service & Due)</span>
+            <span class="badge badge-trial">Logo PDF</span>
+          </div>
+          <div class="field">
+            <label data-i18n="lbl_consumer">कस्टमर चुनें *</label>
+            <select id="srvConsumer"></select>
+          </div>
+          <div class="field">
+            <label data-i18n="lbl_service_name">सर्विस का नाम *</label>
+            <input id="srvName" class="input" placeholder="जैसे: Bridal Makeup / Facial / Hair Spa" />
+          </div>
+          <div class="grid-2">
+            <div class="field">
+              <label data-i18n="lbl_total_amt">कुल रुपये (₹) *</label>
+              <input id="srvAmount" class="input" type="number" min="1" step="any" placeholder="1500" oninput="syncDueInputs()" />
+            </div>
+            <div class="field">
+              <label data-i18n="lbl_paid_now">अभी मिले (₹)</label>
+              <input id="srvPaidNow" class="input" type="number" min="0" step="any" placeholder="0" oninput="syncDueInputs()" />
+            </div>
+          </div>
+          <div class="grid-2">
+            <div class="field">
+              <label data-i18n="lbl_pay_mode">पेमेंट स्थिति</label>
+              <select id="srvPayMode" onchange="onPayModeChange()">
+                <option value="PAID">पूरा मिल गया (Paid)</option>
+                <option value="LATER">बाद में देंगी (Full Due)</option>
+                <option value="PARTIAL">थोड़ा मिला / बाकी बाद में</option>
+              </select>
+            </div>
+            <div class="field">
+              <label data-i18n="lbl_promise_date">कब देंगी (Promise Date)</label>
+              <input id="srvPromiseDate" class="input" type="date" />
+            </div>
+          </div>
+          <button class="btn btn-primary btn-block" onclick="addServiceRecord()" data-i18n="btn_save_service">सर्विस और बिल सेव करें</button>
+        </div>
+
+        <!-- Pending Due Payments List -->
+        <div class="card">
+          <div class="section-title">
+            <span data-i18n="sec_due_list">⏰ बाकी पैसे की लिस्ट (Due Payments)</span>
+            <span class="badge badge-warn" id="dueCountBadge">0</span>
+          </div>
+          <div id="duePaymentsList"></div>
+        </div>
+
+        <!-- Recent Services & Logo PDF Receipts -->
+        <div class="card">
+          <div class="section-title">
+            <span data-i18n="sec_recent_services">🧾 हाल की सर्विस और Logo PDF रसीद</span>
+          </div>
+          <div id="servicesList"></div>
+        </div>
+      </section>
+
+      <!-- TAB 2: STAFF & TWO-STEP PARLOR + USER LOGIN + FORGOT PASSWORD -->
+      <section id="tab-staff" class="tab-view hidden">
+        <div class="card">
+          <div class="section-title">
+            <span>🏢 1. पार्लर में प्रवेश करें (Parlor ID + Password)</span>
+            <div class="row-btns">
+              <span class="badge badge-trial" id="staffLoginCodeHint">ID: PAYAL01</span>
+              <button class="btn btn-danger btn-xs" onclick="logoutCurrentSession()">Log Out</button>
+            </div>
+          </div>
+          <div class="grid-2">
+            <div class="field">
+              <label>Parlor ID *</label>
+              <input id="staffLoginParlorCode" class="input" placeholder="PAYAL01" style="text-transform:uppercase;" />
+            </div>
+            <div class="field">
+              <label>Parlor / Admin Password *</label>
+              <input id="staffLoginParlorPass" class="input" type="password" placeholder="Parlor Password" />
+            </div>
+          </div>
+          <button class="btn btn-soft btn-block" onclick="enterParlorRoom()">पार्लर स्क्रीन खोलें</button>
+        </div>
+
+        <div class="card-rose">
+          <div class="section-title">
+            <span>🔑 2. अंदर की स्क्रीन लॉगिन (User ID + Password)</span>
+            <span class="badge badge-active" id="enteredParlorBadge">PAYAL01</span>
+          </div>
+          <div class="item-sub" id="enteredParlorInfo" style="margin-bottom:10px;">
+            संबंधित पार्लर के अंदर अपना User ID और Password डालकर लॉगिन करें।
+          </div>
+          <div class="grid-2">
+            <div class="field">
+              <label>User ID (Admin या Staff ID) *</label>
+              <input id="innerUserIdInput" class="input" placeholder="जैसे: Payal01 या STAFF01" />
+            </div>
+            <div class="field">
+              <label>User Password *</label>
+              <input id="innerUserPassInput" class="input" type="password" placeholder="Password / PIN" />
+            </div>
+          </div>
+          <div class="row-btns">
+            <button class="btn btn-primary" style="flex:1;" onclick="loginInnerUser()">User ID और Password से लॉगिन करें</button>
+            <button class="btn btn-outline" onclick="openForgotPasswordModal()">Forgot Password?</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="section-title">
+            <span id="staffFormHeading">👑 एडमिन: स्टाफ की ID और Password बनाएं</span>
+            <button class="btn btn-outline btn-xs hidden" id="cancelEditStaffBtn" onclick="cancelStaffEdit()">Cancel</button>
+          </div>
+          <input type="hidden" id="editingStaffId" value="" />
+          <div class="grid-2">
+            <div class="field">
+              <label>Staff User ID *</label>
+              <input id="stfUserId" class="input" placeholder="जैसे: RIYA01" style="text-transform:uppercase;" />
+            </div>
+            <div class="field">
+              <label>स्टाफ का नाम *</label>
+              <input id="stfName" class="input" placeholder="जैसे: Riya" />
+            </div>
+          </div>
+          <div class="grid-2">
+            <div class="field">
+              <label>रोल (Role)</label>
+              <select id="stfRole">
+                <option value="STAFF">STAFF</option>
+                <option value="ADMIN">ADMIN</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Staff Password (4+ अक्षर/अंक) *</label>
+              <input id="stfPin" class="input" type="text" placeholder="जैसे: riya@123 या 2222" />
+            </div>
+          </div>
+          <div class="field">
+            <label>Admin Password / PIN (Save / Edit / Delete के लिए) *</label>
+            <input id="stfAdminAuthPin" class="input" type="password" placeholder="Admin Password (default: 1234)" />
+          </div>
+          <button class="btn btn-primary btn-block" onclick="saveStaffMember()">स्टाफ ID और Password सेव करें</button>
+        </div>
+
+        <div class="card">
+          <div class="section-title"><span data-i18n="sec_staff_list">रजिस्टर्ड स्टाफ और एडमिन</span></div>
+          <div id="staffList"></div>
+        </div>
+      </section>
+
+      <!-- TAB 3: OFFERS -->
+      <section id="tab-offers" class="tab-view hidden">
+        <div class="card">
+          <div class="section-title"><span data-i18n="sec_create_offer">🎁 नया ऑफ़र बनाएं और कस्टमर्स को भेजें</span></div>
+          <div class="field">
+            <label data-i18n="lbl_offer_title">ऑफ़र का नाम *</label>
+            <input id="offTitle" class="input" placeholder="जैसे: करवाचौथ / शादी स्पेशल पैकेज" />
+          </div>
+          <div class="field">
+            <label data-i18n="lbl_offer_desc">ऑफ़र की जानकारी / रेट</label>
+            <input id="offDesc" class="input" placeholder="जैसे: Facial + Hair Spa + Threading सिर्फ ₹999 में" />
+          </div>
+          <button class="btn btn-primary btn-block" onclick="addOffer()" data-i18n="btn_add_offer">ऑफ़र सेव करें</button>
+        </div>
+
+        <div class="card">
+          <div class="section-title">
+            <span data-i18n="sec_active_offers">एक्टिव ऑफ़र्स (एक साथ या टिक करके भेजें)</span>
+          </div>
+          <div id="offersList"></div>
+        </div>
+      </section>
+
+      <!-- TAB 4: CONSUMERS -->
+      <section id="tab-consumers" class="tab-view hidden">
+        <div class="card">
+          <div class="section-title"><span data-i18n="sec_add_client">👩 नया कस्टमर जोड़ें</span></div>
+          <div class="field">
+            <label data-i18n="lbl_client_name">कस्टमर का नाम *</label>
+            <input id="conName" class="input" placeholder="जैसे: Neha Sharma" />
+          </div>
+          <div class="field">
+            <label data-i18n="lbl_mobile">मोबाइल नंबर *</label>
+            <input id="conPhone" class="input" type="tel" placeholder="9876543210" />
+          </div>
+          <div class="field">
+            <label data-i18n="lbl_notes">नोट्स / पसंद</label>
+            <input id="conNote" class="input" placeholder="Bridal / Skin type / Hair spa" />
+          </div>
+          <button class="btn btn-primary btn-block" onclick="addConsumer()" data-i18n="btn_save_client">कस्टमर सेव करें</button>
+        </div>
+
+        <div class="card">
+          <div class="section-title"><span data-i18n="sec_client_list">कस्टमर्स की लिस्ट</span></div>
+          <div id="consumersList"></div>
+        </div>
+      </section>
+
+      <!-- TAB 5: APPOINTMENTS -->
+      <section id="tab-appointments" class="tab-view hidden">
+        <div class="card">
+          <div class="section-title">
+            <span data-i18n="sec_new_appoint">📅 नया अपॉइंटमेंट (Bridal / Client)</span>
+            <span class="badge badge-trial">Date Alert</span>
+          </div>
+          <div class="field">
+            <label data-i18n="lbl_client_name">क्लाइंट का नाम *</label>
+            <input id="appClientName" class="input" placeholder="जैसे: Priya Verma" />
+          </div>
+          <div class="field">
+            <label data-i18n="lbl_mobile">मोबाइल नंबर *</label>
+            <input id="appClientPhone" class="input" type="tel" placeholder="9876543210" />
+          </div>
+          <div class="field">
+            <label data-i18n="lbl_service_pkg">सर्विस / पैकेज *</label>
+            <input id="appServiceType" class="input" placeholder="जैसे: Bridal Makeup / Engagement" />
+          </div>
+          <div class="grid-2">
+            <div class="field">
+              <label data-i18n="lbl_date">तारीख (Date) *</label>
+              <input id="appDate" class="input" type="date" />
+            </div>
+            <div class="field">
+              <label data-i18n="lbl_time">समय (Time) *</label>
+              <input id="appTime" class="input" type="time" />
+            </div>
+          </div>
+          <button class="btn btn-primary btn-block" onclick="addAppointment()" data-i18n="btn_save_appoint">अपॉइंटमेंट सेव करें और WhatsApp भेजें</button>
+        </div>
+
+        <div class="card">
+          <div class="section-title"><span data-i18n="sec_appoint_list">तय किए गए अपॉइंटमेंट्स</span></div>
+          <div id="appointmentsList"></div>
+        </div>
+      </section>
+
+      <!-- TAB 6: DATE-BASED REMINDERS -->
+      <section id="tab-reminders" class="tab-view hidden">
+        <div class="card">
+          <div class="section-title">
+            <span data-i18n="sec_reminders">🔔 ज़रूरी रिमाइंडर (Due Date और Appointments)</span>
+            <span class="badge badge-expired" id="pendingRemBadge">0 Pending</span>
+          </div>
+          <p class="item-sub" style="margin-bottom:10px;" data-i18n="rem_help_txt">
+            तारीख आते ही यहाँ रिमाइंडर दिखेगा और नीचे बटन पर लाल (Red) ब्लिंक होगा। क्लाइंट को यहीं से Call या WhatsApp करें और रिमाइंडर पर टैप करके Check करें।
+          </p>
+          <div id="remindersCenterList"></div>
+        </div>
+      </section>
+
+      <!-- TAB 7: BPM ASSISTANT -->
+      <section id="tab-assistant" class="tab-view hidden">
+        <div class="card">
+          <div class="section-title">
+            <span data-i18n="sec_assistant">✨ BPM असिस्टेंट (बोलें या टाइप करें)</span>
+            <span class="badge badge-trial">Smart Helper</span>
+          </div>
+          <div class="chat-box" id="assistantChatBox"></div>
+
+          <div class="row-btns" style="margin-bottom:8px;">
+            <button class="btn btn-soft btn-xs" onclick="askQuickAssistant('आज की इनकम कितनी है?')">आज की इनकम</button>
+            <button class="btn btn-soft btn-xs" onclick="askQuickAssistant('किसका पैसा बाकी है?')">बाकी पैसे (Due)</button>
+            <button class="btn btn-soft btn-xs" onclick="askQuickAssistant('आज किसका अपॉइंटमेंट है?')">आज के अपॉइंटमेंट</button>
+            <button class="btn btn-soft btn-xs" onclick="askQuickAssistant('कुल कितने कस्टमर हैं?')">कुल कस्टमर</button>
+          </div>
+
+          <div style="display:flex;gap:6px;align-items:center;">
+            <button class="btn btn-soft" id="voiceMicBtn" onclick="startVoiceAssistant()" title="Speak">🎤</button>
+            <input id="assistantInput" class="input" placeholder="बोलें या लिखें: जैसे आज की इनकम, बाकी पैसे, अपॉइंटमेंट..." onkeydown="if(event.key==='Enter') sendAssistantQuery()" />
+            <button class="btn btn-primary" onclick="sendAssistantQuery()" data-i18n="btn_ask">पूछें</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 8: SUPPORT -->
+      <section id="tab-support" class="tab-view hidden">
+        <div class="card">
+          <div class="section-title">
+            <span data-i18n="sec_support">🛟 BPM सपोर्ट टिकट (App Admin को भेजें)</span>
+            <span class="badge badge-trial">In-App</span>
+          </div>
+          <div class="field">
+            <label data-i18n="lbl_tkt_topic">समस्या का विषय *</label>
+            <input id="tktSubject" class="input" placeholder="जैसे: PIN भूल गए / पेमेंट / रसीद PDF" />
+          </div>
+          <div class="field">
+            <label data-i18n="lbl_tkt_detail">पूरी समस्या लिखें *</label>
+            <textarea id="tktMessage" rows="3" placeholder="अपनी समस्या विस्तार से लिखें..."></textarea>
+          </div>
+          <button class="btn btn-primary btn-block" onclick="submitTicketToAppAdmin()" data-i18n="btn_send_ticket">App Admin को टिकट भेजें</button>
+        </div>
+
+        <div class="card">
+          <div class="section-title">
+            <span data-i18n="sec_admin_inbox">📥 App Admin Inbox (टिकट हल करें)</span>
+            <span class="badge badge-warn" id="openTicketCountBadge">0 Open</span>
+          </div>
+          <div id="adminTicketInboxList"></div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Fixed Bottom Navigation Bar -->
+    <nav class="bottom-nav">
+      <button class="nav-btn active" id="nav-home" onclick="openSectionTab('home')">
+        <span class="nav-ico">🏠</span>
+        <span data-i18n="nav_home">होम (Home)</span>
       </button>
-
-      <button class="pill-card-btn" onclick="openReferModal()">
-        <div>
-          <div class="pill-main-txt" id="referPillTitle">🎁 Refer & Earn</div>
-          <div class="pill-sub-txt" id="referPillSub">+15 दिन बोनस पाएं</div>
-        </div>
-        <span class="badge badge-active">APK</span>
+      <button class="nav-btn" id="nav-reminders" onclick="openSectionTab('reminders')">
+        <span class="blink-dot hidden" id="remBlinkDot"></span>
+        <span class="nav-ico">🔔</span>
+        <span data-i18n="nav_reminders">रिमाइंडर</span>
       </button>
-    </section>
-
-    <!-- Top Quick Action Tile Grid -->
-    <section class="tile-grid">
-      <button class="action-tile highlight" onclick="openSectionTab('staff')">
-        <span class="tile-ico">👩‍💼</span>
-        <span class="tile-lbl" data-i18n="tile_staff">स्टाफ (Staff)</span>
+      <button class="nav-btn" id="nav-assistant" onclick="openSectionTab('assistant')">
+        <span class="nav-ico">✨</span>
+        <span data-i18n="nav_assistant">BPM असिस्टेंट</span>
       </button>
-      <button class="action-tile highlight" onclick="openSectionTab('offers')">
-        <span class="tile-ico">🎁</span>
-        <span class="tile-lbl" data-i18n="tile_offers">ऑफ़र (Offers)</span>
+      <button class="nav-btn" id="nav-support" onclick="openSectionTab('support')">
+        <span class="nav-ico">🛟</span>
+        <span data-i18n="nav_support">सपोर्ट (Support)</span>
       </button>
-      <button class="action-tile" onclick="openParlorModal('login')">
-        <span class="tile-ico">🔑</span>
-        <span class="tile-lbl" data-i18n="tile_parlor_id">पार्लर ID</span>
-      </button>
-      <button class="action-tile" onclick="promptIncomeUnlock()">
-        <span class="tile-ico">🔒</span>
-        <span class="tile-lbl" data-i18n="tile_pin">PIN इनकम</span>
-      </button>
-      <button class="action-tile" onclick="openSectionTab('consumers')">
-        <span class="tile-ico">👩</span>
-        <span class="tile-lbl" data-i18n="tile_clients">कस्टमर</span>
-      </button>
-      <button class="action-tile" onclick="openSectionTab('appointments')">
-        <span class="tile-ico">📅</span>
-        <span class="tile-lbl" data-i18n="tile_appoints">अपॉइंटमेंट</span>
-      </button>
-      <button class="action-tile" onclick="manualCloudSync()">
-        <span class="tile-ico">☁️</span>
-        <span class="tile-lbl" data-i18n="tile_sync">क्लाउड सिंक</span>
-      </button>
-      <button class="action-tile" onclick="openParlorModal('register')">
-        <span class="tile-ico">🚪</span>
-        <span class="tile-lbl" data-i18n="tile_switch">नया पार्लर / OTP</span>
-      </button>
-    </section>
+    </nav>
+  </div>
 
-    <!-- TAB 1: HOME -->
-    <section id="tab-home" class="tab-view">
-      <div class="card">
-        <div class="item-title" id="sessionUserLine">👑 Payal · ID: Payal01 (ADMIN)</div>
-        <div class="item-sub" id="sessionParlorLine" style="margin-bottom:10px;">Parlor: Payal beauty parlour (PAYAL01)</div>
-        <div class="row-btns">
-          <button class="btn btn-soft btn-sm" onclick="openSectionTab('staff')" data-i18n="btn_new_staff">+ स्टाफ ID / लॉगिन</button>
-          <button class="btn btn-soft btn-sm" onclick="lockAppSession()" data-i18n="btn_lock_pin">PIN लॉक करें</button>
-          <button class="btn btn-soft btn-sm" onclick="openParlorModal('register')">First-Time / OTP Setup</button>
-        </div>
+  <!-- Modal: Forgot Password via OTP + Set New ID & Password -->
+  <div class="modal-backdrop" id="forgotPasswordModal">
+    <div class="modal-box">
+      <div class="modal-head">
+        <strong>Forgot Password (OTP Reset)</strong>
+        <button class="close-x" onclick="closeModal('forgotPasswordModal')">✕</button>
+      </div>
+      <p class="item-sub" style="margin-bottom:10px;">
+        रजिस्टर्ड मोबाइल नंबर से OTP लें, Verify करें, और अपनी <strong>User ID</strong> व <strong>नया Password</strong> भविष्य के लिए सेव करें।
+      </p>
+
+      <div class="field">
+        <label>रजिस्टर्ड मोबाइल नंबर *</label>
+        <input id="fpMobileInput" class="input" type="tel" maxlength="10" placeholder="10-अंकों का मोबाइल नंबर" />
       </div>
 
-      <!-- PIN-Protected Parlor Income -->
-      <div class="card-rose">
-        <div class="section-title" style="margin-bottom:8px;">
-          <span data-i18n="sec_income">💰 पार्लर इनकम (PIN सुरक्षित)</span>
-          <button class="btn btn-soft btn-xs" onclick="promptIncomeUnlock()" data-i18n="btn_unlock_income">🔒 PIN से देखें</button>
-        </div>
-
-        <div class="income-row" onclick="promptIncomeUnlock()">
-          <div class="income-label" data-i18n="inc_daily">आज की इनकम (Daily)</div>
-          <div class="income-val dots-rose" id="inc-daily">••••••</div>
-        </div>
-
-        <div class="income-row" onclick="promptIncomeUnlock()">
-          <div class="income-label" data-i18n="inc_monthly">इस महीने की इनकम (Monthly)</div>
-          <div class="income-val dots-rose" id="inc-monthly">••••••</div>
-        </div>
-
-        <div class="income-row" onclick="promptIncomeUnlock()">
-          <div class="income-label" data-i18n="inc_quarterly">तिमाही इनकम (Quarterly)</div>
-          <div class="income-val dots-rose" id="inc-quarterly">••••••</div>
-        </div>
-
-        <div class="income-row" onclick="promptIncomeUnlock()">
-          <div class="income-label" data-i18n="inc_annually">सालाना इनकम (Annually)</div>
-          <div class="income-val dots-rose" id="inc-annually">••••••</div>
-        </div>
-
-        <div class="income-row" onclick="promptIncomeUnlock()">
-          <div class="income-label" data-i18n="inc_alltime">अब तक की कुल इनकम (All-Time)</div>
-          <div class="income-val dots-green" id="inc-alltime">••••••</div>
-        </div>
+      <div class="row-btns" style="margin-bottom:10px;">
+        <button class="btn btn-soft btn-sm" style="flex:1;" onclick="sendForgotOtp()">📲 OTP भेजें</button>
       </div>
 
-      <!-- Summary Counters -->
-      <div class="card-rose">
-        <div class="stat-grid">
-          <div class="stat-box">
-            <div class="income-label" data-i18n="stat_clients">कुल कस्टमर</div>
-            <div class="stat-num" id="statConsumers">0</div>
-          </div>
-          <div class="stat-box">
-            <div class="income-label" data-i18n="stat_services">कुल सर्विस</div>
-            <div class="stat-num" id="statServices">0</div>
-          </div>
+      <div id="fpOtpBox" class="card-rose hidden" style="margin-bottom:10px;">
+        <div id="fpOtpStatusNotice" class="item-sub" style="margin-bottom:8px;color:var(--rose-dark);font-weight:700;"></div>
+        <div class="field" style="margin-bottom:8px;">
+          <label>6-अंकों का OTP दर्ज करें *</label>
+          <input id="fpOtpInput" class="input" type="text" maxlength="6" placeholder="123456" />
         </div>
+        <button class="btn btn-whatsapp btn-sm btn-block" onclick="verifyForgotOtp()">OTP Verify करें</button>
       </div>
 
-      <!-- Services & Due Section -->
-      <div class="card" id="servicesDueSection">
-        <div class="section-title">
-          <span data-i18n="sec_service_entry">💆‍♀️ सर्विस बिलिंग और बाकी पैसे (Service & Due)</span>
-          <span class="badge badge-trial">Logo PDF</span>
+      <div class="field">
+        <label>User ID (Admin या Staff ID) *</label>
+        <input id="fpUserIdInput" class="input" placeholder="जैसे: Payal01 या RIYA01" style="text-transform:uppercase;" />
+      </div>
+
+      <div class="grid-2">
+        <div class="field">
+          <label>नया Password / PIN *</label>
+          <input id="fpNewPinInput" class="input" type="password" placeholder="4+ अक्षर/अंक" />
         </div>
         <div class="field">
-          <label data-i18n="lbl_consumer">कस्टमर चुनें *</label>
-          <select id="srvConsumer"></select>
-        </div>
-        <div class="field">
-          <label data-i18n="lbl_service_name">सर्विस का नाम *</label>
-          <input id="srvName" class="input" placeholder="जैसे: Bridal Makeup / Facial / Hair Spa" />
-        </div>
-        <div class="grid-2">
-          <div class="field">
-            <label data-i18n="lbl_total_amt">कुल रुपये (₹) *</label>
-            <input id="srvAmount" class="input" type="number" min="1" step="any" placeholder="1500" oninput="syncDueInputs()" />
-          </div>
-          <div class="field">
-            <label data-i18n="lbl_paid_now">अभी मिले (₹)</label>
-            <input id="srvPaidNow" class="input" type="number" min="0" step="any" placeholder="0" oninput="syncDueInputs()" />
-          </div>
-        </div>
-        <div class="grid-2">
-          <div class="field">
-            <label data-i18n="lbl_pay_mode">पेमेंट स्थिति</label>
-            <select id="srvPayMode" onchange="onPayModeChange()">
-              <option value="PAID">पूरा मिल गया (Paid)</option>
-              <option value="LATER">बाद में देंगी (Full Due)</option>
-              <option value="PARTIAL">थोड़ा मिला / बाकी बाद में</option>
-            </select>
-          </div>
-          <div class="field">
-            <label data-i18n="lbl_promise_date">कब देंगी (Promise Date)</label>
-            <input id="srvPromiseDate" class="input" type="date" />
-          </div>
-        </div>
-        <button class="btn btn-primary btn-block" onclick="addServiceRecord()" data-i18n="btn_save_service">सर्विस और बिल सेव करें</button>
-      </div>
-
-      <!-- Pending Due Payments List -->
-      <div class="card">
-        <div class="section-title">
-          <span data-i18n="sec_due_list">⏰ बाकी पैसे की लिस्ट (Due Payments)</span>
-          <span class="badge badge-warn" id="dueCountBadge">0</span>
-        </div>
-        <div id="duePaymentsList"></div>
-      </div>
-
-      <!-- Recent Services & Logo PDF Receipts -->
-      <div class="card">
-        <div class="section-title">
-          <span data-i18n="sec_recent_services">🧾 हाल की सर्विस और Logo PDF रसीद</span>
-        </div>
-        <div id="servicesList"></div>
-      </div>
-    </section>
-
-    <!-- TAB 2: STAFF & TWO-STEP PARLOR + USER LOGIN -->
-    <section id="tab-staff" class="tab-view hidden">
-      <div class="card">
-        <div class="section-title">
-          <span>🏢 1. पार्लर में प्रवेश करें (Parlor ID + Password)</span>
-          <span class="badge badge-trial" id="staffLoginCodeHint">ID: PAYAL01</span>
-        </div>
-        <div class="grid-2">
-          <div class="field">
-            <label>Parlor ID *</label>
-            <input id="staffLoginParlorCode" class="input" placeholder="PAYAL01" style="text-transform:uppercase;" />
-          </div>
-          <div class="field">
-            <label>Parlor / Admin Password *</label>
-            <input id="staffLoginParlorPass" class="input" type="password" placeholder="Parlor Password" />
-          </div>
-        </div>
-        <button class="btn btn-soft btn-block" onclick="enterParlorRoom()">पार्लर स्क्रीन खोलें</button>
-      </div>
-
-      <div class="card-rose">
-        <div class="section-title">
-          <span>🔑 2. अंदर की स्क्रीन लॉगिन (User ID + Password)</span>
-          <span class="badge badge-active" id="enteredParlorBadge">PAYAL01</span>
-        </div>
-        <div class="item-sub" id="enteredParlorInfo" style="margin-bottom:10px;">
-          संबंधित पार्लर के अंदर अपना User ID और Password डालकर लॉगिन करें।
-        </div>
-        <div class="grid-2">
-          <div class="field">
-            <label>User ID (Admin या Staff ID) *</label>
-            <input id="innerUserIdInput" class="input" placeholder="जैसे: Payal01 या STAFF01" />
-          </div>
-          <div class="field">
-            <label>User Password *</label>
-            <input id="innerUserPassInput" class="input" type="password" placeholder="Password / PIN" />
-          </div>
-        </div>
-        <button class="btn btn-primary btn-block" onclick="loginInnerUser()">User ID और Password से लॉगिन करें</button>
-      </div>
-
-      <div class="card">
-        <div class="section-title">
-          <span id="staffFormHeading">👑 एडमिन: स्टाफ की ID और Password बनाएं</span>
-          <button class="btn btn-outline btn-xs hidden" id="cancelEditStaffBtn" onclick="cancelStaffEdit()">Cancel</button>
-        </div>
-        <input type="hidden" id="editingStaffId" value="" />
-        <div class="grid-2">
-          <div class="field">
-            <label>Staff User ID *</label>
-            <input id="stfUserId" class="input" placeholder="जैसे: RIYA01" style="text-transform:uppercase;" />
-          </div>
-          <div class="field">
-            <label>स्टाफ का नाम *</label>
-            <input id="stfName" class="input" placeholder="जैसे: Riya" />
-          </div>
-        </div>
-        <div class="grid-2">
-          <div class="field">
-            <label>रोल (Role)</label>
-            <select id="stfRole">
-              <option value="STAFF">STAFF</option>
-              <option value="ADMIN">ADMIN</option>
-            </select>
-          </div>
-          <div class="field">
-            <label>Staff Password (4+ अक्षर/अंक) *</label>
-            <input id="stfPin" class="input" type="text" placeholder="जैसे: riya@123 या 2222" />
-          </div>
-        </div>
-        <div class="field">
-          <label>Admin Password / PIN (Save / Edit / Delete के लिए) *</label>
-          <input id="stfAdminAuthPin" class="input" type="password" placeholder="Admin Password (default: 1234)" />
-        </div>
-        <button class="btn btn-primary btn-block" onclick="saveStaffMember()">स्टाफ ID और Password सेव करें</button>
-      </div>
-
-      <div class="card">
-        <div class="section-title"><span data-i18n="sec_staff_list">रजिस्टर्ड स्टाफ और एडमिन</span></div>
-        <div id="staffList"></div>
-      </div>
-    </section>
-
-    <!-- TAB 3: OFFERS -->
-    <section id="tab-offers" class="tab-view hidden">
-      <div class="card">
-        <div class="section-title"><span data-i18n="sec_create_offer">🎁 नया ऑफ़र बनाएं और कस्टमर्स को भेजें</span></div>
-        <div class="field">
-          <label data-i18n="lbl_offer_title">ऑफ़र का नाम *</label>
-          <input id="offTitle" class="input" placeholder="जैसे: करवाचौथ / शादी स्पेशल पैकेज" />
-        </div>
-        <div class="field">
-          <label data-i18n="lbl_offer_desc">ऑफ़र की जानकारी / रेट</label>
-          <input id="offDesc" class="input" placeholder="जैसे: Facial + Hair Spa + Threading सिर्फ ₹999 में" />
-        </div>
-        <button class="btn btn-primary btn-block" onclick="addOffer()" data-i18n="btn_add_offer">ऑफ़र सेव करें</button>
-      </div>
-
-      <div class="card">
-        <div class="section-title">
-          <span data-i18n="sec_active_offers">एक्टिव ऑफ़र्स (एक साथ या टिक करके भेजें)</span>
-        </div>
-        <div id="offersList"></div>
-      </div>
-    </section>
-
-    <!-- TAB 4: CONSUMERS -->
-    <section id="tab-consumers" class="tab-view hidden">
-      <div class="card">
-        <div class="section-title"><span data-i18n="sec_add_client">👩 नया कस्टमर जोड़ें</span></div>
-        <div class="field">
-          <label data-i18n="lbl_client_name">कस्टमर का नाम *</label>
-          <input id="conName" class="input" placeholder="जैसे: Neha Sharma" />
-        </div>
-        <div class="field">
-          <label data-i18n="lbl_mobile">मोबाइल नंबर *</label>
-          <input id="conPhone" class="input" type="tel" placeholder="9876543210" />
-        </div>
-        <div class="field">
-          <label data-i18n="lbl_notes">नोट्स / पसंद</label>
-          <input id="conNote" class="input" placeholder="Bridal / Skin type / Hair spa" />
-        </div>
-        <button class="btn btn-primary btn-block" onclick="addConsumer()" data-i18n="btn_save_client">कस्टमर सेव करें</button>
-      </div>
-
-      <div class="card">
-        <div class="section-title"><span data-i18n="sec_client_list">कस्टमर्स की लिस्ट</span></div>
-        <div id="consumersList"></div>
-      </div>
-    </section>
-
-    <!-- TAB 5: APPOINTMENTS -->
-    <section id="tab-appointments" class="tab-view hidden">
-      <div class="card">
-        <div class="section-title">
-          <span data-i18n="sec_new_appoint">📅 नया अपॉइंटमेंट (Bridal / Client)</span>
-          <span class="badge badge-trial">Date Alert</span>
-        </div>
-        <div class="field">
-          <label data-i18n="lbl_client_name">क्लाइंट का नाम *</label>
-          <input id="appClientName" class="input" placeholder="जैसे: Priya Verma" />
-        </div>
-        <div class="field">
-          <label data-i18n="lbl_mobile">मोबाइल नंबर *</label>
-          <input id="appClientPhone" class="input" type="tel" placeholder="9876543210" />
-        </div>
-        <div class="field">
-          <label data-i18n="lbl_service_pkg">सर्विस / पैकेज *</label>
-          <input id="appServiceType" class="input" placeholder="जैसे: Bridal Makeup / Engagement" />
-        </div>
-        <div class="grid-2">
-          <div class="field">
-            <label data-i18n="lbl_date">तारीख (Date) *</label>
-            <input id="appDate" class="input" type="date" />
-          </div>
-          <div class="field">
-            <label data-i18n="lbl_time">समय (Time) *</label>
-            <input id="appTime" class="input" type="time" />
-          </div>
-        </div>
-        <button class="btn btn-primary btn-block" onclick="addAppointment()" data-i18n="btn_save_appoint">अपॉइंटमेंट सेव करें और WhatsApp भेजें</button>
-      </div>
-
-      <div class="card">
-        <div class="section-title"><span data-i18n="sec_appoint_list">तय किए गए अपॉइंटमेंट्स</span></div>
-        <div id="appointmentsList"></div>
-      </div>
-    </section>
-
-    <!-- TAB 6: DATE-BASED REMINDERS -->
-    <section id="tab-reminders" class="tab-view hidden">
-      <div class="card">
-        <div class="section-title">
-          <span data-i18n="sec_reminders">🔔 ज़रूरी रिमाइंडर (Due Date और Appointments)</span>
-          <span class="badge badge-expired" id="pendingRemBadge">0 Pending</span>
-        </div>
-        <p class="item-sub" style="margin-bottom:10px;" data-i18n="rem_help_txt">
-          तारीख आते ही यहाँ रिमाइंडर दिखेगा और नीचे बटन पर लाल (Red) ब्लिंक होगा। क्लाइंट को यहीं से Call या WhatsApp करें और रिमाइंडर पर टैप करके Check करें।
-        </p>
-        <div id="remindersCenterList"></div>
-      </div>
-    </section>
-
-    <!-- TAB 7: BPM ASSISTANT -->
-    <section id="tab-assistant" class="tab-view hidden">
-      <div class="card">
-        <div class="section-title">
-          <span data-i18n="sec_assistant">✨ BPM असिस्टेंट (बोलें या टाइप करें)</span>
-          <span class="badge badge-trial">Smart Helper</span>
-        </div>
-        <div class="chat-box" id="assistantChatBox"></div>
-
-        <div class="row-btns" style="margin-bottom:8px;">
-          <button class="btn btn-soft btn-xs" onclick="askQuickAssistant('आज की इनकम कितनी है?')">आज की इनकम</button>
-          <button class="btn btn-soft btn-xs" onclick="askQuickAssistant('किसका पैसा बाकी है?')">बाकी पैसे (Due)</button>
-          <button class="btn btn-soft btn-xs" onclick="askQuickAssistant('आज किसका अपॉइंटमेंट है?')">आज के अपॉइंटमेंट</button>
-          <button class="btn btn-soft btn-xs" onclick="askQuickAssistant('कुल कितने कस्टमर हैं?')">कुल कस्टमर</button>
-        </div>
-
-        <div style="display:flex;gap:6px;align-items:center;">
-          <button class="btn btn-soft" id="voiceMicBtn" onclick="startVoiceAssistant()" title="Speak">🎤</button>
-          <input id="assistantInput" class="input" placeholder="बोलें या लिखें: जैसे आज की इनकम, बाकी पैसे, अपॉइंटमेंट..." onkeydown="if(event.key==='Enter') sendAssistantQuery()" />
-          <button class="btn btn-primary" onclick="sendAssistantQuery()" data-i18n="btn_ask">पूछें</button>
+          <label>नया Password दोबारा डालें *</label>
+          <input id="fpConfirmPinInput" class="input" type="password" placeholder="दोबारा डालें" />
         </div>
       </div>
-    </section>
 
-    <!-- TAB 8: SUPPORT -->
-    <section id="tab-support" class="tab-view hidden">
-      <div class="card">
-        <div class="section-title">
-          <span data-i18n="sec_support">🛟 BPM सपोर्ट टिकट (App Admin को भेजें)</span>
-          <span class="badge badge-trial">In-App</span>
-        </div>
-        <div class="field">
-          <label data-i18n="lbl_tkt_topic">समस्या का विषय *</label>
-          <input id="tktSubject" class="input" placeholder="जैसे: PIN भूल गए / पेमेंट / रसीद PDF" />
-        </div>
-        <div class="field">
-          <label data-i18n="lbl_tkt_detail">पूरी समस्या लिखें *</label>
-          <textarea id="tktMessage" rows="3" placeholder="अपनी समस्या विस्तार से लिखें..."></textarea>
-        </div>
-        <button class="btn btn-primary btn-block" onclick="submitTicketToAppAdmin()" data-i18n="btn_send_ticket">App Admin को टिकट भेजें</button>
-      </div>
-
-      <div class="card">
-        <div class="section-title">
-          <span data-i18n="sec_admin_inbox">📥 App Admin Inbox (टिकट हल करें)</span>
-          <span class="badge badge-warn" id="openTicketCountBadge">0 Open</span>
-        </div>
-        <div id="adminTicketInboxList"></div>
-      </div>
-    </section>
-  </main>
-
-  <!-- Fixed Bottom Navigation Bar -->
-  <nav class="bottom-nav">
-    <button class="nav-btn active" id="nav-home" onclick="openSectionTab('home')">
-      <span class="nav-ico">🏠</span>
-      <span data-i18n="nav_home">होम (Home)</span>
-    </button>
-    <button class="nav-btn" id="nav-reminders" onclick="openSectionTab('reminders')">
-      <span class="blink-dot hidden" id="remBlinkDot"></span>
-      <span class="nav-ico">🔔</span>
-      <span data-i18n="nav_reminders">रिमाइंडर</span>
-    </button>
-    <button class="nav-btn" id="nav-assistant" onclick="openSectionTab('assistant')">
-      <span class="nav-ico">✨</span>
-      <span data-i18n="nav_assistant">BPM असिस्टेंट</span>
-    </button>
-    <button class="nav-btn" id="nav-support" onclick="openSectionTab('support')">
-      <span class="nav-ico">🛟</span>
-      <span data-i18n="nav_support">सपोर्ट (Support)</span>
-    </button>
-  </nav>
+      <button class="btn btn-primary btn-block" onclick="saveForgotNewPassword()">नया ID और Password सेव करें</button>
+    </div>
+  </div>
 
   <!-- Modal: App Admin Solve / Reply Ticket -->
   <div class="modal-backdrop" id="solveTicketModal">
@@ -1456,7 +1609,6 @@
         tile_clients: "कस्टमर",
         tile_appoints: "अपॉइंटमेंट",
         tile_sync: "क्लाउड सिंक",
-        tile_switch: "नया पार्लर / OTP",
         btn_new_staff: "+ स्टाफ ID / लॉगिन",
         btn_lock_pin: "PIN लॉक करें",
         sec_income: "💰 पार्लर इनकम (PIN सुरक्षित)",
@@ -1518,7 +1670,6 @@
         tile_clients: "Clients",
         tile_appoints: "Appoints",
         tile_sync: "Cloud Sync",
-        tile_switch: "New / OTP",
         btn_new_staff: "+ Staff ID / Login",
         btn_lock_pin: "Lock PIN",
         sec_income: "💰 Parlor Income (PIN Protected)",
@@ -1582,12 +1733,16 @@
     let isRemoteApplying = false;
     let lastWrittenJson = "";
     let incomeUnlocked = false;
+    let isAppLoggedIn = true;
+    let authenticatedParlorId = "";
     let activeOfferForSend = null;
     let offerSendQueue = [];
     let offerQueueIndex = 0;
     let adminTicketsMap = {};
     let otpVerifiedMobile = "";
     let localFallbackOtp = "";
+    let fpOtpVerifiedMobile = "";
+    let fpFallbackOtp = "";
     let enteredParlorRoomId = "";
 
     function getLocalDateStr(d = new Date()) {
@@ -1752,9 +1907,15 @@
 
     function setSyncStatus(mode, text) {
       const el = document.getElementById("syncBadge");
-      if (!el) return;
-      el.className = "sync-pill" + (mode === "syncing" ? " syncing" : mode === "offline" ? " offline" : "");
-      el.textContent = text;
+      if (el) {
+        el.className = "sync-pill" + (mode === "syncing" ? " syncing" : mode === "offline" ? " offline" : "");
+        el.textContent = text;
+      }
+      const gateEl = document.getElementById("gateSyncBadge");
+      if (gateEl) {
+        gateEl.className = "sync-pill" + (mode === "syncing" ? " syncing" : mode === "offline" ? " offline" : "");
+        gateEl.textContent = text;
+      }
     }
 
     function persistState(pushRemote = true) {
@@ -1784,6 +1945,183 @@
       incomeUnlocked = false;
       renderIncome();
       showToast(currentLang === "hi" ? "इनकम लॉक हो गई" : "Income locked");
+    }
+
+    function logoutCurrentSession() {
+      const current = getCurrentParlor();
+      isAppLoggedIn = false;
+      authenticatedParlorId = "";
+      enteredParlorRoomId = "";
+      incomeUnlocked = false;
+
+      const parlorPassEl = document.getElementById("staffLoginParlorPass");
+      const innerPassEl = document.getElementById("innerUserPassInput");
+      const innerUserEl = document.getElementById("innerUserIdInput");
+      if (parlorPassEl) parlorPassEl.value = "";
+      if (innerPassEl) innerPassEl.value = "";
+      if (innerUserEl) innerUserEl.value = "";
+
+      const gateCodeEl = document.getElementById("gateParlorCodeInput");
+      const gatePassEl = document.getElementById("gateParlorPassInput");
+      const gateUserEl = document.getElementById("gateUserIdInput");
+      const gateUserPassEl = document.getElementById("gateUserPassInput");
+      if (gateCodeEl) gateCodeEl.value = current ? current.code : "";
+      if (gatePassEl) gatePassEl.value = "";
+      if (gateUserEl) gateUserEl.value = "";
+      if (gateUserPassEl) gateUserPassEl.value = "";
+
+      renderAuthShell();
+      renderGateParlorSelect();
+      showToast("ऐप से Log Out हो गया — पहले Parlor ID + Password डालें");
+    }
+
+    function renderAuthShell() {
+      const gateEl = document.getElementById("appAuthGate");
+      const shellEl = document.getElementById("mainAppShell");
+      if (!gateEl || !shellEl) return;
+
+      if (isAppLoggedIn) {
+        gateEl.classList.add("hidden");
+        shellEl.classList.remove("hidden");
+      } else {
+        gateEl.classList.remove("hidden");
+        shellEl.classList.add("hidden");
+        updateGateParlorLoginUI();
+      }
+    }
+
+    function renderGateParlorSelect() {
+      const sel = document.getElementById("gateParlorQuickSelect");
+      if (!sel) return;
+      const list = Object.values(appState.parlors || {});
+      const selectedTarget = appState.parlors[authenticatedParlorId] || getCurrentParlor();
+      sel.innerHTML = list.map((p) =>
+        `<option value="${escapeHtml(p.id)}" ${selectedTarget && p.id === selectedTarget.id ? "selected" : ""}>${escapeHtml(p.name)} (${escapeHtml(p.code)} · ${escapeHtml(p.city)})</option>`
+      ).join("");
+    }
+
+    function onGateParlorSelect(parlorId) {
+      const p = appState.parlors[parlorId];
+      if (!p) return;
+      document.getElementById("gateParlorCodeInput").value = p.code;
+      if (authenticatedParlorId && authenticatedParlorId !== p.id) {
+        authenticatedParlorId = "";
+        updateGateParlorLoginUI();
+      }
+    }
+
+    function checkParlorCredentials(targetParlor, passInput) {
+      const parlorPass = String(targetParlor.parlorPassword || "").trim();
+      const adminMatch = (targetParlor.staff || []).some(
+        (u) => String(u.role).toUpperCase() === "ADMIN" && String(u.pin).trim() === passInput
+      );
+      return passInput === parlorPass || adminMatch;
+    }
+
+    function loginGateParlor() {
+      const codeInput = String(document.getElementById("gateParlorCodeInput").value || "").trim().toUpperCase();
+      const passInput = String(document.getElementById("gateParlorPassInput").value || "").trim();
+
+      if (!codeInput || !passInput) {
+        showToast("Parlor ID और Parlor/Admin Password दोनों डालें");
+        return;
+      }
+
+      const targetParlor = Object.values(appState.parlors || {}).find(
+        (p) => String(p.code || "").trim().toUpperCase() === codeInput
+      );
+      if (!targetParlor) {
+        showToast("इस Parlor ID से कोई रजिस्टर्ड पार्लर नहीं मिला");
+        return;
+      }
+
+      if (!checkParlorCredentials(targetParlor, passInput)) {
+        showToast("गलत Parlor / Admin Password");
+        return;
+      }
+
+      authenticatedParlorId = targetParlor.id;
+      enteredParlorRoomId = targetParlor.id;
+      document.getElementById("gateParlorPassInput").value = "";
+      updateGateParlorLoginUI();
+      document.getElementById("gateUserIdInput").focus();
+      showToast(`${targetParlor.name} (${targetParlor.code}) लॉगिन हुआ — अब इस पार्लर का User ID व Password डालें`);
+    }
+
+    function updateGateParlorLoginUI() {
+      const statusBadge = document.getElementById("gateParlorStatusBadge");
+      const activeBadge = document.getElementById("gateActiveParlorBadge");
+      const hintEl = document.getElementById("gateActiveParlorUsersHint");
+      const authParlor = authenticatedParlorId ? appState.parlors[authenticatedParlorId] : null;
+
+      if (!authParlor) {
+        if (statusBadge) {
+          statusBadge.textContent = "Step 1 Required";
+          statusBadge.className = "badge badge-warn";
+        }
+        if (activeBadge) {
+          activeBadge.textContent = "Locked";
+          activeBadge.className = "badge badge-expired";
+        }
+        if (hintEl) {
+          hintEl.textContent = "पहले ऊपर Parlor ID और Password डालकर पार्लर लॉगिन करें, फिर इस पार्लर के Admin/Staff की User ID व Password डालें।";
+        }
+        return;
+      }
+
+      if (statusBadge) {
+        statusBadge.textContent = `Verified: ${authParlor.code}`;
+        statusBadge.className = "badge badge-active";
+      }
+      if (activeBadge) {
+        activeBadge.textContent = authParlor.code;
+        activeBadge.className = "badge badge-active";
+      }
+      const userIds = (authParlor.staff || []).map((u) => `${u.id} (${u.role})`).join(", ");
+      if (hintEl) {
+        hintEl.innerHTML = `<strong>${escapeHtml(authParlor.name)}</strong> (${escapeHtml(authParlor.code)}) के रजिस्टर्ड यूज़र्स: <strong>${escapeHtml(userIds)}</strong> — अपना User ID और Password डालें।`;
+      }
+    }
+
+    function loginGateUser() {
+      if (!authenticatedParlorId || !appState.parlors[authenticatedParlorId]) {
+        showToast("पहले Step 1 में Parlor ID और Password डालकर पार्लर लॉगिन करें");
+        return;
+      }
+
+      const roomParlor = appState.parlors[authenticatedParlorId];
+      const userIdInput = String(document.getElementById("gateUserIdInput").value || "").trim().toUpperCase();
+      const passInput = String(document.getElementById("gateUserPassInput").value || "").trim();
+
+      if (!userIdInput || !passInput) {
+        showToast("User ID और Password दोनों डालें");
+        return;
+      }
+
+      const matchedUser = (roomParlor.staff || []).find(
+        (u) => String(u.id || "").trim().toUpperCase() === userIdInput && String(u.pin || "").trim() === passInput
+      );
+
+      if (!matchedUser) {
+        showToast("इस पार्लर में यह User ID या Password सही नहीं है");
+        return;
+      }
+
+      appState.activeParlorId = roomParlor.id;
+      enteredParlorRoomId = roomParlor.id;
+      roomParlor.activeUser = {
+        id: matchedUser.id,
+        name: matchedUser.name,
+        role: matchedUser.role
+      };
+      isAppLoggedIn = true;
+      incomeUnlocked = String(matchedUser.role).toUpperCase() === "ADMIN";
+      document.getElementById("gateUserPassInput").value = "";
+
+      persistState(true);
+      renderAuthShell();
+      openSectionTab("home");
+      showToast(`${matchedUser.name} (${matchedUser.role}) लॉगिन हो गए`);
     }
 
     function initFirebaseLiveSync() {
@@ -1943,6 +2281,202 @@
       }
     }
 
+    function openForgotPasswordModal() {
+      const roomParlor = (authenticatedParlorId && appState.parlors[authenticatedParlorId])
+        || appState.parlors[enteredParlorRoomId]
+        || getCurrentParlor();
+      const typedUserId = String(
+        (document.getElementById("gateUserIdInput") && document.getElementById("gateUserIdInput").value)
+        || document.getElementById("innerUserIdInput").value
+        || ""
+      ).trim().toUpperCase();
+
+      fpOtpVerifiedMobile = "";
+      fpFallbackOtp = "";
+
+      document.getElementById("fpMobileInput").value = roomParlor.mobile || "";
+      document.getElementById("fpUserIdInput").value = typedUserId || (roomParlor.activeUser && roomParlor.activeUser.id) || "";
+      document.getElementById("fpOtpInput").value = "";
+      document.getElementById("fpNewPinInput").value = "";
+      document.getElementById("fpConfirmPinInput").value = "";
+      document.getElementById("fpOtpBox").classList.add("hidden");
+      document.getElementById("fpOtpStatusNotice").textContent = "";
+      document.getElementById("forgotPasswordModal").classList.add("open");
+    }
+
+    async function sendForgotOtp() {
+      const roomParlor = (authenticatedParlorId && appState.parlors[authenticatedParlorId])
+        || appState.parlors[enteredParlorRoomId]
+        || getCurrentParlor();
+      const mobileDigits = String(document.getElementById("fpMobileInput").value || "").replace(/\D/g, "").slice(-10);
+      const userIdInput = String(document.getElementById("fpUserIdInput").value || "").trim().toUpperCase();
+
+      if (!/^[6-9]\d{9}$/.test(mobileDigits)) {
+        showToast("सही 10-अंकों का मोबाइल नंबर डालें");
+        return;
+      }
+
+      if (roomParlor.mobile && roomParlor.mobile !== mobileDigits) {
+        showToast(`इस पार्लर का रजिस्टर्ड नंबर ${roomParlor.mobile} है`);
+        return;
+      }
+
+      fpOtpVerifiedMobile = "";
+      fpFallbackOtp = "";
+      const otpInputEl = document.getElementById("fpOtpInput");
+      const statusEl = document.getElementById("fpOtpStatusNotice");
+      if (otpInputEl) otpInputEl.value = "";
+      document.getElementById("fpOtpBox").classList.remove("hidden");
+      if (statusEl) statusEl.textContent = "OTP भेजा जा रहा है...";
+      showToast("OTP भेजा जा रहा है...");
+
+      try {
+        const res = await fetch(WORKER_API_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            action: "send_otp",
+            mobile: mobileDigits,
+            userId: userIdInput || roomParlor.code
+          })
+        });
+        const data = await res.json().catch(() => ({}));
+        if (res.ok && data.success) {
+          const okMsg = data.message || "OTP भेज दिया गया है";
+          if (statusEl) statusEl.textContent = okMsg;
+          showToast(okMsg);
+        } else {
+          fpFallbackOtp = String(Math.floor(100000 + Math.random() * 900000));
+          if (otpInputEl) otpInputEl.value = fpFallbackOtp;
+          const fbMsg = "Backup OTP: " + fpFallbackOtp + " (नीचे भर दिया गया है, OTP Verify करें दबाएं)";
+          if (statusEl) statusEl.textContent = fbMsg;
+          showToast("Backup OTP: " + fpFallbackOtp);
+        }
+      } catch (err) {
+        fpFallbackOtp = String(Math.floor(100000 + Math.random() * 900000));
+        if (otpInputEl) otpInputEl.value = fpFallbackOtp;
+        const fbMsg = "Backup OTP: " + fpFallbackOtp + " (नीचे भर दिया गया है, OTP Verify करें दबाएं)";
+        if (statusEl) statusEl.textContent = fbMsg;
+        showToast("Backup OTP: " + fpFallbackOtp);
+      }
+    }
+
+    async function verifyForgotOtp() {
+      const mobileDigits = String(document.getElementById("fpMobileInput").value || "").replace(/\D/g, "").slice(-10);
+      const otpCode = String(document.getElementById("fpOtpInput").value || "").trim();
+      const userIdInput = String(document.getElementById("fpUserIdInput").value || "").trim().toUpperCase();
+      const statusEl = document.getElementById("fpOtpStatusNotice");
+
+      if (!/^[6-9]\d{9}$/.test(mobileDigits)) {
+        showToast("मोबाइल नंबर जांचें");
+        return;
+      }
+      if (!/^\d{4,6}$/.test(otpCode)) {
+        showToast("4 से 6 अंकों का OTP डालें");
+        return;
+      }
+
+      try {
+        const res = await fetch(WORKER_API_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            action: "verify_and_reset",
+            mobile: mobileDigits,
+            userId: userIdInput || "USER",
+            otp: otpCode
+          })
+        });
+        const data = await res.json().catch(() => ({}));
+        if (res.ok && data.success) {
+          fpOtpVerifiedMobile = mobileDigits;
+          if (statusEl) statusEl.textContent = "✓ OTP Verify हो गया! अब User ID और नया Password सेव करें।";
+          showToast("OTP Verify हो गया! अब नया Password सेव करें");
+          return;
+        }
+      } catch (err) {}
+
+      if (fpFallbackOtp && otpCode === fpFallbackOtp) {
+        fpOtpVerifiedMobile = mobileDigits;
+        if (statusEl) statusEl.textContent = "✓ OTP Verify हो गया! अब User ID और नया Password सेव करें।";
+        showToast("OTP Verify हो गया! अब नया Password सेव करें");
+      } else {
+        if (statusEl) statusEl.textContent = "OTP गलत है या expire हो गया है—दोबारा OTP भेजें।";
+        showToast("OTP गलत है या expire हो गया है");
+      }
+    }
+
+    function saveForgotNewPassword() {
+      const roomParlor = (authenticatedParlorId && appState.parlors[authenticatedParlorId])
+        || appState.parlors[enteredParlorRoomId]
+        || getCurrentParlor();
+      const mobileDigits = String(document.getElementById("fpMobileInput").value || "").replace(/\D/g, "").slice(-10);
+      const userIdInput = String(document.getElementById("fpUserIdInput").value || "").trim().toUpperCase();
+      const newPin = String(document.getElementById("fpNewPinInput").value || "").trim();
+      const confirmPin = String(document.getElementById("fpConfirmPinInput").value || "").trim();
+
+      if (!/^[6-9]\d{9}$/.test(mobileDigits)) {
+        showToast("सही 10-अंकों का मोबाइल नंबर डालें");
+        return;
+      }
+      if (fpOtpVerifiedMobile !== mobileDigits) {
+        showToast("पहले OTP भेजकर Verify करें");
+        return;
+      }
+      if (!userIdInput) {
+        showToast("अपना User ID (Admin या Staff ID) डालें");
+        return;
+      }
+      if (!newPin || newPin.length < 4) {
+        showToast("कम से कम 4 अक्षर/अंक का नया Password डालें");
+        return;
+      }
+      if (newPin !== confirmPin) {
+        showToast("दोनों Password मेल नहीं खा रहे");
+        return;
+      }
+
+      if (!roomParlor.mobile) {
+        roomParlor.mobile = mobileDigits;
+      }
+
+      const staffIdx = (roomParlor.staff || []).findIndex(
+        (u) => String(u.id || "").trim().toUpperCase() === userIdInput
+      );
+
+      if (staffIdx !== -1) {
+        roomParlor.staff[staffIdx].pin = newPin;
+        if (String(roomParlor.staff[staffIdx].role || "").toUpperCase() === "ADMIN") {
+          roomParlor.parlorPassword = newPin;
+        }
+      } else {
+        roomParlor.staff.push({
+          id: userIdInput,
+          name: userIdInput,
+          role: "STAFF",
+          pin: newPin
+        });
+      }
+
+      appState.activeParlorId = roomParlor.id;
+      authenticatedParlorId = roomParlor.id;
+      enteredParlorRoomId = roomParlor.id;
+
+      document.getElementById("gateParlorCodeInput").value = roomParlor.code;
+      document.getElementById("gateUserIdInput").value = userIdInput;
+      document.getElementById("gateUserPassInput").value = newPin;
+      document.getElementById("innerUserIdInput").value = userIdInput;
+      document.getElementById("innerUserPassInput").value = newPin;
+
+      fpOtpVerifiedMobile = "";
+      fpFallbackOtp = "";
+
+      persistState(true);
+      updateGateParlorLoginUI();
+      closeModal("forgotPasswordModal");
+      showToast(`${userIdInput} का नया Password सेव हो गया — अब लॉगिन करें`);
+    }
+
     function registerNewParlor() {
       const name = document.getElementById("newParlorName").value.trim();
       const city = document.getElementById("newParlorCity").value.trim() || "Joura";
@@ -2018,7 +2552,9 @@
       });
 
       appState.activeParlorId = newId;
+      authenticatedParlorId = newId;
       enteredParlorRoomId = newId;
+      isAppLoggedIn = true;
       incomeUnlocked = true;
       localStorage.setItem(FIRST_RUN_KEY, "1");
 
@@ -2037,6 +2573,7 @@
       localFallbackOtp = "";
 
       persistState(true);
+      renderAuthShell();
       closeModal("parlorModal");
       showToast(`पार्लर (${code}) व Admin (${adminIdRaw}) तैयार!`);
     }
@@ -2058,17 +2595,13 @@
         return;
       }
 
-      const parlorPass = String(targetParlor.parlorPassword || "").trim();
-      const adminMatch = (targetParlor.staff || []).some(
-        (u) => String(u.role).toUpperCase() === "ADMIN" && String(u.pin).trim() === passInput
-      );
-
-      if (passInput !== parlorPass && !adminMatch) {
+      if (!checkParlorCredentials(targetParlor, passInput)) {
         showToast("गलत Parlor Password");
         return;
       }
 
       enteredParlorRoomId = targetParlor.id;
+      authenticatedParlorId = targetParlor.id;
       document.getElementById("staffLoginParlorPass").value = "";
       renderInnerParlorRoom();
       showToast(`${targetParlor.name} (${targetParlor.code}) की अंदर की स्क्रीन खुल गई`);
@@ -2102,6 +2635,8 @@
       }
 
       appState.activeParlorId = roomParlor.id;
+      authenticatedParlorId = roomParlor.id;
+      isAppLoggedIn = true;
       roomParlor.activeUser = {
         id: matchedUser.id,
         name: matchedUser.name,
@@ -2111,6 +2646,7 @@
       document.getElementById("innerUserPassInput").value = "";
 
       persistState(true);
+      renderAuthShell();
       openSectionTab("home");
       showToast(`${matchedUser.name} (${matchedUser.role}) लॉगिन हो गए`);
     }
@@ -3142,6 +3678,7 @@
       if (!appState.parlors[id]) return;
       appState.activeParlorId = id;
       enteredParlorRoomId = id;
+      if (!isAppLoggedIn) authenticatedParlorId = id;
       incomeUnlocked = false;
       persistState(true);
       closeModal("parlorModal");
@@ -3273,6 +3810,8 @@
       const loginCodeInput = document.getElementById("staffLoginParlorCode");
       if (loginCodeInput && !loginCodeInput.value) loginCodeInput.value = parlor.code;
       renderInnerParlorRoom();
+      renderGateParlorSelect();
+      renderAuthShell();
 
       document.getElementById("statConsumers").textContent = String(parlor.consumers.length);
       document.getElementById("statServices").textContent = String(parlor.services.length);
