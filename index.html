@@ -12,6 +12,9 @@
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 
+  <!-- Razorpay Checkout SDK -->
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
   <style>
     :root {
       --bg: #fdf7fa;
@@ -326,6 +329,11 @@
       color: #fff;
     }
 
+    .btn-razorpay {
+      background: #072654;
+      color: #fff;
+    }
+
     .btn-whatsapp {
       background: #16a34a;
       color: #fff;
@@ -555,7 +563,7 @@
         </div>
 
         <div class="section-title">
-          <span>Subscription Plans</span>
+          <span>Subscription Plans (Razorpay)</span>
           <span class="badge badge-active">+15d Referral Bonus</span>
         </div>
         <div class="plan-grid">
@@ -565,7 +573,7 @@
               <div class="plan-price">₹99</div>
               <div class="plan-meta">30 Days Full Access</div>
             </div>
-            <button class="btn btn-soft btn-sm btn-block" onclick="openPlansModal('monthly')">Select ₹99</button>
+            <button class="btn btn-razorpay btn-sm btn-block" onclick="openPlansModal('monthly')">Pay ₹99</button>
           </div>
           <div class="plan-card">
             <div>
@@ -573,7 +581,7 @@
               <div class="plan-price">₹199</div>
               <div class="plan-meta">90 Days Full Access</div>
             </div>
-            <button class="btn btn-soft btn-sm btn-block" onclick="openPlansModal('quarterly')">Select ₹199</button>
+            <button class="btn btn-razorpay btn-sm btn-block" onclick="openPlansModal('quarterly')">Pay ₹199</button>
           </div>
           <div class="plan-card popular">
             <div>
@@ -581,7 +589,7 @@
               <div class="plan-price">₹399</div>
               <div class="plan-meta">180 Days Full Access</div>
             </div>
-            <button class="btn btn-soft btn-sm btn-block" onclick="openPlansModal('halfyearly')">Select ₹399</button>
+            <button class="btn btn-razorpay btn-sm btn-block" onclick="openPlansModal('halfyearly')">Pay ₹399</button>
           </div>
           <div class="plan-card">
             <div>
@@ -589,7 +597,7 @@
               <div class="plan-price">₹499</div>
               <div class="plan-meta">365 Days Full Access</div>
             </div>
-            <button class="btn btn-primary btn-sm btn-block" onclick="openPlansModal('yearly')">Select ₹499</button>
+            <button class="btn btn-primary btn-sm btn-block" onclick="openPlansModal('yearly')">Pay ₹499</button>
           </div>
         </div>
       </div>
@@ -870,11 +878,11 @@
     </div>
   </div>
 
-  <!-- Modal: Subscription Plans & Activation -->
+  <!-- Modal: Razorpay Subscription Payment & Activation -->
   <div class="modal-backdrop" id="plansModal">
     <div class="modal-box">
       <div class="modal-head">
-        <strong>Purchase / Activate Plan</strong>
+        <strong>Razorpay Subscription Payment</strong>
         <button class="close-x" onclick="closeModal('plansModal')">✕</button>
       </div>
 
@@ -888,24 +896,27 @@
         </select>
       </div>
 
+      <div class="field">
+        <label>Mobile Number (for Razorpay Receipt)</label>
+        <input id="payerPhoneInput" class="input" type="tel" placeholder="10-digit mobile number" />
+      </div>
+
       <div class="card-rose" id="planSummaryBox" style="margin-bottom:12px;"></div>
 
-      <div class="row-btns" style="margin-bottom:12px;">
-        <a id="upiPayLink" class="btn btn-primary" style="flex:1;text-decoration:none;" href="#">Pay via UPI</a>
-        <button class="btn btn-whatsapp" style="flex:1;" onclick="sendPlanRequestWhatsApp()">Send Receipt on WhatsApp</button>
-      </div>
+      <button class="btn btn-razorpay btn-block" style="margin-bottom:10px;padding:12px;" onclick="startRazorpayCheckout()">
+        💳 Pay Now with Razorpay (Instant Activation)
+      </button>
 
-      <div class="field">
-        <label>Activation Code / Admin Key (to extend validity immediately)</label>
-        <input id="activationKeyInput" class="input" placeholder="Enter activation key (e.g. BPM-ACTIVATE)" />
-      </div>
-      <button class="btn btn-soft btn-block" onclick="activateSelectedPlan()">Activate Plan Days Now</button>
+      <div id="paymentHistoryBox" style="margin-top:10px;"></div>
     </div>
   </div>
 
   <div class="toast" id="toast"></div>
 
   <script>
+    // Razorpay Test Key ID (Secret Key kabhi frontend mein na rakhein)
+    const RAZORPAY_KEY_ID = "rzp_test_U33IsCW4CKN2KJ";
+
     const FIREBASE_CONFIG = {
       apiKey: "AIzaSyD5n8P4e4Qylr9fh02f4e9d04zyJcWE9Xw",
       authDomain: "bpm1-52e92.firebaseapp.com",
@@ -922,10 +933,6 @@
     const DAY_MS = 24 * 60 * 60 * 1000;
     const TRIAL_DAYS = 30;
     const REFERRAL_BONUS_DAYS = 15;
-
-    const DEFAULT_UPI_ID = "easywaystechno@upi";
-    const DEFAULT_SUPPORT_WHATSAPP = "919999999999";
-    const ACTIVATION_KEYS = ["BPM-ACTIVATE", "EASYWAYS99", "BPM2026"];
 
     const PLANS = {
       monthly: { id: "monthly", label: "Monthly Plan", price: 99, days: 30 },
@@ -972,6 +979,7 @@
             referredBy: "",
             referralCount: 0,
             bonusDaysEarned: 0,
+            payments: [],
             consumers: [
               { id: "c1", name: "Anjali Verma", phone: "9826000001", note: "Facial" },
               { id: "c2", name: "Meera Tiwari", phone: "9826000002", note: "Hair Spa" }
@@ -1018,6 +1026,7 @@
         referredBy: safeObj.referredBy || "",
         referralCount: Math.max(0, Number(safeObj.referralCount || 0)),
         bonusDaysEarned: Math.max(0, Number(safeObj.bonusDaysEarned || 0)),
+        payments: Array.isArray(safeObj.payments) ? safeObj.payments : [],
         consumers: Array.isArray(safeObj.consumers) ? safeObj.consumers : [],
         services: Array.isArray(safeObj.services) ? safeObj.services : [],
         reminders: Array.isArray(safeObj.reminders) ? safeObj.reminders : [],
@@ -1158,6 +1167,125 @@
       });
     }
 
+    function openPlansModal(selectedPlanKey = "yearly") {
+      const sel = document.getElementById("planSelect");
+      if (PLANS[selectedPlanKey]) sel.value = selectedPlanKey;
+      updatePlanSummary();
+      document.getElementById("plansModal").classList.add("open");
+    }
+
+    function updatePlanSummary() {
+      const key = document.getElementById("planSelect").value;
+      const plan = PLANS[key] || PLANS.yearly;
+      const parlor = getCurrentParlor();
+
+      document.getElementById("planSummaryBox").innerHTML = `
+        <div class="item-title">${escapeHtml(plan.label)} — ₹${plan.price} (${plan.days} Days)</div>
+        <div class="item-sub">Parlor: <strong>${escapeHtml(parlor.name)}</strong> · Current Days Left: <strong>${getRemainingDays(parlor)}</strong></div>
+        <div class="item-sub" style="margin-top:4px;">Razorpay se payment poora hote hi <strong>+${plan.days} Days</strong> turant jud jaayenge.</div>
+      `;
+
+      const histEl = document.getElementById("paymentHistoryBox");
+      if (parlor.payments && parlor.payments.length) {
+        histEl.innerHTML = `<div class="item-sub" style="font-weight:700;margin-bottom:6px;">Recent Razorpay Payments</div>` +
+          parlor.payments.slice(0, 3).map((pay) => `
+            <div class="list-item" style="padding:8px 10px;">
+              <div>
+                <div class="item-title" style="font-size:12px;">${escapeHtml(pay.planLabel)} — ₹${pay.amount}</div>
+                <div class="item-sub">ID: ${escapeHtml(pay.paymentId)} · ${escapeHtml(pay.date)}</div>
+              </div>
+              <span class="badge badge-active">Paid</span>
+            </div>
+          `).join("");
+      } else {
+        histEl.innerHTML = "";
+      }
+    }
+
+    function startRazorpayCheckout() {
+      const key = document.getElementById("planSelect").value;
+      const plan = PLANS[key] || PLANS.yearly;
+      const parlor = getCurrentParlor();
+      const phone = document.getElementById("payerPhoneInput").value.trim();
+
+      if (typeof Razorpay === "undefined") {
+        showToast("Razorpay SDK load nahi hua — internet check karein");
+        return;
+      }
+
+      const options = {
+        key: RAZORPAY_KEY_ID,
+        amount: plan.price * 100,
+        currency: "INR",
+        name: "BPM — Beauty Parlour Management",
+        description: `${plan.label} (${plan.days} Days) - ${parlor.name}`,
+        prefill: {
+          name: parlor.activeUser.name || parlor.name,
+          contact: phone || ""
+        },
+        notes: {
+          parlor_id: parlor.id,
+          parlor_name: parlor.name,
+          plan_id: plan.id
+        },
+        theme: {
+          color: "#c2185b"
+        },
+        handler: function (response) {
+          const paymentId = response.razorpay_payment_id || ("pay_" + Date.now());
+          const now = Date.now();
+          const currentParlor = getCurrentParlor();
+          const baseTime = Math.max(now, Number(currentParlor.validUntil) || now);
+
+          currentParlor.validUntil = baseTime + plan.days * DAY_MS;
+          currentParlor.planName = plan.label;
+          currentParlor.payments = Array.isArray(currentParlor.payments) ? currentParlor.payments : [];
+          currentParlor.payments.unshift({
+            paymentId,
+            planId: plan.id,
+            planLabel: plan.label,
+            amount: plan.price,
+            daysAdded: plan.days,
+            date: getLocalDateStr()
+          });
+
+          if (dbRef && dbRef.parent) {
+            dbRef.parent.child("bpm_payments").push({
+              parlorId: currentParlor.id,
+              parlorName: currentParlor.name,
+              paymentId,
+              planId: plan.id,
+              amount: plan.price,
+              daysAdded: plan.days,
+              createdAt: now
+            }).catch(() => {});
+          }
+
+          persistState(true);
+          updatePlanSummary();
+          closeModal("plansModal");
+          showToast(`Payment Successful! ${plan.label} (+${plan.days} Days) Active`);
+        },
+        modal: {
+          ondismiss: function () {
+            showToast("Payment cancelled");
+          }
+        }
+      };
+
+      try {
+        const rzp = new Razorpay(options);
+        rzp.on("payment.failed", function (resp) {
+          const reason = resp && resp.error && resp.error.description ? resp.error.description : "Payment failed";
+          showToast(reason);
+        });
+        rzp.open();
+      } catch (err) {
+        console.error("Razorpay open error:", err);
+        showToast("Razorpay open karne mein error aaya");
+      }
+    }
+
     function copyTextSafe(text, successMsg) {
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(text).then(() => showToast(successMsg)).catch(() => fallbackCopy(text, successMsg));
@@ -1202,58 +1330,6 @@
       ].join("\n");
 
       window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, "_blank", "noopener,noreferrer");
-    }
-
-    function openPlansModal(selectedPlanKey = "yearly") {
-      const sel = document.getElementById("planSelect");
-      if (PLANS[selectedPlanKey]) sel.value = selectedPlanKey;
-      updatePlanSummary();
-      document.getElementById("plansModal").classList.add("open");
-    }
-
-    function updatePlanSummary() {
-      const key = document.getElementById("planSelect").value;
-      const plan = PLANS[key] || PLANS.yearly;
-      const parlor = getCurrentParlor();
-
-      document.getElementById("planSummaryBox").innerHTML = `
-        <div class="item-title">${escapeHtml(plan.label)} — ₹${plan.price} (${plan.days} Days)</div>
-        <div class="item-sub">Parlor: <strong>${escapeHtml(parlor.name)}</strong> · Current Days Left: <strong>${getRemainingDays(parlor)}</strong></div>
-        <div class="item-sub" style="margin-top:4px;">UPI ID: <strong>${escapeHtml(DEFAULT_UPI_ID)}</strong></div>
-      `;
-
-      const upiUrl = `upi://pay?pa=${encodeURIComponent(DEFAULT_UPI_ID)}&pn=${encodeURIComponent("BPM Subscription")}&am=${plan.price}&cu=INR&tn=${encodeURIComponent(parlor.name + " - " + plan.label)}`;
-      document.getElementById("upiPayLink").href = upiUrl;
-    }
-
-    function sendPlanRequestWhatsApp() {
-      const key = document.getElementById("planSelect").value;
-      const plan = PLANS[key] || PLANS.yearly;
-      const parlor = getCurrentParlor();
-      const text = `Namaste, mujhe *${parlor.name}* (${parlor.city}) ke liye *${plan.label} (₹${plan.price}, ${plan.days} Days)* activate karwana hai. Referral Code: ${parlor.referralCode}`;
-      window.open(`https://wa.me/${DEFAULT_SUPPORT_WHATSAPP}?text=${encodeURIComponent(text)}`, "_blank", "noopener,noreferrer");
-    }
-
-    function activateSelectedPlan() {
-      const key = document.getElementById("planSelect").value;
-      const plan = PLANS[key] || PLANS.yearly;
-      const enteredKey = document.getElementById("activationKeyInput").value.trim().toUpperCase();
-
-      if (!ACTIVATION_KEYS.includes(enteredKey)) {
-        showToast("Valid Activation Key daalein (e.g. BPM-ACTIVATE)");
-        return;
-      }
-
-      const parlor = getCurrentParlor();
-      const now = Date.now();
-      const baseTime = Math.max(now, Number(parlor.validUntil) || now);
-      parlor.validUntil = baseTime + plan.days * DAY_MS;
-      parlor.planName = plan.label;
-      document.getElementById("activationKeyInput").value = "";
-
-      persistState(true);
-      closeModal("plansModal");
-      showToast(`${plan.label} activated (+${plan.days} days)`);
     }
 
     function openParlorModal() {
@@ -1360,10 +1436,7 @@
       if (!dateStr || typeof dateStr !== "string") return null;
       const parts = dateStr.split("-");
       if (parts.length === 3) {
-        const y = Number(parts[0]);
-        const m = Number(parts[1]) - 1;
-        const d = Number(parts[2]);
-        const dt = new Date(y, m, d);
+        const dt = new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
         if (!isNaN(dt)) return dt;
       }
       const fallback = new Date(dateStr);
