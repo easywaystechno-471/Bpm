@@ -51,7 +51,7 @@
       color: var(--ink);
       min-height: 100vh;
       padding-top: 8px;
-      padding-bottom: 108px;
+      padding-bottom: 94px;
     }
 
     .container {
@@ -60,36 +60,7 @@
       padding: 8px 14px 14px;
     }
 
-    .center-brand {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      margin-bottom: 10px;
-      padding-top: 2px;
-    }
-
-    .center-app-icon {
-      width: 44px;
-      height: 44px;
-      border-radius: 14px;
-      background: var(--accent-grad);
-      color: #fff;
-      display: grid;
-      place-items: center;
-      font-size: 20px;
-      box-shadow: 0 6px 16px rgba(194, 24, 91, 0.25);
-      margin-bottom: 5px;
-    }
-
-    .center-app-title {
-      font-size: 16px;
-      font-weight: 800;
-      color: var(--rose-dark);
-      letter-spacing: 0.2px;
-    }
-
+    /* Top Parlour Strip + Language Toggle + Sync */
     .parlor-banner {
       background: var(--surface);
       border: 1px solid var(--line);
@@ -100,7 +71,7 @@
       justify-content: space-between;
       gap: 8px;
       box-shadow: var(--shadow);
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
 
     .parlor-meta {
@@ -120,7 +91,7 @@
       display: grid;
       place-items: center;
       font-weight: 800;
-      font-size: 12px;
+      font-size: 13px;
       flex-shrink: 0;
     }
 
@@ -150,6 +121,17 @@
       flex-shrink: 0;
     }
 
+    .lang-btn {
+      background: #fff0f6;
+      border: 1px solid #e7b5ce;
+      color: var(--rose-dark);
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: 11px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
     .sync-pill {
       padding: 4px 9px;
       border-radius: 999px;
@@ -170,24 +152,86 @@
       color: var(--bad);
     }
 
-    .trial-top-btn {
-      width: 100%;
-      background: linear-gradient(120deg, #fff0f6 0%, #f8e6ff 100%);
-      border: 1.5px solid #e9b8d1;
-      border-radius: 15px;
-      padding: 12px 14px;
+    /* Top Side-by-Side Trial & Refer Pills (Inspired by Reference UI) */
+    .top-pills-row {
+      display: grid;
+      grid-template-columns: 1.25fr 1fr;
+      gap: 8px;
       margin-bottom: 12px;
+    }
+
+    .pill-card-btn {
+      background: var(--surface);
+      border: 1.5px solid #dfbdd0;
+      border-radius: 14px;
+      padding: 10px 12px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 10px;
+      gap: 6px;
       cursor: pointer;
       text-align: left;
       box-shadow: var(--shadow);
     }
 
-    .trial-top-btn:active {
+    .pill-card-btn:active {
       transform: scale(0.99);
+    }
+
+    .pill-main-txt {
+      font-size: 12.5px;
+      font-weight: 800;
+      color: var(--rose-dark);
+    }
+
+    .pill-sub-txt {
+      font-size: 10.5px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    /* Quick Action Tile Grid (Staff & Offers Placed at Top) */
+    .tile-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .action-tile {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 11px 6px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(136, 14, 79, 0.05);
+      text-align: center;
+    }
+
+    .action-tile.highlight {
+      border-color: #e4a9c6;
+      background: #fff8fc;
+    }
+
+    .action-tile:active {
+      transform: scale(0.97);
+    }
+
+    .tile-ico {
+      font-size: 20px;
+      line-height: 1;
+    }
+
+    .tile-lbl {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--ink);
+      line-height: 1.2;
     }
 
     .card {
@@ -205,20 +249,6 @@
       border-radius: var(--radius);
       padding: 14px;
       margin-bottom: 12px;
-    }
-
-    .alert-banner {
-      background: #fff8e7;
-      border: 1.5px solid #f59e0b;
-      border-radius: var(--radius);
-      padding: 12px 14px;
-      margin-bottom: 12px;
-      box-shadow: var(--shadow);
-    }
-
-    .alert-banner.due-alert {
-      background: #fff1f2;
-      border-color: #e11d48;
     }
 
     .section-title {
@@ -490,6 +520,11 @@
       flex-wrap: wrap;
     }
 
+    .list-item.unread-rem {
+      border: 1.5px solid #e11d48;
+      background: #fff1f2;
+    }
+
     .item-title {
       font-size: 14px;
       font-weight: 700;
@@ -531,6 +566,43 @@
       flex-shrink: 0;
     }
 
+    /* Chat Bubble Styles for BPM Assistant */
+    .chat-box {
+      max-height: 290px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 10px;
+      padding: 6px;
+      background: #fff8fb;
+      border: 1px solid #f4d6e5;
+      border-radius: 12px;
+    }
+
+    .msg-bubble {
+      padding: 9px 12px;
+      border-radius: 12px;
+      font-size: 13px;
+      line-height: 1.4;
+      max-width: 88%;
+      white-space: pre-line;
+    }
+
+    .msg-user {
+      align-self: flex-end;
+      background: var(--accent-grad);
+      color: #fff;
+    }
+
+    .msg-bot {
+      align-self: flex-start;
+      background: #fff;
+      border: 1px solid #ecc6da;
+      color: var(--ink);
+    }
+
+    /* Bottom Navigation Bar (4 Focused Slots: Home, Reminders with Red Blink, BPM Assistant, Support) */
     .bottom-nav {
       position: fixed;
       bottom: 0;
@@ -540,19 +612,20 @@
       background: #fff;
       border-top: 1px solid var(--line);
       display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      padding: 6px 2px;
+      grid-template-columns: repeat(4, 1fr);
+      padding: 6px 4px;
       box-shadow: 0 -4px 16px rgba(36, 19, 28, 0.08);
     }
 
     .nav-btn {
+      position: relative;
       background: transparent;
       border: none;
       color: var(--muted);
-      font-size: 9.5px;
+      font-size: 11px;
       font-weight: 700;
-      padding: 5px 1px;
-      border-radius: 10px;
+      padding: 6px 4px;
+      border-radius: 11px;
       cursor: pointer;
       display: flex;
       flex-direction: column;
@@ -566,8 +639,37 @@
     }
 
     .nav-ico {
-      font-size: 15px;
+      font-size: 17px;
       line-height: 1;
+    }
+
+    /* Red Blink Animation on Reminders Button Until Checked */
+    @keyframes redBlinkPulse {
+      0%, 100% {
+        background-color: #fee2e2;
+        color: #b91c1c;
+        box-shadow: 0 0 0 0 rgba(225, 29, 72, 0.55);
+      }
+      50% {
+        background-color: #e11d48;
+        color: #ffffff;
+        box-shadow: 0 0 12px 2px rgba(225, 29, 72, 0.75);
+      }
+    }
+
+    .nav-btn.blink-alert {
+      animation: redBlinkPulse 1.1s infinite;
+    }
+
+    .blink-dot {
+      position: absolute;
+      top: 4px;
+      right: 22%;
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      background: #dc2626;
+      border: 1.5px solid #fff;
     }
 
     .modal-backdrop {
@@ -615,7 +717,7 @@
 
     .toast {
       position: fixed;
-      bottom: 78px;
+      bottom: 82px;
       left: 50%;
       transform: translateX(-50%);
       background: #1b1217;
@@ -643,192 +745,269 @@
 </head>
 <body>
   <main class="container">
-    <!-- Center App Icon & Title -->
-    <div class="center-brand">
-      <div class="center-app-icon" id="centerAppIcon">✂️</div>
-      <div class="center-app-title">Beauty Parlour Management</div>
-    </div>
-
-    <!-- Top Strip: Left Parlour Logo + Name, Right Refer & Earn + Sync -->
+    <!-- Top Parlour Strip: Left Logo + Name, Right Hindi/English Toggle + Sync -->
     <section class="parlor-banner">
       <div class="parlor-meta">
         <div class="parlor-avatar" id="parlorAvatar">PBP</div>
         <div style="min-width:0;">
           <div class="parlor-name" id="parlorTitle">Payal beauty parlour</div>
-          <div class="parlor-sub" id="parlorSub">Joura · User: Payal (ADMIN)</div>
+          <div class="parlor-sub" id="parlorSub">Joura · Payal (ADMIN)</div>
         </div>
       </div>
       <div class="banner-right">
-        <button class="btn btn-primary btn-xs" onclick="openReferModal()">🎁 Refer & Earn</button>
+        <button class="lang-btn" id="langToggleBtn" onclick="toggleLanguage()">English / हिंदी</button>
         <div class="sync-pill" id="syncBadge">Cloud Synced ✓</div>
       </div>
     </section>
 
-    <!-- Free Trial / Remaining Days Top Button -->
-    <button class="trial-top-btn" onclick="openPlansModal('yearly')">
-      <div>
-        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-          <strong style="font-size:14px;color:var(--rose-dark);" id="planNameLabel">30-Day Free Trial</strong>
-          <span class="badge badge-trial" id="daysLeftBadge">30 Days Left</span>
+    <!-- Top Side-by-Side Pills: Free Trial / Days Left + Refer & Earn -->
+    <section class="top-pills-row">
+      <button class="pill-card-btn" onclick="openPlansModal('yearly')">
+        <div>
+          <div class="pill-main-txt" id="planNameLabel">⏳ 30 Days Left</div>
+          <div class="pill-sub-txt" id="validityDateText">प्लान देखने के लिए टैप करें</div>
         </div>
-        <div class="item-sub" id="validityDateText">Tap here to view & buy plans</div>
-      </div>
-      <span class="btn btn-primary btn-sm">Plans</span>
-    </button>
+        <span class="badge badge-trial" id="plansBadgeLabel">Plans</span>
+      </button>
 
-    <!-- Morning 8 AM Appointment Alert & Payment Due Alert Banner -->
-    <section id="morningAlertBanner" class="alert-banner hidden"></section>
-    <section id="duePaymentAlertBanner" class="alert-banner due-alert hidden"></section>
+      <button class="pill-card-btn" onclick="openReferModal()">
+        <div>
+          <div class="pill-main-txt" id="referPillTitle">🎁 Refer & Earn</div>
+          <div class="pill-sub-txt" id="referPillSub">+15 दिन बोनस पाएं</div>
+        </div>
+        <span class="badge badge-active">APK</span>
+      </button>
+    </section>
 
-    <!-- TAB 1: HOME -->
+    <!-- Top Quick Action Tile Grid (Staff & Offers Placed at Top) -->
+    <section class="tile-grid">
+      <button class="action-tile highlight" onclick="openSectionTab('staff')">
+        <span class="tile-ico">👩‍💼</span>
+        <span class="tile-lbl" data-i18n="tile_staff">स्टाफ (Staff)</span>
+      </button>
+      <button class="action-tile highlight" onclick="openSectionTab('offers')">
+        <span class="tile-ico">🎁</span>
+        <span class="tile-lbl" data-i18n="tile_offers">ऑफ़र (Offers)</span>
+      </button>
+      <button class="action-tile" onclick="openParlorModal()">
+        <span class="tile-ico">🔑</span>
+        <span class="tile-lbl" data-i18n="tile_parlor_id">पार्लर ID</span>
+      </button>
+      <button class="action-tile" onclick="promptIncomeUnlock()">
+        <span class="tile-ico">🔒</span>
+        <span class="tile-lbl" data-i18n="tile_pin">PIN इनकम</span>
+      </button>
+      <button class="action-tile" onclick="openSectionTab('consumers')">
+        <span class="tile-ico">👩</span>
+        <span class="tile-lbl" data-i18n="tile_clients">कस्टमर</span>
+      </button>
+      <button class="action-tile" onclick="openSectionTab('appointments')">
+        <span class="tile-ico">📅</span>
+        <span class="tile-lbl" data-i18n="tile_appoints">अपॉइंटमेंट</span>
+      </button>
+      <button class="action-tile" onclick="manualCloudSync()">
+        <span class="tile-ico">☁️</span>
+        <span class="tile-lbl" data-i18n="tile_sync">क्लाउड सिंक</span>
+      </button>
+      <button class="action-tile" onclick="openParlorModal()">
+        <span class="tile-ico">🚪</span>
+        <span class="tile-lbl" data-i18n="tile_switch">स्विच / लॉगआउट</span>
+      </button>
+    </section>
+
+    <!-- TAB 1: HOME (Includes Session, PIN Income, and Services & Due Below) -->
     <section id="tab-home" class="tab-view">
+      <!-- Admin / Active User Session Card -->
       <div class="card">
         <div class="item-title" id="sessionUserLine">👑 Payal · ID: Payal01 (ADMIN)</div>
         <div class="item-sub" id="sessionParlorLine" style="margin-bottom:10px;">Parlor: Payal beauty parlour (PAYAL01)</div>
         <div class="row-btns">
-          <button class="btn btn-soft btn-sm" onclick="lockAppSession()">Lock PIN</button>
-          <button class="btn btn-soft btn-sm" onclick="manualCloudSync()">Cloud Sync</button>
-          <button class="btn btn-soft btn-sm" onclick="requestAlertPermission()">🔔 Alerts</button>
-          <button class="btn btn-soft btn-sm" onclick="openParlorModal()">Switch / Logout</button>
+          <button class="btn btn-soft btn-sm" onclick="openSectionTab('staff')" data-i18n="btn_new_staff">+ नया स्टाफ / लॉगिन</button>
+          <button class="btn btn-soft btn-sm" onclick="lockAppSession()" data-i18n="btn_lock_pin">PIN लॉक करें</button>
+          <button class="btn btn-soft btn-sm" onclick="openSectionTab('offers')" data-i18n="btn_send_offer">ऑफ़र भेजें</button>
         </div>
-        <div class="item-sub" id="cloudLiveSubline" style="margin-top:8px;">Cloud Live ✓ (PAYAL01)</div>
       </div>
 
+      <!-- PIN-Protected Parlor Income -->
       <div class="card-rose">
         <div class="section-title" style="margin-bottom:8px;">
-          <span>💰 Parlor Income (PIN Protected)</span>
-        </div>
-        <div style="margin-bottom:10px;">
-          <button class="btn btn-soft btn-sm" onclick="promptIncomeUnlock()">🔒 PIN से Income देखें</button>
+          <span data-i18n="sec_income">💰 पार्लर इनकम (PIN सुरक्षित)</span>
+          <button class="btn btn-soft btn-xs" onclick="promptIncomeUnlock()" data-i18n="btn_unlock_income">🔒 PIN से देखें</button>
         </div>
 
-        <div class="income-row" onclick="promptIncomeUnlock('daily')">
-          <div class="income-label">Daily Income</div>
-          <div class="income-val dots-rose" id="inc-daily">••••</div>
+        <div class="income-row" onclick="promptIncomeUnlock()">
+          <div class="income-label" data-i18n="inc_daily">आज की इनकम (Daily)</div>
+          <div class="income-val dots-rose" id="inc-daily">••••••</div>
         </div>
 
-        <div class="income-row" onclick="promptIncomeUnlock('monthly')">
-          <div class="income-label">Monthly Income</div>
-          <div class="income-val dots-rose" id="inc-monthly">••••</div>
+        <div class="income-row" onclick="promptIncomeUnlock()">
+          <div class="income-label" data-i18n="inc_monthly">इस महीने की इनकम (Monthly)</div>
+          <div class="income-val dots-rose" id="inc-monthly">••••••</div>
         </div>
 
-        <div class="income-row" onclick="promptIncomeUnlock('quarterly')">
-          <div class="income-label">Quarterly Income</div>
-          <div class="income-val dots-rose" id="inc-quarterly">••••</div>
+        <div class="income-row" onclick="promptIncomeUnlock()">
+          <div class="income-label" data-i18n="inc_quarterly">तिमाही इनकम (Quarterly)</div>
+          <div class="income-val dots-rose" id="inc-quarterly">••••••</div>
         </div>
 
-        <div class="income-row" onclick="promptIncomeUnlock('annually')">
-          <div class="income-label">Annually Income</div>
-          <div class="income-val dots-rose" id="inc-annually">••••</div>
+        <div class="income-row" onclick="promptIncomeUnlock()">
+          <div class="income-label" data-i18n="inc_annually">सालाना इनकम (Annually)</div>
+          <div class="income-val dots-rose" id="inc-annually">••••••</div>
         </div>
 
-        <div class="income-row" onclick="promptIncomeUnlock('alltime')">
-          <div class="income-label">Ab Tak Ki Poori Income (All-Time)</div>
-          <div class="income-val dots-green" id="inc-alltime">••••</div>
-        </div>
-
-        <div class="item-sub" style="margin-top:8px;" id="incomeHintText">
-          Income देखने के लिए बटन दबाकर PIN डालें।
+        <div class="income-row" onclick="promptIncomeUnlock()">
+          <div class="income-label" data-i18n="inc_alltime">अब तक की कुल इनकम (All-Time)</div>
+          <div class="income-val dots-green" id="inc-alltime">••••••</div>
         </div>
       </div>
 
+      <!-- Summary Counters -->
       <div class="card-rose">
         <div class="stat-grid">
           <div class="stat-box">
-            <div class="income-label">Total Consumers</div>
+            <div class="income-label" data-i18n="stat_clients">कुल कस्टमर</div>
             <div class="stat-num" id="statConsumers">0</div>
           </div>
           <div class="stat-box">
-            <div class="income-label">Total Services Done</div>
+            <div class="income-label" data-i18n="stat_services">कुल सर्विस</div>
             <div class="stat-num" id="statServices">0</div>
           </div>
         </div>
       </div>
 
-      <div class="card-rose">
+      <!-- SERVICES & DUE SECTION PLACED BELOW ON HOME -->
+      <div class="card" id="servicesDueSection">
         <div class="section-title">
-          <span>📅 Today & Upcoming Appointments</span>
-          <span class="badge badge-trial" id="upcomingCountBadge">0</span>
+          <span data-i18n="sec_service_entry">💆‍♀️ सर्विस बिलिंग और बाकी पैसे (Service & Due)</span>
+          <span class="badge badge-trial">Logo PDF</span>
         </div>
-        <div id="homeAppointmentsList" class="item-sub">कोई आगामी Appointment नहीं है।</div>
+        <div class="field">
+          <label data-i18n="lbl_consumer">कस्टमर चुनें *</label>
+          <select id="srvConsumer"></select>
+        </div>
+        <div class="field">
+          <label data-i18n="lbl_service_name">सर्विस का नाम *</label>
+          <input id="srvName" class="input" placeholder="जैसे: Bridal Makeup / Facial / Hair Spa" />
+        </div>
+        <div class="grid-2">
+          <div class="field">
+            <label data-i18n="lbl_total_amt">कुल रुपये (₹) *</label>
+            <input id="srvAmount" class="input" type="number" min="1" step="any" placeholder="1500" oninput="syncDueInputs()" />
+          </div>
+          <div class="field">
+            <label data-i18n="lbl_paid_now">अभी मिले (₹)</label>
+            <input id="srvPaidNow" class="input" type="number" min="0" step="any" placeholder="0" oninput="syncDueInputs()" />
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="field">
+            <label data-i18n="lbl_pay_mode">पेमेंट स्थिति</label>
+            <select id="srvPayMode" onchange="onPayModeChange()">
+              <option value="PAID">पूरा मिल गया (Paid)</option>
+              <option value="LATER">बाद में देंगी (Full Due)</option>
+              <option value="PARTIAL">थोड़ा मिला / बाकी बाद में</option>
+            </select>
+          </div>
+          <div class="field">
+            <label data-i18n="lbl_promise_date">कब देंगी (Promise Date)</label>
+            <input id="srvPromiseDate" class="input" type="date" />
+          </div>
+        </div>
+        <button class="btn btn-primary btn-block" onclick="addServiceRecord()" data-i18n="btn_save_service">सर्विस और बिल सेव करें</button>
+      </div>
+
+      <!-- Pending Due Payments List -->
+      <div class="card">
+        <div class="section-title">
+          <span data-i18n="sec_due_list">⏰ बाकी पैसे की लिस्ट (Due Payments)</span>
+          <span class="badge badge-warn" id="dueCountBadge">0</span>
+        </div>
+        <div id="duePaymentsList"></div>
+      </div>
+
+      <!-- Recent Services & Logo PDF Receipts -->
+      <div class="card">
+        <div class="section-title">
+          <span data-i18n="sec_recent_services">🧾 हाल की सर्विस और Logo PDF रसीद</span>
+        </div>
+        <div id="servicesList"></div>
       </div>
     </section>
 
-    <!-- TAB 2: STAFF -->
+    <!-- TAB 2: STAFF (Top Tile Opens Here) -->
     <section id="tab-staff" class="tab-view hidden">
       <div class="card">
         <div class="section-title">
-          <span>🔑 Staff Login (Parlor ID + PIN)</span>
+          <span data-i18n="sec_staff_login">🔑 स्टाफ लॉगिन (Parlor ID + PIN)</span>
           <span class="badge badge-trial" id="staffLoginCodeHint">ID: PAYAL01</span>
         </div>
         <div class="grid-2">
           <div class="field">
             <label>Parlor Code / ID *</label>
-            <input id="staffLoginParlorCode" class="input" placeholder="e.g. PAYAL01" style="text-transform:uppercase;" />
+            <input id="staffLoginParlorCode" class="input" placeholder="PAYAL01" style="text-transform:uppercase;" />
           </div>
           <div class="field">
             <label>Staff / User PIN *</label>
-            <input id="staffLoginPin" class="input" type="password" placeholder="e.g. 1234" />
+            <input id="staffLoginPin" class="input" type="password" placeholder="1234" />
           </div>
         </div>
-        <button class="btn btn-primary btn-block" onclick="loginWithParlorIdAndPin()">Login to Parlor</button>
+        <button class="btn btn-primary btn-block" onclick="loginWithParlorIdAndPin()" data-i18n="btn_staff_login">पार्लर में लॉगिन करें</button>
       </div>
 
       <div class="card">
         <div class="section-title">
-          <span id="staffFormHeading">Add Staff / User (Admin PIN Required)</span>
-          <button class="btn btn-outline btn-xs hidden" id="cancelEditStaffBtn" onclick="cancelStaffEdit()">Cancel Edit</button>
+          <span id="staffFormHeading" data-i18n="sec_staff_manage">स्टाफ जोड़ें / एडिट करें (Admin PIN ज़रूरी)</span>
+          <button class="btn btn-outline btn-xs hidden" id="cancelEditStaffBtn" onclick="cancelStaffEdit()">Cancel</button>
         </div>
         <input type="hidden" id="editingStaffId" value="" />
         <div class="field">
-          <label>Staff / User Name *</label>
-          <input id="stfName" class="input" placeholder="e.g. Riya" />
+          <label data-i18n="lbl_staff_name">स्टाफ का नाम *</label>
+          <input id="stfName" class="input" placeholder="जैसे: Riya" />
         </div>
         <div class="grid-2">
           <div class="field">
-            <label>Role</label>
+            <label data-i18n="lbl_role">रोल (Role)</label>
             <select id="stfRole">
               <option value="STAFF">STAFF</option>
               <option value="ADMIN">ADMIN</option>
             </select>
           </div>
           <div class="field">
-            <label>Staff PIN *</label>
-            <input id="stfPin" class="input" type="text" maxlength="8" placeholder="e.g. 2222" />
+            <label data-i18n="lbl_staff_pin">स्टाफ PIN *</label>
+            <input id="stfPin" class="input" type="text" maxlength="8" placeholder="2222" />
           </div>
         </div>
         <div class="field">
-          <label>BPM Admin PIN (Save / Edit / Delete ke liye) *</label>
+          <label data-i18n="lbl_admin_pin">BPM Admin PIN (Save / Edit / Delete के लिए) *</label>
           <input id="stfAdminAuthPin" class="input" type="password" maxlength="8" placeholder="Admin PIN (default: 1234)" />
         </div>
-        <button class="btn btn-primary btn-block" id="saveStaffBtn" onclick="saveStaffMember()">Save Staff User</button>
+        <button class="btn btn-primary btn-block" onclick="saveStaffMember()" data-i18n="btn_save_staff">स्टाफ सेव करें</button>
       </div>
 
       <div class="card">
-        <div class="section-title"><span>Registered Staff & Admin Users</span></div>
+        <div class="section-title"><span data-i18n="sec_staff_list">रजिस्टर्ड स्टाफ और एडमिन</span></div>
         <div id="staffList"></div>
       </div>
     </section>
 
-    <!-- TAB 3: OFFERS -->
+    <!-- TAB 3: OFFERS (Top Tile Opens Here) -->
     <section id="tab-offers" class="tab-view hidden">
       <div class="card">
-        <div class="section-title"><span>Create Offer & Send to Consumers</span></div>
+        <div class="section-title"><span data-i18n="sec_create_offer">🎁 नया ऑफ़र बनाएं और कस्टमर्स को भेजें</span></div>
         <div class="field">
-          <label>Offer Title *</label>
-          <input id="offTitle" class="input" placeholder="e.g. Festive Glow Combo" />
+          <label data-i18n="lbl_offer_title">ऑफ़र का नाम *</label>
+          <input id="offTitle" class="input" placeholder="जैसे: करवाचौथ / शादी स्पेशल पैकेज" />
         </div>
         <div class="field">
-          <label>Details / Price</label>
-          <input id="offDesc" class="input" placeholder="e.g. Facial + Threading + Hair Wash @ ₹999" />
+          <label data-i18n="lbl_offer_desc">ऑफ़र की जानकारी / रेट</label>
+          <input id="offDesc" class="input" placeholder="जैसे: Facial + Hair Spa + Threading सिर्फ ₹999 में" />
         </div>
-        <button class="btn btn-primary btn-block" onclick="addOffer()">Add Offer</button>
+        <button class="btn btn-primary btn-block" onclick="addOffer()" data-i18n="btn_add_offer">ऑफ़र सेव करें</button>
       </div>
 
       <div class="card">
         <div class="section-title">
-          <span>Active Offers</span>
-          <span class="badge badge-trial">All / Tick Select</span>
+          <span data-i18n="sec_active_offers">एक्टिव ऑफ़र्स (एक साथ या टिक करके भेजें)</span>
         </div>
         <div id="offersList"></div>
       </div>
@@ -837,175 +1016,150 @@
     <!-- TAB 4: CONSUMERS -->
     <section id="tab-consumers" class="tab-view hidden">
       <div class="card">
-        <div class="section-title"><span>Add Consumer</span></div>
+        <div class="section-title"><span data-i18n="sec_add_client">👩 नया कस्टमर जोड़ें</span></div>
         <div class="field">
-          <label>Consumer Name *</label>
-          <input id="conName" class="input" placeholder="e.g. Neha Sharma" />
+          <label data-i18n="lbl_client_name">कस्टमर का नाम *</label>
+          <input id="conName" class="input" placeholder="जैसे: Neha Sharma" />
         </div>
         <div class="field">
-          <label>Mobile Number *</label>
-          <input id="conPhone" class="input" type="tel" placeholder="e.g. 9876543210" />
+          <label data-i18n="lbl_mobile">मोबाइल नंबर *</label>
+          <input id="conPhone" class="input" type="tel" placeholder="9876543210" />
         </div>
         <div class="field">
-          <label>Notes / Preferences</label>
-          <input id="conNote" class="input" placeholder="Skin type, bridal package, etc." />
+          <label data-i18n="lbl_notes">नोट्स / पसंद</label>
+          <input id="conNote" class="input" placeholder="Bridal / Skin type / Hair spa" />
         </div>
-        <button class="btn btn-primary btn-block" onclick="addConsumer()">Save Consumer</button>
+        <button class="btn btn-primary btn-block" onclick="addConsumer()" data-i18n="btn_save_client">कस्टमर सेव करें</button>
       </div>
 
       <div class="card">
-        <div class="section-title"><span>Consumers List</span></div>
+        <div class="section-title"><span data-i18n="sec_client_list">कस्टमर्स की लिस्ट</span></div>
         <div id="consumersList"></div>
       </div>
     </section>
 
-    <!-- TAB 5: SERVICES & DUE / RECEIPT PDF -->
-    <section id="tab-services" class="tab-view hidden">
-      <div class="card">
-        <div class="section-title"><span>Record Service / Billing & Due Date</span></div>
-        <div class="field">
-          <label>Consumer *</label>
-          <select id="srvConsumer"></select>
-        </div>
-        <div class="field">
-          <label>Service Name *</label>
-          <input id="srvName" class="input" placeholder="e.g. Bridal Makeup / Facial / Hair Spa" />
-        </div>
-        <div class="grid-2">
-          <div class="field">
-            <label>Total Amount (₹) *</label>
-            <input id="srvAmount" class="input" type="number" min="1" step="any" placeholder="e.g. 1500" oninput="syncDueInputs()" />
-          </div>
-          <div class="field">
-            <label>Paid Now (₹)</label>
-            <input id="srvPaidNow" class="input" type="number" min="0" step="any" placeholder="0 if baad me denge" oninput="syncDueInputs()" />
-          </div>
-        </div>
-        <div class="grid-2">
-          <div class="field">
-            <label>Payment Status</label>
-            <select id="srvPayMode" onchange="onPayModeChange()">
-              <option value="PAID">Full Paid</option>
-              <option value="LATER">Baad Mein Denge (Full Due)</option>
-              <option value="PARTIAL">Thoda Paid / Baaki Later</option>
-            </select>
-          </div>
-          <div class="field">
-            <label>Promise Date (Kab Denge)</label>
-            <input id="srvPromiseDate" class="input" type="date" />
-          </div>
-        </div>
-        <button class="btn btn-primary btn-block" onclick="addServiceRecord()">Save Service, Due & Sync</button>
-      </div>
-
-      <div class="card">
-        <div class="section-title">
-          <span>Baaki Paise (Due / Promise Alerts)</span>
-          <span class="badge badge-warn" id="dueCountBadge">0</span>
-        </div>
-        <div id="duePaymentsList"></div>
-      </div>
-
-      <div class="card">
-        <div class="section-title"><span>Recent Services & Logo PDF Receipts</span></div>
-        <div id="servicesList"></div>
-      </div>
-    </section>
-
-    <!-- TAB 6: DEDICATED APPOINTMENTS -->
+    <!-- TAB 5: APPOINTMENTS -->
     <section id="tab-appointments" class="tab-view hidden">
       <div class="card">
         <div class="section-title">
-          <span>📅 New Appointment (Bridal / Client)</span>
-          <span class="badge badge-trial">8:00 AM Alert</span>
+          <span data-i18n="sec_new_appoint">📅 नया अपॉइंटमेंट (Bridal / Client)</span>
+          <span class="badge badge-trial">Date Alert</span>
         </div>
         <div class="field">
-          <label>Client Name *</label>
-          <input id="appClientName" class="input" placeholder="e.g. Priya Verma" />
+          <label data-i18n="lbl_client_name">क्लाइंट का नाम *</label>
+          <input id="appClientName" class="input" placeholder="जैसे: Priya Verma" />
         </div>
         <div class="field">
-          <label>Mobile Number *</label>
-          <input id="appClientPhone" class="input" type="tel" placeholder="e.g. 9876543210" />
+          <label data-i18n="lbl_mobile">मोबाइल नंबर *</label>
+          <input id="appClientPhone" class="input" type="tel" placeholder="9876543210" />
         </div>
         <div class="field">
-          <label>Service / Package *</label>
-          <input id="appServiceType" class="input" placeholder="e.g. Bridal Makeup / Engagement / Hair Styling" />
+          <label data-i18n="lbl_service_pkg">सर्विस / पैकेज *</label>
+          <input id="appServiceType" class="input" placeholder="जैसे: Bridal Makeup / Engagement" />
         </div>
         <div class="grid-2">
           <div class="field">
-            <label>Appointment Date *</label>
+            <label data-i18n="lbl_date">तारीख (Date) *</label>
             <input id="appDate" class="input" type="date" />
           </div>
           <div class="field">
-            <label>Appointment Time *</label>
+            <label data-i18n="lbl_time">समय (Time) *</label>
             <input id="appTime" class="input" type="time" />
           </div>
         </div>
-        <button class="btn btn-primary btn-block" onclick="addAppointment()">Save Appointment & Send Date/Time</button>
+        <button class="btn btn-primary btn-block" onclick="addAppointment()" data-i18n="btn_save_appoint">अपॉइंटमेंट सेव करें और WhatsApp भेजें</button>
       </div>
 
       <div class="card">
-        <div class="section-title"><span>Scheduled Appointments</span></div>
+        <div class="section-title"><span data-i18n="sec_appoint_list">तय किए गए अपॉइंटमेंट्स</span></div>
         <div id="appointmentsList"></div>
       </div>
     </section>
 
-    <!-- TAB 7: SUPPORT TICKET (In-App To App Admin + Admin Solve Inbox) -->
+    <!-- TAB 6: DATE-BASED REMINDERS (RED BLINK UNTIL CHECKED + DIRECT CALL & WHATSAPP) -->
+    <section id="tab-reminders" class="tab-view hidden">
+      <div class="card">
+        <div class="section-title">
+          <span data-i18n="sec_reminders">🔔 ज़रूरी रिमाइंडर (Due Date और Appointments)</span>
+          <span class="badge badge-expired" id="pendingRemBadge">0 Pending</span>
+        </div>
+        <p class="item-sub" style="margin-bottom:10px;" data-i18n="rem_help_txt">
+          तारीख आते ही यहाँ रिमाइंडर दिखेगा और नीचे बटन पर लाल (Red) ब्लिंक होगा। क्लाइंट को यहीं से Call या WhatsApp करें और रिमाइंडर पर टैप करके Check करें।
+        </p>
+        <div id="remindersCenterList"></div>
+      </div>
+    </section>
+
+    <!-- TAB 7: BPM ASSISTANT (VOICE + TYPE QUERY ON SAVED DATA) -->
+    <section id="tab-assistant" class="tab-view hidden">
+      <div class="card">
+        <div class="section-title">
+          <span data-i18n="sec_assistant">✨ BPM असिस्टेंट (बोलें या टाइप करें)</span>
+          <span class="badge badge-trial">Smart Helper</span>
+        </div>
+        <div class="chat-box" id="assistantChatBox"></div>
+
+        <div class="row-btns" style="margin-bottom:8px;">
+          <button class="btn btn-soft btn-xs" onclick="askQuickAssistant('आज की इनकम कितनी है?')">आज की इनकम</button>
+          <button class="btn btn-soft btn-xs" onclick="askQuickAssistant('किसका पैसा बाकी है?')">बाकी पैसे (Due)</button>
+          <button class="btn btn-soft btn-xs" onclick="askQuickAssistant('आज किसका अपॉइंटमेंट है?')">आज के अपॉइंटमेंट</button>
+          <button class="btn btn-soft btn-xs" onclick="askQuickAssistant('कुल कितने कस्टमर हैं?')">कुल कस्टमर</button>
+        </div>
+
+        <div style="display:flex;gap:6px;align-items:center;">
+          <button class="btn btn-soft" id="voiceMicBtn" onclick="startVoiceAssistant()" title="Speak">🎤</button>
+          <input id="assistantInput" class="input" placeholder="बोलें या लिखें: जैसे आज की इनकम, बाकी पैसे, अपॉइंटमेंट..." onkeydown="if(event.key==='Enter') sendAssistantQuery()" />
+          <button class="btn btn-primary" onclick="sendAssistantQuery()" data-i18n="btn_ask">पूछें</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 8: SUPPORT (IN-APP TO APP ADMIN + ADMIN SOLVE INBOX) -->
     <section id="tab-support" class="tab-view hidden">
       <div class="card">
         <div class="section-title">
-          <span>🛟 BPM Support Ticket</span>
-          <span class="badge badge-trial">Sent to App Admin</span>
-        </div>
-        <p class="item-sub" style="margin-bottom:10px;">
-          Apni problem likh kar ticket bhejein—yeh seedha <strong>App Admin</strong> ko in-app send hogi aur aap neeche <strong>App Admin Inbox</strong> se ise solve kar paayenge.
-        </p>
-        <div class="field">
-          <label>Problem Topic *</label>
-          <input id="tktSubject" class="input" placeholder="e.g. Razorpay / Cloud Sync / Staff PIN / Receipt PDF" />
+          <span data-i18n="sec_support">🛟 BPM सपोर्ट टिकट (App Admin को भेजें)</span>
+          <span class="badge badge-trial">In-App</span>
         </div>
         <div class="field">
-          <label>Problem Details *</label>
-          <textarea id="tktMessage" rows="3" placeholder="Apni problem detail mein likhein..."></textarea>
+          <label data-i18n="lbl_tkt_topic">समस्या का विषय *</label>
+          <input id="tktSubject" class="input" placeholder="जैसे: PIN भूल गए / पेमेंट / रसीद PDF" />
         </div>
-        <button class="btn btn-primary btn-block" onclick="submitTicketToAppAdmin()">Send Ticket to App Admin</button>
+        <div class="field">
+          <label data-i18n="lbl_tkt_detail">पूरी समस्या लिखें *</label>
+          <textarea id="tktMessage" rows="3" placeholder="अपनी समस्या विस्तार से लिखें..."></textarea>
+        </div>
+        <button class="btn btn-primary btn-block" onclick="submitTicketToAppAdmin()" data-i18n="btn_send_ticket">App Admin को टिकट भेजें</button>
       </div>
 
       <div class="card">
         <div class="section-title">
-          <span>📥 App Admin Inbox (Solve Tickets)</span>
+          <span data-i18n="sec_admin_inbox">📥 App Admin Inbox (टिकट हल करें)</span>
           <span class="badge badge-warn" id="openTicketCountBadge">0 Open</span>
-        </div>
-        <div class="item-sub" style="margin-bottom:10px;">
-          Yahan se aap (App Admin) kisi bhi ticket par <strong>Solve / Reply</strong> dabakar Admin PIN se solution likh aur status <strong>Resolved</strong> kar sakte hain.
         </div>
         <div id="adminTicketInboxList"></div>
       </div>
     </section>
   </main>
 
-  <!-- Fixed Bottom Navigation Bar -->
+  <!-- Fixed Bottom Navigation Bar (Home, Reminders with Red Blink, BPM Assistant, Support) -->
   <nav class="bottom-nav">
-    <button class="nav-btn active" data-tab="home" onclick="switchTab('home', this)">
-      <span class="nav-ico">🏠</span><span>Home</span>
+    <button class="nav-btn active" id="nav-home" onclick="openSectionTab('home')">
+      <span class="nav-ico">🏠</span>
+      <span data-i18n="nav_home">होम (Home)</span>
     </button>
-    <button class="nav-btn" data-tab="staff" onclick="switchTab('staff', this)">
-      <span class="nav-ico">👩‍💼</span><span>Staff</span>
+    <button class="nav-btn" id="nav-reminders" onclick="openSectionTab('reminders')">
+      <span class="blink-dot hidden" id="remBlinkDot"></span>
+      <span class="nav-ico">🔔</span>
+      <span data-i18n="nav_reminders">रिमाइंडर</span>
     </button>
-    <button class="nav-btn" data-tab="offers" onclick="switchTab('offers', this)">
-      <span class="nav-ico">🎁</span><span>Offers</span>
+    <button class="nav-btn" id="nav-assistant" onclick="openSectionTab('assistant')">
+      <span class="nav-ico">✨</span>
+      <span data-i18n="nav_assistant">BPM असिस्टेंट</span>
     </button>
-    <button class="nav-btn" data-tab="consumers" onclick="switchTab('consumers', this)">
-      <span class="nav-ico">👩</span><span>Clients</span>
-    </button>
-    <button class="nav-btn" data-tab="services" onclick="switchTab('services', this)">
-      <span class="nav-ico">💆‍♀️</span><span>Services</span>
-    </button>
-    <button class="nav-btn" data-tab="appointments" onclick="switchTab('appointments', this)">
-      <span class="nav-ico">📅</span><span>Appoints</span>
-    </button>
-    <button class="nav-btn" data-tab="support" onclick="switchTab('support', this)">
-      <span class="nav-ico">🛟</span><span>Support</span>
+    <button class="nav-btn" id="nav-support" onclick="openSectionTab('support')">
+      <span class="nav-ico">🛟</span>
+      <span data-i18n="nav_support">सपोर्ट (Support)</span>
     </button>
   </nav>
 
@@ -1019,22 +1173,22 @@
       <input type="hidden" id="solvingTicketKey" value="" />
       <div class="card-rose" id="solvingTicketSummary" style="margin-bottom:10px;"></div>
       <div class="field">
-        <label>Ticket Status</label>
+        <label>Status</label>
         <select id="solveTicketStatus">
-          <option value="Resolved">Resolved (Solved)</option>
+          <option value="Resolved">Resolved (हल हो गया)</option>
           <option value="In Progress">In Progress</option>
           <option value="Open">Open</option>
         </select>
       </div>
       <div class="field">
         <label>App Admin Solution / Reply *</label>
-        <textarea id="solveTicketReply" rows="3" placeholder="User ko solution / update likhein..."></textarea>
+        <textarea id="solveTicketReply" rows="3" placeholder="समाधान लिखें..."></textarea>
       </div>
       <div class="field">
         <label>App Admin PIN *</label>
         <input id="solveTicketAdminPin" class="input" type="password" placeholder="Admin PIN (default: 1234)" />
       </div>
-      <button class="btn btn-primary btn-block" onclick="saveTicketSolution()">Save Solution & Update Ticket</button>
+      <button class="btn btn-primary btn-block" onclick="saveTicketSolution()">समाधान सेव करें</button>
     </div>
   </div>
 
@@ -1042,41 +1196,34 @@
   <div class="modal-backdrop" id="referModal">
     <div class="modal-box">
       <div class="modal-head">
-        <strong>Refer & Earn (+15 Days Benefit)</strong>
+        <strong>Refer & Earn (+15 Days Bonus)</strong>
         <button class="close-x" onclick="closeModal('referModal')">✕</button>
       </div>
-
       <p class="item-sub">
-        Apna auto-generated referral code WhatsApp par bhejein. Download link se install karke jo naya parlor/user yeh code daal kar register karega, usko aur aapko <strong>+15 Days bonus</strong> ka benefit milega.
+        अपना रेफ़रल कोड WhatsApp पर शेयर करें। APK लिंक से डाउनलोड करके नया पार्लर यह कोड डालकर रजिस्टर करेगा तो दोनों को <strong>+15 दिन बोनस</strong> मिलेगा।
       </p>
-
       <div class="ref-code-box">
         <div>
-          <div class="item-sub">Auto Generated Referral Code</div>
+          <div class="item-sub">Auto Referral Code</div>
           <div class="ref-code-text" id="myReferralCode">BPM-PAYAL-1001</div>
         </div>
         <button class="btn btn-soft btn-sm" onclick="copyReferralCode()">Copy</button>
       </div>
-
       <div class="row-btns" style="margin-bottom:10px;">
-        <button class="btn btn-whatsapp" style="flex:1;" onclick="shareReferralOnWhatsApp()">
-          WhatsApp Refer (APK Link)
-        </button>
-        <button class="btn btn-outline btn-sm" onclick="copyApkLink()">Copy APK Link</button>
+        <button class="btn btn-whatsapp" style="flex:1;" onclick="shareReferralOnWhatsApp()">WhatsApp Refer (APK Link)</button>
+        <button class="btn btn-outline btn-sm" onclick="copyApkLink()">Copy APK</button>
       </div>
-
       <div class="card-rose" style="margin-bottom:0;" id="referStatsBox"></div>
     </div>
   </div>
 
-  <!-- Modal: Purchase Plans -->
+  <!-- Modal: Purchase Plans (Razorpay) -->
   <div class="modal-backdrop" id="plansModal">
     <div class="modal-box">
       <div class="modal-head">
         <strong>Purchase Plans (Razorpay)</strong>
         <button class="close-x" onclick="closeModal('plansModal')">✕</button>
       </div>
-
       <div class="plan-grid">
         <div class="plan-card">
           <div>
@@ -1123,18 +1270,12 @@
           <option value="yearly" selected>Yearly — ₹499 (365 Days)</option>
         </select>
       </div>
-
       <div class="field">
-        <label>Mobile Number (for Razorpay Receipt)</label>
+        <label>Mobile Number</label>
         <input id="payerPhoneInput" class="input" type="tel" placeholder="10-digit mobile number" />
       </div>
-
       <div class="card-rose" id="planSummaryBox" style="margin-bottom:12px;"></div>
-
-      <button class="btn btn-razorpay btn-block" style="padding:12px;" onclick="startRazorpayCheckout()">
-        💳 Pay Now with Razorpay
-      </button>
-
+      <button class="btn btn-razorpay btn-block" style="padding:12px;" onclick="startRazorpayCheckout()">💳 Pay Now with Razorpay</button>
       <div id="paymentHistoryBox" style="margin-top:10px;"></div>
     </div>
   </div>
@@ -1143,79 +1284,74 @@
   <div class="modal-backdrop" id="sendOfferModal">
     <div class="modal-box">
       <div class="modal-head">
-        <strong>Send Offer on WhatsApp</strong>
+        <strong>WhatsApp पर ऑफ़र भेजें</strong>
         <button class="close-x" onclick="closeModal('sendOfferModal')">✕</button>
       </div>
-
       <div class="card-rose" style="margin-bottom:10px;">
         <div class="item-title" id="broadcastOfferTitle">Offer Title</div>
         <div class="item-sub" id="broadcastOfferDesc">Offer Details</div>
       </div>
-
       <div class="row-btns" style="margin-bottom:10px;">
-        <button class="btn btn-soft btn-sm" style="flex:1;" onclick="toggleAllOfferConsumers(true)">☑ Select All (Sabko)</button>
-        <button class="btn btn-outline btn-sm" style="flex:1;" onclick="toggleAllOfferConsumers(false)">☐ Unselect All</button>
+        <button class="btn btn-soft btn-sm" style="flex:1;" onclick="toggleAllOfferConsumers(true)">☑ सबको चुनें (Select All)</button>
+        <button class="btn btn-outline btn-sm" style="flex:1;" onclick="toggleAllOfferConsumers(false)">☐ हटाएं (Unselect)</button>
       </div>
-
       <div id="offerConsumerChecklist" style="max-height:220px;overflow-y:auto;margin-bottom:12px;"></div>
-
       <div id="offerQueueBar" class="card-rose hidden" style="margin-bottom:10px;">
         <div class="item-title" id="offerQueueStatus">Queue Ready</div>
         <div class="row-btns" style="margin-top:8px;">
-          <button class="btn btn-whatsapp btn-sm" style="flex:1;" onclick="sendNextQueuedOffer()">Send Next on WhatsApp</button>
+          <button class="btn btn-whatsapp btn-sm" style="flex:1;" onclick="sendNextQueuedOffer()">अगले कस्टमर को भेजें</button>
           <button class="btn btn-outline btn-sm" onclick="resetOfferQueue()">Reset</button>
         </div>
       </div>
-
       <button class="btn btn-whatsapp btn-block" onclick="startOfferBroadcastQueue()">
-        🚀 Start Sending to Selected (<span id="selectedConsumerCount">0</span>)
+        🚀 चुने हुए कस्टमर्स को भेजें (<span id="selectedConsumerCount">0</span>)
       </button>
     </div>
   </div>
 
-  <!-- Modal: Parlor Switch / Register with Referral Code -->
+  <!-- Modal: Parlor Switch / Register -->
   <div class="modal-backdrop" id="parlorModal">
     <div class="modal-box">
       <div class="modal-head">
-        <strong>Parlor Switch / Register</strong>
+        <strong>पार्लर बदलें / नया पार्लर जोड़ें</strong>
         <button class="close-x" onclick="closeModal('parlorModal')">✕</button>
       </div>
-
       <div class="field">
-        <label>Select Existing Parlor</label>
+        <label>मौजूदा पार्लर चुनें</label>
         <select id="switchParlorSelect" onchange="selectExistingParlor(this.value)"></select>
       </div>
-
       <hr style="border:none;border-top:1px solid var(--line);margin:14px 0;" />
-
-      <div class="section-title"><span>Register New Parlor (30-Day Trial)</span></div>
+      <div class="section-title"><span>नया पार्लर रजिस्टर करें (30 दिन फ्री ट्रायल)</span></div>
       <div class="field">
-        <label>Parlor Name *</label>
-        <input id="newParlorName" class="input" placeholder="e.g. Glamour Studio" />
+        <label>पार्लर का नाम *</label>
+        <input id="newParlorName" class="input" placeholder="जैसे: Glamour Studio" />
       </div>
       <div class="field">
-        <label>City / Area</label>
-        <input id="newParlorCity" class="input" placeholder="e.g. Joura" />
+        <label>शहर / पता</label>
+        <input id="newParlorCity" class="input" placeholder="Joura" />
       </div>
       <div class="field">
-        <label>Admin Name *</label>
-        <input id="newAdminName" class="input" placeholder="e.g. Pooja" />
+        <label>एडमिन का नाम *</label>
+        <input id="newAdminName" class="input" placeholder="Pooja" />
       </div>
       <div class="field">
-        <label>Admin PIN (4+ digits) *</label>
-        <input id="newAdminPin" class="input" type="password" placeholder="e.g. 1111" />
+        <label>एडमिन PIN (4+ अंक) *</label>
+        <input id="newAdminPin" class="input" type="password" placeholder="1111" />
       </div>
       <div class="field">
-        <label>Referral Code (Daal kar +15 Days Benefit Paayein)</label>
-        <input id="newParlorRefInput" class="input" placeholder="e.g. BPM-PAYAL-1001" style="text-transform:uppercase;" />
+        <label>रेफ़रल कोड (+15 दिन बोनस के लिए)</label>
+        <input id="newParlorRefInput" class="input" placeholder="BPM-PAYAL-1001" style="text-transform:uppercase;" />
       </div>
-      <button class="btn btn-primary btn-block" onclick="registerNewParlor()">Create Parlor & Claim Referral Benefit</button>
+      <button class="btn btn-primary btn-block" onclick="registerNewParlor()">पार्लर बनाएं और बोनस पाएं</button>
     </div>
   </div>
 
   <div class="toast" id="toast"></div>
 
   <script>
+    // =========================================================================
+    // 1. CONFIG & CONSTANTS
+    // =========================================================================
     const RAZORPAY_KEY_ID = "rzp_live_U33fOg4q9BEcIY";
 
     const FIREBASE_CONFIG = {
@@ -1242,7 +1378,153 @@
       yearly: { id: "yearly", label: "Yearly Plan", price: 499, days: 365 }
     };
 
+    const I18N = {
+      hi: {
+        tile_staff: "स्टाफ (Staff)",
+        tile_offers: "ऑफ़र (Offers)",
+        tile_parlor_id: "पार्लर ID",
+        tile_pin: "PIN इनकम",
+        tile_clients: "कस्टमर",
+        tile_appoints: "अपॉइंटमेंट",
+        tile_sync: "क्लाउड सिंक",
+        tile_switch: "स्विच / लॉगआउट",
+        btn_new_staff: "+ नया स्टाफ / लॉगिन",
+        btn_lock_pin: "PIN लॉक करें",
+        btn_send_offer: "ऑफ़र भेजें",
+        sec_income: "💰 पार्लर इनकम (PIN सुरक्षित)",
+        btn_unlock_income: "🔒 PIN से देखें",
+        inc_daily: "आज की इनकम (Daily)",
+        inc_monthly: "इस महीने की इनकम (Monthly)",
+        inc_quarterly: "तिमाही इनकम (Quarterly)",
+        inc_annually: "सालाना इनकम (Annually)",
+        inc_alltime: "अब तक की कुल इनकम (All-Time)",
+        stat_clients: "कुल कस्टमर",
+        stat_services: "कुल सर्विस",
+        sec_service_entry: "💆‍♀️ सर्विस बिलिंग और बाकी पैसे (Service & Due)",
+        lbl_consumer: "कस्टमर चुनें *",
+        lbl_service_name: "सर्विस का नाम *",
+        lbl_total_amt: "कुल रुपये (₹) *",
+        lbl_paid_now: "अभी मिले (₹)",
+        lbl_pay_mode: "पेमेंट स्थिति",
+        lbl_promise_date: "कब देंगी (Promise Date)",
+        btn_save_service: "सर्विस और बिल सेव करें",
+        sec_due_list: "⏰ बाकी पैसे की लिस्ट (Due Payments)",
+        sec_recent_services: "🧾 हाल की सर्विस और Logo PDF रसीद",
+        sec_staff_login: "🔑 स्टाफ लॉगिन (Parlor ID + PIN)",
+        btn_staff_login: "पार्लर में लॉगिन करें",
+        sec_staff_manage: "स्टाफ जोड़ें / एडिट करें (Admin PIN ज़रूरी)",
+        lbl_staff_name: "स्टाफ का नाम *",
+        lbl_role: "रोल (Role)",
+        lbl_staff_pin: "स्टाफ PIN *",
+        lbl_admin_pin: "BPM Admin PIN (Save / Edit / Delete के लिए) *",
+        btn_save_staff: "स्टाफ सेव करें",
+        sec_staff_list: "रजिस्टर्ड स्टाफ और एडमिन",
+        sec_create_offer: "🎁 नया ऑफ़र बनाएं और कस्टमर्स को भेजें",
+        lbl_offer_title: "ऑफ़र का नाम *",
+        lbl_offer_desc: "ऑफ़र की जानकारी / रेट",
+        btn_add_offer: "ऑफ़र सेव करें",
+        sec_active_offers: "एक्टिव ऑफ़र्स (एक साथ या टिक करके भेजें)",
+        sec_add_client: "👩 नया कस्टमर जोड़ें",
+        lbl_client_name: "कस्टमर का नाम *",
+        lbl_mobile: "मोबाइल नंबर *",
+        lbl_notes: "नोट्स / पसंद",
+        btn_save_client: "कस्टमर सेव करें",
+        sec_client_list: "कस्टमर्स की लिस्ट",
+        sec_new_appoint: "📅 नया अपॉइंटमेंट (Bridal / Client)",
+        lbl_service_pkg: "सर्विस / पैकेज *",
+        lbl_date: "तारीख (Date) *",
+        lbl_time: "समय (Time) *",
+        btn_save_appoint: "अपॉइंटमेंट सेव करें और WhatsApp भेजें",
+        sec_appoint_list: "तय किए गए अपॉइंटमेंट्स",
+        sec_reminders: "🔔 ज़रूरी रिमाइंडर (Due Date और Appointments)",
+        rem_help_txt: "तारीख आते ही यहाँ रिमाइंडर दिखेगा और नीचे बटन पर लाल (Red) ब्लिंक होगा। क्लाइंट को यहीं से Call या WhatsApp करें और रिमाइंडर पर टैप करके Check करें।",
+        sec_assistant: "✨ BPM असिस्टेंट (बोलें या टाइप करें)",
+        btn_ask: "पूछें",
+        sec_support: "🛟 BPM सपोर्ट टिकट (App Admin को भेजें)",
+        lbl_tkt_topic: "समस्या का विषय *",
+        lbl_tkt_detail: "पूरी समस्या लिखें *",
+        btn_send_ticket: "App Admin को टिकट भेजें",
+        sec_admin_inbox: "📥 App Admin Inbox (टिकट हल करें)",
+        nav_home: "होम (Home)",
+        nav_reminders: "रिमाइंडर",
+        nav_assistant: "BPM असिस्टेंट",
+        nav_support: "सपोर्ट (Support)"
+      },
+      en: {
+        tile_staff: "Staff",
+        tile_offers: "Offers",
+        tile_parlor_id: "Parlor ID",
+        tile_pin: "PIN Income",
+        tile_clients: "Clients",
+        tile_appoints: "Appoints",
+        tile_sync: "Cloud Sync",
+        tile_switch: "Switch / Out",
+        btn_new_staff: "+ New Staff / Login",
+        btn_lock_pin: "Lock PIN",
+        btn_send_offer: "Send Offer",
+        sec_income: "💰 Parlor Income (PIN Protected)",
+        btn_unlock_income: "🔒 Unlock with PIN",
+        inc_daily: "Daily Income",
+        inc_monthly: "Monthly Income",
+        inc_quarterly: "Quarterly Income",
+        inc_annually: "Annually Income",
+        inc_alltime: "All-Time Total Income",
+        stat_clients: "Total Clients",
+        stat_services: "Services Done",
+        sec_service_entry: "💆‍♀️ Service Billing & Due Date",
+        lbl_consumer: "Select Client *",
+        lbl_service_name: "Service Name *",
+        lbl_total_amt: "Total Amount (₹) *",
+        lbl_paid_now: "Paid Now (₹)",
+        lbl_pay_mode: "Payment Status",
+        lbl_promise_date: "Promise Date (Due)",
+        btn_save_service: "Save Service & Billing",
+        sec_due_list: "⏰ Pending Due Payments",
+        sec_recent_services: "🧾 Recent Services & Logo PDF Receipt",
+        sec_staff_login: "🔑 Staff Login (Parlor ID + PIN)",
+        btn_staff_login: "Login to Parlor",
+        sec_staff_manage: "Add / Edit Staff (Admin PIN Required)",
+        lbl_staff_name: "Staff Name *",
+        lbl_role: "Role",
+        lbl_staff_pin: "Staff PIN *",
+        lbl_admin_pin: "BPM Admin PIN (Save / Edit / Delete) *",
+        btn_save_staff: "Save Staff User",
+        sec_staff_list: "Registered Staff & Admin",
+        sec_create_offer: "🎁 Create Offer & Broadcast",
+        lbl_offer_title: "Offer Title *",
+        lbl_offer_desc: "Offer Details / Price",
+        btn_add_offer: "Save Offer",
+        sec_active_offers: "Active Offers (All or Tick Select)",
+        sec_add_client: "👩 Add New Client",
+        lbl_client_name: "Client Name *",
+        lbl_mobile: "Mobile Number *",
+        lbl_notes: "Notes / Preferences",
+        btn_save_client: "Save Client",
+        sec_client_list: "Clients List",
+        sec_new_appoint: "📅 New Appointment (Bridal / Client)",
+        lbl_service_pkg: "Service / Package *",
+        lbl_date: "Date *",
+        lbl_time: "Time *",
+        btn_save_appoint: "Save Appointment & Send WhatsApp",
+        sec_appoint_list: "Scheduled Appointments",
+        sec_reminders: "🔔 Important Reminders (Due Dates & Appointments)",
+        rem_help_txt: "Reminders trigger by date and blink red until checked. Call or WhatsApp directly and tap a reminder to mark it checked.",
+        sec_assistant: "✨ BPM Assistant (Speak or Type)",
+        btn_ask: "Ask",
+        sec_support: "🛟 BPM Support Ticket (To App Admin)",
+        lbl_tkt_topic: "Problem Topic *",
+        lbl_tkt_detail: "Problem Details *",
+        btn_send_ticket: "Send Ticket to App Admin",
+        sec_admin_inbox: "📥 App Admin Inbox (Solve Tickets)",
+        nav_home: "Home",
+        nav_reminders: "Reminders",
+        nav_assistant: "BPM Assistant",
+        nav_support: "Support"
+      }
+    };
+
     const STORAGE_KEY = "bpm_state_v1";
+    let currentLang = localStorage.getItem("bpm_lang") || "hi";
     let dbRef = null;
     let ticketsDbRef = null;
     let isRemoteApplying = false;
@@ -1305,7 +1587,6 @@
             services: [
               {
                 id: "s1",
-                consumerId: "c1",
                 consumerName: "Anjali Verma",
                 consumerPhone: "9826000001",
                 name: "Gold Facial",
@@ -1314,19 +1595,7 @@
                 dueAmount: 0,
                 promiseDate: "",
                 settled: true,
-                date: today
-              },
-              {
-                id: "s2",
-                consumerId: "c2",
-                consumerName: "Meera Tiwari",
-                consumerPhone: "9826000002",
-                name: "Keratin Spa",
-                amount: 950,
-                paidAmount: 950,
-                dueAmount: 0,
-                promiseDate: "",
-                settled: true,
+                reminderChecked: true,
                 date: today
               }
             ],
@@ -1395,19 +1664,14 @@
       const keys = Object.keys(parlors);
       if (!keys.length) return fallback;
       const activeId = parlors[raw.activeParlorId] ? raw.activeParlorId : keys[0];
-      return {
-        activeParlorId: activeId,
-        parlors
-      };
+      return { activeParlorId: activeId, parlors };
     }
 
     function loadLocalState() {
       try {
         const saved = localStorage.getItem(STORAGE_KEY);
         if (saved) return normalizeState(JSON.parse(saved));
-      } catch (e) {
-        console.warn("Local storage read failed:", e);
-      }
+      } catch (e) {}
       return createDefaultState();
     }
 
@@ -1430,9 +1694,7 @@
       const serialized = JSON.stringify(appState);
       try {
         localStorage.setItem(STORAGE_KEY, serialized);
-      } catch (e) {
-        console.warn("Local storage write failed:", e);
-      }
+      } catch (e) {}
       renderAll();
 
       if (pushRemote && !isRemoteApplying && dbRef && serialized !== lastWrittenJson) {
@@ -1447,13 +1709,13 @@
     function manualCloudSync() {
       lastWrittenJson = "";
       persistState(true);
-      showToast("Cloud sync triggered");
+      showToast(currentLang === "hi" ? "क्लाउड सिंक हो गया" : "Cloud synced");
     }
 
     function lockAppSession() {
       incomeUnlocked = false;
       renderIncome();
-      showToast("Income locked");
+      showToast(currentLang === "hi" ? "इनकम लॉक हो गई" : "Income locked");
     }
 
     function initFirebaseLiveSync() {
@@ -1498,13 +1760,262 @@
           renderAdminTicketsInbox();
         }, () => {});
       } catch (err) {
-        console.warn("Firebase init error:", err);
         setSyncStatus("offline", "Local Mode");
       }
     }
 
     // =========================================================================
-    // IN-APP TICKET TO APP ADMIN + ADMIN SOLVE WORKFLOW
+    // 2. HINDI / ENGLISH LANGUAGE SWITCHER
+    // =========================================================================
+    function applyLanguage() {
+      const dict = I18N[currentLang] || I18N.hi;
+      document.querySelectorAll("[data-i18n]").forEach((el) => {
+        const key = el.getAttribute("data-i18n");
+        if (dict[key]) el.textContent = dict[key];
+      });
+      const langBtn = document.getElementById("langToggleBtn");
+      if (langBtn) {
+        langBtn.textContent = currentLang === "hi" ? "English" : "हिंदी";
+      }
+    }
+
+    function toggleLanguage() {
+      currentLang = currentLang === "hi" ? "en" : "hi";
+      localStorage.setItem("bpm_lang", currentLang);
+      applyLanguage();
+      renderAll();
+      showToast(currentLang === "hi" ? "भाषा: हिंदी" : "Language: English");
+    }
+
+    // =========================================================================
+    // 3. DATE-BASED REMINDERS + RED BLINK UNTIL CHECKED + CALL & WHATSAPP
+    // =========================================================================
+    function getDateTriggeredReminders() {
+      const parlor = getCurrentParlor();
+      const today = getLocalDateStr();
+      const items = [];
+
+      for (const s of (parlor.services || [])) {
+        const dueAmt = Math.max(0, Number(s.dueAmount || 0));
+        if (!s.settled && dueAmt > 0 && s.promiseDate && s.promiseDate <= today) {
+          items.push({
+            type: "DUE",
+            id: s.id,
+            title: `${s.consumerName} — बाकी ₹${Math.round(dueAmt).toLocaleString("en-IN")}`,
+            sub: `सर्विस: ${s.name} · Promise Date: ${s.promiseDate}`,
+            phone: s.consumerPhone || "",
+            checked: Boolean(s.reminderChecked),
+            waMsg: `नमस्ते *${s.consumerName}* जी, *${parlor.name}* से याद दिलाना था कि आपकी सर्विस (${s.name}) के *₹${Math.round(dueAmt)}* आज (${s.promiseDate}) जमा होने हैं। धन्यवाद!`
+          });
+        }
+      }
+
+      for (const a of (parlor.appointments || [])) {
+        if (a.date && a.date <= today && !a.completed) {
+          const timeLbl = formatTime12h(a.time) || a.time;
+          items.push({
+            type: "APPOINTMENT",
+            id: a.id,
+            title: `${a.clientName} — ${a.serviceType}`,
+            sub: `तारीख: ${a.date} · समय: ${timeLbl}`,
+            phone: a.phone || "",
+            checked: Boolean(a.reminderChecked),
+            waMsg: `नमस्ते *${a.clientName}* जी, *${parlor.name}* में आज (${a.date}) *${timeLbl}* पर आपका *${a.serviceType}* अपॉइंटमेंट है। कृपया समय से पधारें!`
+          });
+        }
+      }
+
+      return items;
+    }
+
+    function toggleReminderChecked(type, id) {
+      const parlor = getCurrentParlor();
+      if (type === "DUE") {
+        const item = (parlor.services || []).find((s) => s.id === id);
+        if (item) item.reminderChecked = !item.reminderChecked;
+      } else if (type === "APPOINTMENT") {
+        const item = (parlor.appointments || []).find((a) => a.id === id);
+        if (item) item.reminderChecked = !item.reminderChecked;
+      }
+      persistState(true);
+      showToast(currentLang === "hi" ? "रिमाइंडर चेक अपडेट हो गया" : "Reminder checked updated");
+    }
+
+    function renderRemindersAndBlink() {
+      const remList = getDateTriggeredReminders();
+      const uncheckedCount = remList.filter((r) => !r.checked).length;
+
+      const navBtn = document.getElementById("nav-reminders");
+      const dot = document.getElementById("remBlinkDot");
+      const badge = document.getElementById("pendingRemBadge");
+
+      if (navBtn) {
+        if (uncheckedCount > 0) navBtn.classList.add("blink-alert");
+        else navBtn.classList.remove("blink-alert");
+      }
+      if (dot) {
+        if (uncheckedCount > 0) dot.classList.remove("hidden");
+        else dot.classList.add("hidden");
+      }
+      if (badge) {
+        badge.textContent = `${uncheckedCount} Unchecked`;
+        badge.className = "badge " + (uncheckedCount > 0 ? "badge-expired" : "badge-active");
+      }
+
+      const listEl = document.getElementById("remindersCenterList");
+      if (!listEl) return;
+
+      if (!remList.length) {
+        listEl.innerHTML = `<div class="item-sub">${currentLang === "hi" ? "आज की तारीख का कोई पेंडिंग रिमाइंडर नहीं है।" : "No due reminders for today's date."}</div>`;
+        return;
+      }
+
+      listEl.innerHTML = remList.map((r) => {
+        const waDigits = sanitizeWhatsAppPhone(r.phone);
+        return `
+          <div class="list-item ${r.checked ? "" : "unread-rem"}" onclick="toggleReminderChecked('${escapeHtml(r.type)}', '${escapeHtml(r.id)}')">
+            <div style="min-width:185px;flex:1;">
+              <div class="item-title">
+                ${r.checked ? "✅" : "🔴"} ${escapeHtml(r.title)}
+              </div>
+              <div class="item-sub">${escapeHtml(r.sub)} · <strong>${r.checked ? "Checked" : "Tap to Check"}</strong></div>
+            </div>
+            <div class="row-btns" onclick="event.stopPropagation()">
+              ${r.phone ? `<a class="btn btn-call btn-sm" href="tel:${escapeHtml(r.phone)}">Call</a>` : ""}
+              ${waDigits ? `<a class="btn btn-whatsapp btn-sm" target="_blank" rel="noopener noreferrer" href="https://wa.me/${waDigits}?text=${encodeURIComponent(r.waMsg)}">WhatsApp</a>` : ""}
+              <button class="btn btn-soft btn-sm" onclick="toggleReminderChecked('${escapeHtml(r.type)}', '${escapeHtml(r.id)}')">${r.checked ? "Uncheck" : "Check ✓"}</button>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    // =========================================================================
+    // 4. BPM ASSISTANT (VOICE + TEXT QUERY ON SAVED DATA)
+    // =========================================================================
+    function initAssistantWelcome() {
+      const box = document.getElementById("assistantChatBox");
+      if (box && !box.children.length) {
+        appendAssistantBubble(
+          "bot",
+          "नमस्ते! मैं आपका BPM असिस्टेंट हूँ। आप बोलकर या लिखकर पूछ सकते हैं:\n• आज की इनकम कितनी है?\n• किसका पैसा बाकी (Due) है?\n• आज किसका अपॉइंटमेंट है?\n• कुल कितने कस्टमर हैं?"
+        );
+      }
+    }
+
+    function appendAssistantBubble(sender, text) {
+      const box = document.getElementById("assistantChatBox");
+      if (!box) return;
+      const div = document.createElement("div");
+      div.className = "msg-bubble " + (sender === "user" ? "msg-user" : "msg-bot");
+      div.textContent = text;
+      box.appendChild(div);
+      box.scrollTop = box.scrollHeight;
+    }
+
+    function askQuickAssistant(q) {
+      document.getElementById("assistantInput").value = q;
+      sendAssistantQuery();
+    }
+
+    function sendAssistantQuery() {
+      const inputEl = document.getElementById("assistantInput");
+      const qRaw = inputEl.value.trim();
+      if (!qRaw) return;
+      inputEl.value = "";
+      appendAssistantBubble("user", qRaw);
+
+      const answer = buildAssistantReply(qRaw);
+      appendAssistantBubble("bot", answer);
+      speakReplyIfSupported(answer);
+    }
+
+    function buildAssistantReply(query) {
+      const parlor = getCurrentParlor();
+      const q = query.toLowerCase();
+      const today = getLocalDateStr();
+      const totals = computeIncomeTotals(parlor.services);
+
+      if (q.includes("income") || q.includes("इनकम") || q.includes("कमाई") || q.includes("रुपये") || q.includes("kamai")) {
+        if (!incomeUnlocked) {
+          return "आपकी इनकम PIN से लॉक है। पहले ऊपर 'PIN इनकम' टाइल दबाकर PIN डालें, फिर मैं पूरी इनकम बता दूंगा।";
+        }
+        return `💰 ${parlor.name} की इनकम:\n• आज (Daily): ₹${Math.round(totals.daily)}\n• इस महीने: ₹${Math.round(totals.monthly)}\n• कुल (All-Time): ₹${Math.round(totals.alltime)}`;
+      }
+
+      if (q.includes("due") || q.includes("बाकी") || q.includes("उधार") || q.includes("baki") || q.includes("baaki")) {
+        const dues = (parlor.services || []).filter((s) => !s.settled && Number(s.dueAmount || 0) > 0);
+        if (!dues.length) return "अभी किसी भी कस्टमर का पैसा बाकी नहीं है।";
+        const lines = dues.map((d) => `• ${d.consumerName}: ₹${Math.round(d.dueAmount)} (तारीख: ${d.promiseDate || "—"})`);
+        return `⏰ बाकी पैसे की लिस्ट (${dues.length}):\n${lines.join("\n")}`;
+      }
+
+      if (q.includes("appoint") || q.includes("अपॉइंटमेंट") || q.includes("बुकिंग") || q.includes("bridal")) {
+        const apps = parlor.appointments || [];
+        if (!apps.length) return "अभी कोई अपॉइंटमेंट सेव नहीं है।";
+        const todayApps = apps.filter((a) => a.date === today);
+        const list = todayApps.length ? todayApps : apps.slice(0, 5);
+        const header = todayApps.length ? `📅 आज (${today}) के अपॉइंटमेंट:` : "📅 आगामी अपॉइंटमेंट्स:";
+        return `${header}\n${list.map((a) => `• ${a.clientName} — ${a.serviceType} (${a.date} ${formatTime12h(a.time) || a.time})`).join("\n")}`;
+      }
+
+      if (q.includes("client") || q.includes("customer") || q.includes("कस्टमर") || q.includes("ग्राहक")) {
+        const list = parlor.consumers || [];
+        if (!list.length) return "अभी कोई कस्टमर सेव नहीं है।";
+        return `👩 कुल ${list.length} कस्टमर सेव हैं:\n${list.slice(0, 6).map((c) => `• ${c.name} (${c.phone})`).join("\n")}`;
+      }
+
+      if (q.includes("staff") || q.includes("स्टाफ")) {
+        return `👩‍💼 कुल ${parlor.staff.length} स्टाफ/एडमिन रजिस्टर्ड हैं:\n${parlor.staff.map((u) => `• ${u.name} (${u.role})`).join("\n")}`;
+      }
+
+      if (q.includes("offer") || q.includes("ऑफ़र")) {
+        const offs = parlor.offers || [];
+        if (!offs.length) return "अभी कोई ऑफ़र नहीं बना है।";
+        return `🎁 एक्टिव ऑफ़र्स:\n${offs.map((o) => `• ${o.title}: ${o.desc || ""}`).join("\n")}`;
+      }
+
+      return `पार्लर: ${parlor.name} (${parlor.code})\n• कुल कस्टमर: ${parlor.consumers.length}\n• कुल सर्विस: ${parlor.services.length}\n• बाकी पेमेंट्स: ${(parlor.services || []).filter((s) => !s.settled && Number(s.dueAmount || 0) > 0).length}\n• अपॉइंटमेंट्स: ${(parlor.appointments || []).length}`;
+    }
+
+    function speakReplyIfSupported(text) {
+      try {
+        if ("speechSynthesis" in window) {
+          window.speechSynthesis.cancel();
+          const utter = new SpeechSynthesisUtterance(text.replace(/[•*]/g, ""));
+          utter.lang = currentLang === "hi" ? "hi-IN" : "en-IN";
+          window.speechSynthesis.speak(utter);
+        }
+      } catch (e) {}
+    }
+
+    function startVoiceAssistant() {
+      const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRec) {
+        showToast("इस डिवाइस पर माइक सपोर्ट नहीं है—नीचे टाइप करके पूछें");
+        return;
+      }
+      try {
+        const rec = new SpeechRec();
+        rec.lang = currentLang === "hi" ? "hi-IN" : "en-IN";
+        rec.interimResults = false;
+        showToast("सुन रहा हूँ... बोलें");
+        rec.onresult = (event) => {
+          const transcript = event.results[0][0].transcript;
+          document.getElementById("assistantInput").value = transcript;
+          sendAssistantQuery();
+        };
+        rec.onerror = () => {
+          showToast("आवाज़ साफ़ नहीं मिली—टाइप करके पूछें");
+        };
+        rec.start();
+      } catch (e) {
+        showToast("माइक उपलब्ध नहीं है—टाइप करके पूछें");
+      }
+    }
+
+    // =========================================================================
+    // 5. SUPPORT TICKET SYSTEM (IN-APP TO APP ADMIN + ADMIN SOLVE INBOX)
     // =========================================================================
     function submitTicketToAppAdmin() {
       const parlor = getCurrentParlor();
@@ -1512,7 +2023,7 @@
       const message = document.getElementById("tktMessage").value.trim();
 
       if (!subject || !message) {
-        showToast("Problem Topic aur Details dono likhein");
+        showToast("समस्या का विषय और विवरण लिखें");
         return;
       }
 
@@ -1549,7 +2060,7 @@
 
       persistState(true);
       renderAdminTicketsInbox();
-      showToast(`Ticket ${ticketId} App Admin ko send ho gaya`);
+      showToast(`टिकट ${ticketId} App Admin को भेज दिया गया`);
     }
 
     function getAllInboxTickets() {
@@ -1601,34 +2112,26 @@
       const adminPin = document.getElementById("solveTicketAdminPin").value.trim();
 
       if (!isValidBpmAdminPin(parlor, adminPin)) {
-        showToast("Galat App Admin PIN (default: 1234)");
+        showToast("गलत App Admin PIN (default: 1234)");
         return;
       }
       if (!reply) {
-        showToast("Solution / Reply likhein");
+        showToast("समाधान लिखें");
         return;
       }
 
-      const patch = {
-        status,
-        adminReply: reply,
-        solvedAt: getLocalDateStr()
-      };
+      const patch = { status, adminReply: reply, solvedAt: getLocalDateStr() };
 
       if (adminTicketsMap[ticketKey]) {
         adminTicketsMap[ticketKey] = { ...adminTicketsMap[ticketKey], ...patch };
       }
-
       if (ticketsDbRef && ticketKey) {
         ticketsDbRef.child(ticketKey).update(patch).catch(() => {});
       }
 
       for (const p of Object.values(appState.parlors)) {
         if (Array.isArray(p.tickets)) {
-          p.tickets = p.tickets.map((t) => {
-            const k = t.firebaseKey || t.id;
-            return k === ticketKey ? { ...t, ...patch } : t;
-          });
+          p.tickets = p.tickets.map((t) => ((t.firebaseKey || t.id) === ticketKey ? { ...t, ...patch } : t));
         }
       }
 
@@ -1651,7 +2154,7 @@
       }
 
       if (!list.length) {
-        el.innerHTML = `<div class="item-sub">Abhi App Admin Inbox mein koi ticket nahi aayi hai.</div>`;
+        el.innerHTML = `<div class="item-sub">अभी कोई टिकट नहीं है।</div>`;
         return;
       }
 
@@ -1665,9 +2168,7 @@
                 ${escapeHtml(tkt.id)} · ${escapeHtml(tkt.subject)}
                 <span class="badge ${badgeCls}">${escapeHtml(tkt.status || "Open")}</span>
               </div>
-              <div class="item-sub">
-                🏪 ${escapeHtml(tkt.parlorName)} (${escapeHtml(tkt.parlorCode)}) · 👤 ${escapeHtml(tkt.userName)} · 📅 ${escapeHtml(tkt.date || "")}
-              </div>
+              <div class="item-sub">🏪 ${escapeHtml(tkt.parlorName)} (${escapeHtml(tkt.parlorCode)}) · 👤 ${escapeHtml(tkt.userName)} · 📅 ${escapeHtml(tkt.date || "")}</div>
               <div class="item-sub" style="color:var(--ink);margin-top:4px;">${escapeHtml(tkt.message)}</div>
               ${tkt.adminReply ? `<div class="reply-box"><strong>App Admin Solution:</strong> ${escapeHtml(tkt.adminReply)}</div>` : ""}
             </div>
@@ -1680,7 +2181,7 @@
     }
 
     // =========================================================================
-    // STAFF PARLOR-ID LOGIN & ADMIN PIN EDIT / SAVE / DELETE
+    // 6. STAFF PARLOR-ID LOGIN & ADMIN PIN EDIT / SAVE / DELETE
     // =========================================================================
     function isValidBpmAdminPin(parlor, enteredPin) {
       const pin = String(enteredPin || "").trim();
@@ -1695,36 +2196,30 @@
       const pinInput = document.getElementById("staffLoginPin").value.trim();
 
       if (!codeInput || !pinInput) {
-        showToast("Parlor Code/ID aur PIN dono daalein");
+        showToast("Parlor ID और PIN दोनों डालें");
         return;
       }
 
       const targetParlor = Object.values(appState.parlors).find(
         (p) => String(p.code || "").trim().toUpperCase() === codeInput
       );
-
       if (!targetParlor) {
-        showToast("Is Parlor ID se koi parlor nahi mila");
+        showToast("इस Parlor ID से कोई पार्लर नहीं मिला");
         return;
       }
 
       const matchedStaff = (targetParlor.staff || []).find((u) => String(u.pin).trim() === pinInput);
       if (!matchedStaff) {
-        showToast("Galat PIN — login nahi ho saka");
+        showToast("गलत PIN");
         return;
       }
 
       appState.activeParlorId = targetParlor.id;
-      targetParlor.activeUser = {
-        id: matchedStaff.id,
-        name: matchedStaff.name,
-        role: matchedStaff.role
-      };
+      targetParlor.activeUser = { id: matchedStaff.id, name: matchedStaff.name, role: matchedStaff.role };
       incomeUnlocked = String(matchedStaff.role).toUpperCase() === "ADMIN";
-
       document.getElementById("staffLoginPin").value = "";
       persistState(true);
-      showToast(`${matchedStaff.name} (${matchedStaff.role}) logged in to ${targetParlor.code}`);
+      showToast(`${matchedStaff.name} (${matchedStaff.role}) लॉगिन हो गए`);
     }
 
     function startEditStaff(staffId) {
@@ -1736,9 +2231,8 @@
       document.getElementById("stfName").value = member.name;
       document.getElementById("stfRole").value = member.role || "STAFF";
       document.getElementById("stfPin").value = member.pin || "";
-      document.getElementById("staffFormHeading").textContent = `Edit Staff: ${member.name} (Admin PIN Required)`;
       document.getElementById("cancelEditStaffBtn").classList.remove("hidden");
-      showToast("Staff details loaded for edit — Admin PIN daal kar Save karein");
+      showToast("Admin PIN डालकर Save करें");
     }
 
     function cancelStaffEdit() {
@@ -1746,7 +2240,6 @@
       document.getElementById("stfName").value = "";
       document.getElementById("stfRole").value = "STAFF";
       document.getElementById("stfPin").value = "";
-      document.getElementById("staffFormHeading").textContent = "Add Staff / User (Admin PIN Required)";
       document.getElementById("cancelEditStaffBtn").classList.add("hidden");
     }
 
@@ -1759,38 +2252,27 @@
       const adminAuthPin = document.getElementById("stfAdminAuthPin").value.trim();
 
       if (!name || !pin) {
-        showToast("Staff Name aur PIN daalein");
+        showToast("स्टाफ का नाम और PIN डालें");
         return;
       }
-
       if (!isValidBpmAdminPin(parlor, adminAuthPin)) {
-        showToast("Sirf BPM Admin apne PIN se Staff Save/Edit kar sakta hai");
+        showToast("सिर्फ BPM Admin PIN से ही सेव/एडिट होगा");
         return;
       }
 
       if (editId) {
         const idx = parlor.staff.findIndex((u) => u.id === editId);
         if (idx !== -1) {
-          parlor.staff[idx] = {
-            ...parlor.staff[idx],
-            name,
-            role,
-            pin
-          };
+          parlor.staff[idx] = { ...parlor.staff[idx], name, role, pin };
           if (parlor.activeUser && parlor.activeUser.id === editId) {
             parlor.activeUser.name = name;
             parlor.activeUser.role = role;
           }
-          showToast("Staff details updated");
+          showToast("स्टाफ अपडेट हो गया");
         }
       } else {
-        parlor.staff.push({
-          id: "u-" + Date.now(),
-          name,
-          role,
-          pin
-        });
-        showToast("New staff user saved");
+        parlor.staff.push({ id: "u-" + Date.now(), name, role, pin });
+        showToast("नया स्टाफ सेव हो गया");
       }
 
       cancelStaffEdit();
@@ -1801,164 +2283,32 @@
     function deleteStaffMember(staffId) {
       const parlor = getCurrentParlor();
       if ((parlor.staff || []).length <= 1) {
-        showToast("Kam se kam 1 user/admin rehna zaroori hai");
+        showToast("कम से कम 1 एडमिन/यूज़र रहना ज़रूरी है");
         return;
       }
-
-      const adminPin = prompt("Staff delete karne ke liye BPM Admin PIN daalein:");
+      const adminPin = prompt("स्टाफ डिलीट करने के लिए BPM Admin PIN डालें:");
       if (!isValidBpmAdminPin(parlor, adminPin)) {
-        showToast("Galat Admin PIN — delete cancel");
+        showToast("गलत Admin PIN");
         return;
       }
-
       parlor.staff = parlor.staff.filter((u) => u.id !== staffId);
       if (parlor.activeUser && parlor.activeUser.id === staffId) {
-        const fallbackUser = parlor.staff[0];
-        parlor.activeUser = {
-          id: fallbackUser.id,
-          name: fallbackUser.name,
-          role: fallbackUser.role
-        };
+        const fb = parlor.staff[0];
+        parlor.activeUser = { id: fb.id, name: fb.name, role: fb.role };
       }
       persistState(true);
-      showToast("Staff user deleted");
+      showToast("स्टाफ डिलीट हो गया");
     }
 
     // =========================================================================
-    // ALERTS: 8:00 AM APPOINTMENT ALERT & DUE PAYMENT PROMISE ALERT
-    // =========================================================================
-    function requestAlertPermission() {
-      if (!("Notification" in window)) {
-        showToast("In-app 8 AM & Due alerts active");
-        return;
-      }
-      if (Notification.permission === "granted") {
-        showToast("Notifications enabled");
-        triggerSystemAlertIfNeeded();
-      } else {
-        Notification.requestPermission().then((perm) => {
-          showToast(perm === "granted" ? "Notifications enabled" : "In-app alerts active");
-        }).catch(() => {});
-      }
-    }
-
-    function triggerSystemAlertIfNeeded() {
-      const parlor = getCurrentParlor();
-      const today = getLocalDateStr();
-      const now = new Date();
-      const after8AM = now.getHours() >= 8;
-
-      const todayApps = (parlor.appointments || []).filter((a) => a.date === today);
-      const dueTodayOrPast = (parlor.services || []).filter(
-        (s) => !s.settled && Number(s.dueAmount || 0) > 0 && s.promiseDate && s.promiseDate <= today
-      );
-
-      if (!("Notification" in window) || Notification.permission !== "granted") return;
-
-      const notifyKey = `bpm_sys_notif_${parlor.id}_${today}`;
-      if (sessionStorage.getItem(notifyKey)) return;
-
-      if (after8AM && todayApps.length > 0) {
-        sessionStorage.setItem(notifyKey, "1");
-        try {
-          new Notification(`${parlor.name} — Aaj Ki Appointments`, {
-            body: `${todayApps.length} client appointment(s) aaj scheduled hain.`
-          });
-        } catch (e) {}
-      } else if (dueTodayOrPast.length > 0) {
-        sessionStorage.setItem(notifyKey, "1");
-        try {
-          new Notification(`${parlor.name} — Payment Promise Alert`, {
-            body: `${dueTodayOrPast.length} customer ka payment promise date aa chuka hai.`
-          });
-        } catch (e) {}
-      }
-    }
-
-    function renderAlertBanners() {
-      const parlor = getCurrentParlor();
-      const today = getLocalDateStr();
-      const now = new Date();
-      const after8AM = now.getHours() >= 8;
-
-      const morningEl = document.getElementById("morningAlertBanner");
-      const todayApps = (parlor.appointments || []).filter((a) => a.date === today);
-
-      if (after8AM && todayApps.length > 0) {
-        morningEl.classList.remove("hidden");
-        morningEl.innerHTML = `
-          <div class="section-title" style="margin-bottom:6px;">
-            <span>🌅 Subah 8:00 Baje Ka Appointment Alert (${todayApps.length})</span>
-            <span class="badge badge-warn">Today</span>
-          </div>
-          ${todayApps.map((a) => {
-            const phone = sanitizeWhatsAppPhone(a.phone);
-            const msg = `Namaste *${a.clientName}* ji, yaad dilana tha ki aaj *${formatTime12h(a.time) || a.time}* par *${parlor.name}* mein aapka *${a.serviceType}* appointment hai. Kripya time se pahunch jayein.`;
-            return `
-              <div class="list-item" style="margin-bottom:6px;">
-                <div>
-                  <div class="item-title">${escapeHtml(a.clientName)} · ${escapeHtml(formatTime12h(a.time) || a.time)}</div>
-                  <div class="item-sub">${escapeHtml(a.serviceType)} · ${escapeHtml(a.phone)}</div>
-                </div>
-                <div class="row-btns">
-                  ${a.phone ? `<a class="btn btn-call btn-sm" href="tel:${escapeHtml(a.phone)}">Call</a>` : ""}
-                  ${phone ? `<a class="btn btn-whatsapp btn-sm" target="_blank" rel="noopener noreferrer" href="https://wa.me/${phone}?text=${encodeURIComponent(msg)}">WhatsApp</a>` : ""}
-                </div>
-              </div>
-            `;
-          }).join("")}
-        `;
-      } else {
-        morningEl.classList.add("hidden");
-        morningEl.innerHTML = "";
-      }
-
-      const dueEl = document.getElementById("duePaymentAlertBanner");
-      const dueList = (parlor.services || []).filter(
-        (s) => !s.settled && Number(s.dueAmount || 0) > 0 && s.promiseDate && s.promiseDate <= today
-      );
-
-      if (dueList.length > 0) {
-        dueEl.classList.remove("hidden");
-        dueEl.innerHTML = `
-          <div class="section-title" style="margin-bottom:6px;">
-            <span>⏰ Baaki Paise Ki Promise Date Alert (${dueList.length})</span>
-            <span class="badge badge-expired">Call Due</span>
-          </div>
-          ${dueList.map((s) => `
-            <div class="list-item" style="margin-bottom:6px;">
-              <div>
-                <div class="item-title">${escapeHtml(s.consumerName)} — Baaki ₹${Math.round(Number(s.dueAmount)).toLocaleString("en-IN")}</div>
-                <div class="item-sub">Service: ${escapeHtml(s.name)} · Promise Date: <strong>${escapeHtml(s.promiseDate)}</strong></div>
-              </div>
-              <div class="row-btns">
-                ${s.consumerPhone ? `<a class="btn btn-call btn-sm" href="tel:${escapeHtml(s.consumerPhone)}">Call</a>` : ""}
-                <button class="btn btn-soft btn-sm" onclick="markServiceSettled('${escapeHtml(s.id)}')">Received</button>
-              </div>
-            </div>
-          `).join("")}
-        `;
-      } else {
-        dueEl.classList.add("hidden");
-        dueEl.innerHTML = "";
-      }
-
-      triggerSystemAlertIfNeeded();
-    }
-
-    // =========================================================================
-    // SERVICES, DUE PROMISE DATE & LOGO PDF RECEIPT (jsPDF)
+    // 7. SERVICES, DUE PROMISE DATE & LOGO PDF RECEIPT (jsPDF)
     // =========================================================================
     function syncDueInputs() {
       const total = Math.max(0, Number(document.getElementById("srvAmount").value) || 0);
       const mode = document.getElementById("srvPayMode").value;
       const paidEl = document.getElementById("srvPaidNow");
-
-      if (mode === "PAID") {
-        paidEl.value = total > 0 ? String(total) : "";
-      } else if (mode === "LATER") {
-        paidEl.value = "0";
-      }
+      if (mode === "PAID") paidEl.value = total > 0 ? String(total) : "";
+      else if (mode === "LATER") paidEl.value = "0";
     }
 
     function onPayModeChange() {
@@ -1991,7 +2341,7 @@
       const promiseDate = document.getElementById("srvPromiseDate").value;
 
       if (!name || !Number.isFinite(amount) || amount <= 0) {
-        showToast("Service aur valid Total Amount daalein");
+        showToast("सर्विस और कुल रुपये डालें");
         return;
       }
 
@@ -2002,13 +2352,12 @@
 
       const dueAmount = Math.max(0, amount - paidAmount);
       if (dueAmount > 0 && !promiseDate) {
-        showToast("Baaki paise ke liye Promise Date (kab degi) select karein");
+        showToast("बाकी पैसे के लिए तारीख (Promise Date) चुनें");
         return;
       }
 
-      const newRecord = {
+      parlor.services.unshift({
         id: "s-" + Date.now(),
-        consumerId: matchedConsumer ? matchedConsumer.id : "",
         consumerName,
         consumerPhone,
         name,
@@ -2017,10 +2366,9 @@
         dueAmount,
         promiseDate: dueAmount > 0 ? promiseDate : "",
         settled: dueAmount === 0,
+        reminderChecked: false,
         date: getLocalDateStr()
-      };
-
-      parlor.services.unshift(newRecord);
+      });
 
       document.getElementById("srvName").value = "";
       document.getElementById("srvAmount").value = "";
@@ -2029,7 +2377,7 @@
       document.getElementById("srvPayMode").value = "PAID";
 
       persistState(true);
-      showToast(dueAmount > 0 ? `Saved with Due ₹${dueAmount} (${promiseDate})` : "Service & payment saved");
+      showToast(dueAmount > 0 ? `सेव हो गया · बाकी ₹${dueAmount} (${promiseDate})` : "सर्विस सेव हो गई");
     }
 
     function markServiceSettled(serviceId) {
@@ -2039,8 +2387,9 @@
       s.paidAmount = Number(s.amount || 0);
       s.dueAmount = 0;
       s.settled = true;
+      s.reminderChecked = true;
       persistState(true);
-      showToast("Due payment marked as received");
+      showToast("बाकी पेमेंट जमा हो गई");
     }
 
     function createParlorLogoDataUrl(parlor) {
@@ -2084,7 +2433,7 @@
       if (!s) return;
 
       if (!window.jspdf || !window.jspdf.jsPDF) {
-        showToast("PDF library load nahi hui");
+        showToast("PDF लाइब्रेरी लोड नहीं हुई");
         return;
       }
 
@@ -2133,7 +2482,7 @@
         if (dueAmt > 0) {
           doc.setFont("helvetica", "bold");
           doc.setTextColor(185, 28, 28);
-          doc.text(`Balance Due (Baad Mein Denge): Rs. ${dueAmt}`, 12, 93);
+          doc.text(`Balance Due: Rs. ${dueAmt}`, 12, 93);
           doc.text(`Payment Promise Date: ${s.promiseDate || "Not Set"}`, 12, 99);
         } else {
           doc.setFont("helvetica", "bold");
@@ -2144,19 +2493,18 @@
         doc.setFont("helvetica", "normal");
         doc.setFontSize(9);
         doc.setTextColor(110, 85, 99);
-        doc.text("Thank you for visiting! Please keep this receipt for reference.", 12, 115);
+        doc.text("Thank you for visiting!", 12, 115);
 
         const fileName = `Receipt_${(s.consumerName || "Client").replace(/\s+/g, "_")}_${s.date}.pdf`;
         doc.save(fileName);
-        showToast("Logo PDF Receipt downloaded");
+        showToast("Logo PDF Receipt डाउनलोड हो गई");
       } catch (err) {
-        console.error("PDF error:", err);
-        showToast("PDF banane mein error aaya");
+        showToast("PDF बनाने में त्रुटि आई");
       }
     }
 
     // =========================================================================
-    // DEDICATED APPOINTMENTS
+    // 8. APPOINTMENTS & OFFER BROADCAST
     // =========================================================================
     function addAppointment() {
       const parlor = getCurrentParlor();
@@ -2167,7 +2515,7 @@
       const time = document.getElementById("appTime").value;
 
       if (!clientName || !phone || !serviceType || !date || !time) {
-        showToast("Client Name, Phone, Service, Date aur Time sab daalein");
+        showToast("नाम, मोबाइल, सर्विस, तारीख और समय सभी भरें");
         return;
       }
 
@@ -2177,11 +2525,12 @@
         phone,
         serviceType,
         date,
-        time
+        time,
+        reminderChecked: false,
+        completed: false
       };
 
       parlor.appointments.unshift(newApp);
-
       document.getElementById("appClientName").value = "";
       document.getElementById("appClientPhone").value = "";
       document.getElementById("appServiceType").value = "";
@@ -2189,7 +2538,7 @@
       document.getElementById("appTime").value = "";
 
       persistState(true);
-      showToast("Appointment saved");
+      showToast("अपॉइंटमेंट सेव हो गया");
       sendAppointmentWhatsApp(newApp.id);
     }
 
@@ -2201,23 +2550,18 @@
       const phoneDigits = sanitizeWhatsAppPhone(a.phone);
       const timeLabel = formatTime12h(a.time) || a.time;
       const msg = [
-        `✨ Namaste *${a.clientName}* ji, *${parlor.name}* (${parlor.city}) mein aapka appointment confirm hai:`,
-        `💆‍♀️ Service: *${a.serviceType}*`,
-        `📅 Date: *${a.date}*`,
-        `⏰ Time: *${timeLabel}*`,
-        `Kripya samay se pahunchne ki kripa karein. Dhanyawad!`
+        `✨ नमस्ते *${a.clientName}* जी, *${parlor.name}* (${parlor.city}) में आपका अपॉइंटमेंट कन्फ़र्म है:`,
+        `💆‍♀️ सर्विस: *${a.serviceType}*`,
+        `📅 तारीख: *${a.date}*`,
+        `⏰ समय: *${timeLabel}*`,
+        `कृपया समय से पधारने की कृपा करें। धन्यवाद!`
       ].join("\n");
 
       if (phoneDigits.length >= 10) {
         window.open(`https://wa.me/${phoneDigits}?text=${encodeURIComponent(msg)}`, "_blank", "noopener,noreferrer");
-      } else {
-        showToast("Valid mobile number nahi mila");
       }
     }
 
-    // =========================================================================
-    // OFFER BROADCAST
-    // =========================================================================
     function openSendOfferModal(offerId, selectAllByDefault = false) {
       const parlor = getCurrentParlor();
       const offer = (parlor.offers || []).find((o) => o.id === offerId);
@@ -2227,13 +2571,12 @@
       offerSendQueue = [];
       offerQueueIndex = 0;
       document.getElementById("offerQueueBar").classList.add("hidden");
-
       document.getElementById("broadcastOfferTitle").textContent = offer.title;
-      document.getElementById("broadcastOfferDesc").textContent = offer.desc || "Special Parlour Offer";
+      document.getElementById("broadcastOfferDesc").textContent = offer.desc || "Special Offer";
 
       const listEl = document.getElementById("offerConsumerChecklist");
       if (!parlor.consumers.length) {
-        listEl.innerHTML = `<div class="item-sub">Pehle Clients tab mein customer add karein.</div>`;
+        listEl.innerHTML = `<div class="item-sub">पहले कस्टमर जोड़ें।</div>`;
       } else {
         listEl.innerHTML = parlor.consumers.map((c, idx) => `
           <label class="check-row">
@@ -2269,22 +2612,12 @@
       return digits;
     }
 
-    function buildOfferMessage(parlor, consumerName, offer) {
-      return [
-        `✨ Namaste *${consumerName}* ji, *${parlor.name}* (${parlor.city}) ka special offer:`,
-        `🎁 *${offer.title}*`,
-        offer.desc ? `📋 ${offer.desc}` : "",
-        `Booking ya jaankari ke liye abhi reply karein!`
-      ].filter(Boolean).join("\n");
-    }
-
     function startOfferBroadcastQueue() {
       if (!activeOfferForSend) return;
       const parlor = getCurrentParlor();
       const checkedBoxes = Array.from(document.querySelectorAll(".offer-con-check:checked"));
-
       if (!checkedBoxes.length) {
-        showToast("Kam se kam 1 consumer tick karein ya Select All dabayein");
+        showToast("कम से कम 1 कस्टमर चुनें");
         return;
       }
 
@@ -2293,7 +2626,7 @@
         .filter((c) => c && sanitizeWhatsAppPhone(c.phone).length >= 10);
 
       if (!offerSendQueue.length) {
-        showToast("Selected consumers ke valid mobile numbers nahi mile");
+        showToast("सही मोबाइल नंबर नहीं मिले");
         return;
       }
 
@@ -2305,20 +2638,24 @@
     function sendNextQueuedOffer() {
       if (!activeOfferForSend || !offerSendQueue.length) return;
       if (offerQueueIndex >= offerSendQueue.length) {
-        document.getElementById("offerQueueStatus").textContent = "Sabhi selected consumers ko offer bheja ja chuka hai!";
-        showToast("Offer sending completed");
+        document.getElementById("offerQueueStatus").textContent = "सभी चुने हुए कस्टमर्स को ऑफ़र भेजा जा चुका है!";
         return;
       }
 
       const parlor = getCurrentParlor();
       const target = offerSendQueue[offerQueueIndex];
       const phoneDigits = sanitizeWhatsAppPhone(target.phone);
-      const msg = buildOfferMessage(parlor, target.name, activeOfferForSend);
+      const msg = [
+        `✨ नमस्ते *${target.name}* जी, *${parlor.name}* (${parlor.city}) का स्पेशल ऑफ़र:`,
+        `🎁 *${activeOfferForSend.title}*`,
+        activeOfferForSend.desc ? `📋 ${activeOfferForSend.desc}` : "",
+        `बुकिंग के लिए अभी रिप्लाई करें!`
+      ].filter(Boolean).join("\n");
 
       offerQueueIndex += 1;
       const remaining = offerSendQueue.length - offerQueueIndex;
       document.getElementById("offerQueueStatus").textContent =
-        `Sent to ${target.name} (${offerQueueIndex}/${offerSendQueue.length}) · Remaining: ${remaining}`;
+        `${target.name} को भेजा (${offerQueueIndex}/${offerSendQueue.length}) · बाकी: ${remaining}`;
 
       window.open(`https://wa.me/${phoneDigits}?text=${encodeURIComponent(msg)}`, "_blank", "noopener,noreferrer");
     }
@@ -2330,15 +2667,14 @@
     }
 
     // =========================================================================
-    // REFER & EARN, RAZORPAY PLANS, PARLOR & INCOME
+    // 9. REFER & EARN, RAZORPAY PLANS, PARLOR & INCOME
     // =========================================================================
     function openReferModal() {
       const parlor = getCurrentParlor();
       document.getElementById("myReferralCode").textContent = parlor.referralCode;
       document.getElementById("referStatsBox").innerHTML = `
-        <div class="item-title">Referral Benefits Summary</div>
-        <div class="item-sub">Successful Referrals: <strong>${parlor.referralCount}</strong> · Bonus Days Earned: <strong>+${parlor.bonusDaysEarned} Days</strong></div>
-        <div class="item-sub" style="margin-top:4px;">Naya user/parlor aapka code <strong>${escapeHtml(parlor.referralCode)}</strong> daal kar register karega to <strong>+${REFERRAL_BONUS_DAYS} Days</strong> benefit milega.</div>
+        <div class="item-title">Referral Summary</div>
+        <div class="item-sub">Referrals: <strong>${parlor.referralCount}</strong> · Bonus Days: <strong>+${parlor.bonusDaysEarned} Days</strong></div>
       `;
       document.getElementById("referModal").classList.add("open");
     }
@@ -2351,11 +2687,7 @@
     function formatDateShort(ts) {
       const n = Number(ts);
       if (!Number.isFinite(n) || n <= 0) return "—";
-      return new Date(n).toLocaleDateString("en-IN", {
-        day: "2-digit",
-        month: "short",
-        year: "numeric"
-      });
+      return new Date(n).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
     }
 
     function openPlansModal(selectedPlanKey = "yearly") {
@@ -2380,12 +2712,11 @@
       document.getElementById("planSummaryBox").innerHTML = `
         <div class="item-title">${escapeHtml(plan.label)} — ₹${plan.price} (${plan.days} Days)</div>
         <div class="item-sub">Parlor: <strong>${escapeHtml(parlor.name)}</strong> · Valid till: <strong>${formatDateShort(parlor.validUntil)}</strong></div>
-        <div class="item-sub" style="margin-top:4px;">Payment poora hote hi <strong>+${plan.days} Days</strong> turant jud jaayenge.</div>
       `;
 
       const histEl = document.getElementById("paymentHistoryBox");
       if (parlor.payments && parlor.payments.length) {
-        histEl.innerHTML = `<div class="item-sub" style="font-weight:700;margin-bottom:6px;">Recent Razorpay Payments</div>` +
+        histEl.innerHTML = `<div class="item-sub" style="font-weight:700;margin-bottom:6px;">Recent Payments</div>` +
           parlor.payments.slice(0, 3).map((pay) => `
             <div class="list-item" style="padding:8px 10px;">
               <div>
@@ -2407,7 +2738,7 @@
       const phone = document.getElementById("payerPhoneInput").value.trim();
 
       if (typeof Razorpay === "undefined") {
-        showToast("Razorpay SDK load nahi hua — internet check karein");
+        showToast("Razorpay SDK लोड नहीं हुआ");
         return;
       }
 
@@ -2417,18 +2748,9 @@
         currency: "INR",
         name: "Beauty Parlour Management",
         description: `${plan.label} (${plan.days} Days) - ${parlor.name}`,
-        prefill: {
-          name: parlor.activeUser.name || parlor.name,
-          contact: phone || ""
-        },
-        notes: {
-          parlor_id: parlor.id,
-          parlor_name: parlor.name,
-          plan_id: plan.id
-        },
-        theme: {
-          color: "#c2185b"
-        },
+        prefill: { name: parlor.activeUser.name || parlor.name, contact: phone || "" },
+        notes: { parlor_id: parlor.id, parlor_name: parlor.name, plan_id: plan.id },
+        theme: { color: "#c2185b" },
         handler: function (response) {
           const paymentId = response.razorpay_payment_id || ("pay_" + Date.now());
           const now = Date.now();
@@ -2462,25 +2784,19 @@
           persistState(true);
           updatePlanSummary();
           closeModal("plansModal");
-          showToast(`Payment Successful! ${plan.label} (+${plan.days} Days) Active`);
+          showToast(`Payment Successful! +${plan.days} Days Active`);
         },
-        modal: {
-          ondismiss: function () {
-            showToast("Payment cancelled");
-          }
-        }
+        modal: { ondismiss: function () { showToast("Payment cancelled"); } }
       };
 
       try {
         const rzp = new Razorpay(options);
         rzp.on("payment.failed", function (resp) {
-          const reason = resp && resp.error && resp.error.description ? resp.error.description : "Payment failed";
-          showToast(reason);
+          showToast(resp && resp.error && resp.error.description ? resp.error.description : "Payment failed");
         });
         rzp.open();
       } catch (err) {
-        console.error("Razorpay open error:", err);
-        showToast("Razorpay open karne mein error aaya");
+        showToast("Razorpay error");
       }
     }
 
@@ -2503,30 +2819,26 @@
         document.execCommand("copy");
         document.body.removeChild(ta);
         showToast(successMsg);
-      } catch (e) {
-        showToast("Copy failed");
-      }
+      } catch (e) {}
     }
 
     function copyReferralCode() {
       const code = getCurrentParlor().referralCode;
-      copyTextSafe(code, `Referral Code copied: ${code}`);
+      copyTextSafe(code, `Code copied: ${code}`);
     }
 
     function copyApkLink() {
-      copyTextSafe(APK_DIRECT_URL, "APK Download Link copied");
+      copyTextSafe(APK_DIRECT_URL, "APK link copied");
     }
 
     function shareReferralOnWhatsApp() {
       const parlor = getCurrentParlor();
       const msg = [
-        `✨ *${parlor.name}* ne aapko *Beauty Parlour Management* app invite kiya hai!`,
-        `🎁 *30 Din Free Trial* shuru karein aur Referral Code *${parlor.referralCode}* daal kar *+${REFERRAL_BONUS_DAYS} Days Benefit* paayein.`,
-        `📲 *Direct APK Download & Install Link:*`,
-        `${APK_DIRECT_URL}`,
-        `🌐 Web Link: ${WEB_APP_URL}`
+        `✨ *${parlor.name}* ने आपको *Beauty Parlour Management* ऐप भेजा है!`,
+        `🎁 *30 दिन फ्री ट्रायल* और रेफ़रल कोड *${parlor.referralCode}* डालकर *+${REFERRAL_BONUS_DAYS} दिन बोनस* पाएं।`,
+        `📲 *APK Download Link:* ${APK_DIRECT_URL}`,
+        `🌐 Web: ${WEB_APP_URL}`
       ].join("\n");
-
       window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, "_blank", "noopener,noreferrer");
     }
 
@@ -2555,7 +2867,7 @@
       const refCodeInput = document.getElementById("newParlorRefInput").value.trim().toUpperCase();
 
       if (!name) {
-        showToast("Parlor Name likhein");
+        showToast("पार्लर का नाम लिखें");
         return;
       }
 
@@ -2566,8 +2878,6 @@
 
       let bonusForNewParlor = 0;
       let matchedReferrer = null;
-      let referralMsg = "New Parlor registered with 30-Day Free Trial";
-
       if (refCodeInput) {
         matchedReferrer = Object.values(appState.parlors).find(
           (p) => String(p.referralCode || "").trim().toUpperCase() === refCodeInput
@@ -2578,9 +2888,6 @@
           matchedReferrer.validUntil = refBase + REFERRAL_BONUS_DAYS * DAY_MS;
           matchedReferrer.referralCount = Number(matchedReferrer.referralCount || 0) + 1;
           matchedReferrer.bonusDaysEarned = Number(matchedReferrer.bonusDaysEarned || 0) + REFERRAL_BONUS_DAYS;
-          referralMsg = `Registered! +${REFERRAL_BONUS_DAYS} bonus days benefit added`;
-        } else {
-          referralMsg = "Registered (Referral code not matched)";
         }
       }
 
@@ -2593,7 +2900,7 @@
         activeUser: { id: code, name: adminName, role: "ADMIN" },
         trialStartedAt: now,
         validUntil: now + totalInitialDays * DAY_MS,
-        planName: bonusForNewParlor > 0 ? "30-Day Trial + Referral Bonus" : "30-Day Free Trial",
+        planName: bonusForNewParlor > 0 ? "30-Day Trial + Bonus" : "30-Day Free Trial",
         referralCode: generateReferralCode(name),
         referredBy: matchedReferrer ? matchedReferrer.referralCode : "",
         referralCount: 0,
@@ -2603,7 +2910,6 @@
 
       appState.activeParlorId = newId;
       incomeUnlocked = false;
-
       document.getElementById("newParlorName").value = "";
       document.getElementById("newParlorCity").value = "";
       document.getElementById("newAdminName").value = "";
@@ -2612,21 +2918,21 @@
 
       persistState(true);
       closeModal("parlorModal");
-      showToast(referralMsg);
+      showToast(bonusForNewParlor > 0 ? "पार्लर बना +15 दिन बोनस मिला!" : "नया पार्लर बन गया");
     }
 
     function promptIncomeUnlock() {
       const parlor = getCurrentParlor();
-      const pin = prompt("Income देखने के लिए ADMIN / User PIN डालें:");
+      const pin = prompt(currentLang === "hi" ? "इनकम देखने के लिए PIN डालें:" : "Enter PIN to view income:");
       if (!pin) return;
       const cleanPin = pin.trim();
       const validUser = parlor.staff.find((u) => String(u.pin) === cleanPin);
       if (validUser || cleanPin === "1234") {
         incomeUnlocked = true;
         renderIncome();
-        showToast("Income unlocked");
+        showToast(currentLang === "hi" ? "इनकम अनलॉक हो गई" : "Income unlocked");
       } else {
-        showToast("Galat PIN");
+        showToast(currentLang === "hi" ? "गलत PIN" : "Wrong PIN");
       }
     }
 
@@ -2672,7 +2978,7 @@
       const phone = document.getElementById("conPhone").value.trim();
       const note = document.getElementById("conNote").value.trim();
       if (!name || !phone) {
-        showToast("Name aur Mobile Number zaroori hai");
+        showToast("नाम और मोबाइल नंबर ज़रूरी है");
         return;
       }
       const parlor = getCurrentParlor();
@@ -2681,14 +2987,14 @@
       document.getElementById("conPhone").value = "";
       document.getElementById("conNote").value = "";
       persistState(true);
-      showToast("Consumer saved");
+      showToast("कस्टमर सेव हो गया");
     }
 
     function addOffer() {
       const title = document.getElementById("offTitle").value.trim();
       const desc = document.getElementById("offDesc").value.trim();
       if (!title) {
-        showToast("Offer Title daalein");
+        showToast("ऑफ़र का नाम लिखें");
         return;
       }
       const parlor = getCurrentParlor();
@@ -2696,7 +3002,7 @@
       document.getElementById("offTitle").value = "";
       document.getElementById("offDesc").value = "";
       persistState(true);
-      showToast("Offer added");
+      showToast("ऑफ़र सेव हो गया");
     }
 
     function renderIncome() {
@@ -2704,15 +3010,11 @@
       const t = computeIncomeTotals(parlor.services);
       const fmt = (n) => `₹${Math.round(n).toLocaleString("en-IN")}`;
 
-      document.getElementById("inc-daily").textContent = incomeUnlocked ? fmt(t.daily) : "••••";
-      document.getElementById("inc-monthly").textContent = incomeUnlocked ? fmt(t.monthly) : "••••";
-      document.getElementById("inc-quarterly").textContent = incomeUnlocked ? fmt(t.quarterly) : "••••";
-      document.getElementById("inc-annually").textContent = incomeUnlocked ? fmt(t.annually) : "••••";
-      document.getElementById("inc-alltime").textContent = incomeUnlocked ? fmt(t.alltime) : "••••";
-
-      document.getElementById("incomeHintText").textContent = incomeUnlocked
-        ? "Income unlocked. Tap Lock PIN or switch tab to lock."
-        : "Income देखने के लिए बटन दबाकर PIN डालें।";
+      document.getElementById("inc-daily").textContent = incomeUnlocked ? fmt(t.daily) : "••••••";
+      document.getElementById("inc-monthly").textContent = incomeUnlocked ? fmt(t.monthly) : "••••••";
+      document.getElementById("inc-quarterly").textContent = incomeUnlocked ? fmt(t.quarterly) : "••••••";
+      document.getElementById("inc-annually").textContent = incomeUnlocked ? fmt(t.annually) : "••••••";
+      document.getElementById("inc-alltime").textContent = incomeUnlocked ? fmt(t.alltime) : "••••••";
     }
 
     function renderAll() {
@@ -2729,55 +3031,26 @@
 
       document.getElementById("parlorAvatar").textContent = initials;
       document.getElementById("parlorTitle").textContent = parlor.name;
-      document.getElementById("parlorSub").textContent =
-        `${parlor.city} · ${parlor.activeUser.name} (${parlor.activeUser.role})`;
+      document.getElementById("parlorSub").textContent = `${parlor.city} · ${parlor.activeUser.name} (${parlor.activeUser.role})`;
 
-      document.getElementById("sessionUserLine").textContent =
-        `👑 ${parlor.activeUser.name} · ID: ${parlor.activeUser.id || parlor.code} (${parlor.activeUser.role})`;
-      document.getElementById("sessionParlorLine").textContent =
-        `Parlor: ${parlor.name} (${parlor.code})`;
-      document.getElementById("cloudLiveSubline").textContent =
-        `Cloud Live ✓ (${parlor.code})`;
+      document.getElementById("sessionUserLine").textContent = `👑 ${parlor.activeUser.name} · ID: ${parlor.activeUser.id || parlor.code} (${parlor.activeUser.role})`;
+      document.getElementById("sessionParlorLine").textContent = `Parlor: ${parlor.name} (${parlor.code})`;
+
+      document.getElementById("planNameLabel").textContent = daysLeft > 0 ? `⏳ ${daysLeft} Days Left` : "Expired";
+      document.getElementById("validityDateText").textContent = `Valid: ${formatDateShort(parlor.validUntil)}`;
 
       document.getElementById("staffLoginCodeHint").textContent = `ID: ${parlor.code}`;
       const loginCodeInput = document.getElementById("staffLoginParlorCode");
-      if (loginCodeInput && !loginCodeInput.value) {
-        loginCodeInput.value = parlor.code;
-      }
+      if (loginCodeInput && !loginCodeInput.value) loginCodeInput.value = parlor.code;
 
-      document.getElementById("planNameLabel").textContent = parlor.planName || "30-Day Free Trial";
-      const badge = document.getElementById("daysLeftBadge");
-      badge.textContent = daysLeft > 0 ? `${daysLeft} Days Left` : "Expired";
-      badge.className = "badge " + (daysLeft > 7 ? "badge-trial" : daysLeft > 0 ? "badge-active" : "badge-expired");
-
-      document.getElementById("validityDateText").textContent =
-        `Valid till ${formatDateShort(parlor.validUntil)} · Tap to view & buy plans`;
-
-      document.getElementById("myReferralCode").textContent = parlor.referralCode;
       document.getElementById("statConsumers").textContent = String(parlor.consumers.length);
       document.getElementById("statServices").textContent = String(parlor.services.length);
 
-      const apps = parlor.appointments || [];
-      document.getElementById("upcomingCountBadge").textContent = String(apps.length);
-      document.getElementById("homeAppointmentsList").innerHTML = apps.length
-        ? apps.slice(0, 4).map((a) => `
-            <div class="list-item">
-              <div>
-                <div class="item-title">${escapeHtml(a.clientName)} · ${escapeHtml(a.date)} (${escapeHtml(formatTime12h(a.time) || a.time)})</div>
-                <div class="item-sub">${escapeHtml(a.serviceType)} · ${escapeHtml(a.phone)}</div>
-              </div>
-              <div class="row-btns">
-                ${a.phone ? `<a class="btn btn-call btn-sm" href="tel:${escapeHtml(a.phone)}">Call</a>` : ""}
-                <button class="btn btn-whatsapp btn-sm" onclick="sendAppointmentWhatsApp('${escapeHtml(a.id)}')">WhatsApp</button>
-              </div>
-            </div>
-          `).join("")
-        : "कोई आगामी Appointment नहीं है।";
-
       renderIncome();
-      renderAlertBanners();
+      renderRemindersAndBlink();
       renderAdminTicketsInbox();
 
+      // Staff list
       document.getElementById("staffList").innerHTML = parlor.staff.length
         ? parlor.staff.map((u) => `
             <div class="list-item">
@@ -2791,8 +3064,9 @@
               </div>
             </div>
           `).join("")
-        : `<div class="item-sub">No staff users registered.</div>`;
+        : `<div class="item-sub">No staff.</div>`;
 
+      // Consumers dropdown & list
       const srvSelect = document.getElementById("srvConsumer");
       srvSelect.innerHTML = parlor.consumers.length
         ? parlor.consumers.map((c) => `<option value="${escapeHtml(c.name)}">${escapeHtml(c.name)} (${escapeHtml(c.phone)})</option>`).join("")
@@ -2808,16 +3082,17 @@
               ${c.phone ? `<a class="btn btn-call btn-sm" href="tel:${escapeHtml(c.phone)}">Call</a>` : ""}
             </div>
           `).join("")
-        : `<div class="item-sub">No consumers yet.</div>`;
+        : `<div class="item-sub">अभी कोई कस्टमर नहीं है।</div>`;
 
+      // Due list
       const dueItems = (parlor.services || []).filter((s) => !s.settled && Number(s.dueAmount || 0) > 0);
       document.getElementById("dueCountBadge").textContent = String(dueItems.length);
       document.getElementById("duePaymentsList").innerHTML = dueItems.length
         ? dueItems.map((s) => `
             <div class="list-item">
               <div>
-                <div class="item-title">${escapeHtml(s.consumerName)} — Baaki ₹${Math.round(Number(s.dueAmount)).toLocaleString("en-IN")}</div>
-                <div class="item-sub">Service: ${escapeHtml(s.name)} · Promise Date: <strong>${escapeHtml(s.promiseDate || "—")}</strong></div>
+                <div class="item-title">${escapeHtml(s.consumerName)} — बाकी ₹${Math.round(Number(s.dueAmount)).toLocaleString("en-IN")}</div>
+                <div class="item-sub">${escapeHtml(s.name)} · तारीख: <strong>${escapeHtml(s.promiseDate || "—")}</strong></div>
               </div>
               <div class="row-btns">
                 ${s.consumerPhone ? `<a class="btn btn-call btn-sm" href="tel:${escapeHtml(s.consumerPhone)}">Call</a>` : ""}
@@ -2826,13 +3101,14 @@
               </div>
             </div>
           `).join("")
-        : `<div class="item-sub">Koi baaki payment nahi hai.</div>`;
+        : `<div class="item-sub">कोई बाकी पेमेंट नहीं है।</div>`;
 
+      // Services list
       document.getElementById("servicesList").innerHTML = parlor.services.length
         ? parlor.services.map((s) => {
             const dueAmt = Math.max(0, Number(s.dueAmount || 0));
             const subLine = dueAmt > 0
-              ? `${escapeHtml(s.consumerName)} · ${escapeHtml(s.date)} · <strong style="color:#b91c1c;">Due ₹${dueAmt} (Promise: ${escapeHtml(s.promiseDate || "—")})</strong>`
+              ? `${escapeHtml(s.consumerName)} · ${escapeHtml(s.date)} · <strong style="color:#b91c1c;">बाकी ₹${dueAmt} (${escapeHtml(s.promiseDate || "—")})</strong>`
               : `${escapeHtml(s.consumerName)} · ${escapeHtml(s.date)} · <span style="color:#15803d;font-weight:700;">Paid</span>`;
             return `
               <div class="list-item">
@@ -2844,8 +3120,10 @@
               </div>
             `;
           }).join("")
-        : `<div class="item-sub">No services recorded yet.</div>`;
+        : `<div class="item-sub">कोई सर्विस सेव नहीं है।</div>`;
 
+      // Appointments list
+      const apps = parlor.appointments || [];
       document.getElementById("appointmentsList").innerHTML = apps.length
         ? apps.map((a) => `
             <div class="list-item">
@@ -2859,8 +3137,9 @@
               </div>
             </div>
           `).join("")
-        : `<div class="item-sub">No appointments scheduled yet.</div>`;
+        : `<div class="item-sub">कोई अपॉइंटमेंट नहीं है।</div>`;
 
+      // Offers list
       document.getElementById("offersList").innerHTML = parlor.offers.length
         ? parlor.offers.map((o) => `
             <div class="list-item">
@@ -2869,20 +3148,25 @@
                 <div class="item-sub">${escapeHtml(o.desc || "")}</div>
               </div>
               <div class="row-btns">
-                <button class="btn btn-whatsapp btn-sm" onclick="openSendOfferModal('${escapeHtml(o.id)}', true)">Sabko Bhejein</button>
-                <button class="btn btn-soft btn-sm" onclick="openSendOfferModal('${escapeHtml(o.id)}', false)">Tick Karke Bhejein</button>
+                <button class="btn btn-whatsapp btn-sm" onclick="openSendOfferModal('${escapeHtml(o.id)}', true)">सबको भेजें</button>
+                <button class="btn btn-soft btn-sm" onclick="openSendOfferModal('${escapeHtml(o.id)}', false)">टिक करके भेजें</button>
               </div>
             </div>
           `).join("")
-        : `<div class="item-sub">No offers added.</div>`;
+        : `<div class="item-sub">कोई ऑफ़र नहीं है।</div>`;
     }
 
-    function switchTab(tabName, btnEl) {
+    function openSectionTab(tabName) {
       document.querySelectorAll(".tab-view").forEach((el) => el.classList.add("hidden"));
       const target = document.getElementById(`tab-${tabName}`);
       if (target) target.classList.remove("hidden");
+
       document.querySelectorAll(".nav-btn").forEach((b) => b.classList.remove("active"));
-      if (btnEl) btnEl.classList.add("active");
+      const navMatch = document.getElementById(`nav-${tabName}`);
+      if (navMatch) navMatch.classList.add("active");
+
+      if (tabName === "assistant") initAssistantWelcome();
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
     function closeModal(id) {
@@ -2907,6 +3191,7 @@
         .replace(/"/g, "&quot;");
     }
 
+    applyLanguage();
     renderAll();
     initFirebaseLiveSync();
   </script>
