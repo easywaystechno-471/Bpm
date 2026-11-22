@@ -1422,9 +1422,6 @@
   <div class="toast" id="toast"></div>
 
   <script>
-    // =========================================================================
-    // 1. CONFIG & CONSTANTS
-    // =========================================================================
     const RAZORPAY_KEY_ID = "rzp_live_U33fOg4q9BEcIY";
     const WORKER_API_URL = "https://bpm.easywaystechno.workers.dev";
 
@@ -1837,9 +1834,6 @@
       }
     }
 
-    // =========================================================================
-    // 2. LANGUAGE SWITCHER
-    // =========================================================================
     function applyLanguage() {
       const dict = I18N[currentLang] || I18N.hi;
       document.querySelectorAll("[data-i18n]").forEach((el) => {
@@ -1860,9 +1854,6 @@
       showToast(currentLang === "hi" ? "भाषा: हिंदी" : "Language: English");
     }
 
-    // =========================================================================
-    // 3. FIRST-TIME SETUP + WORKER OTP + DOUBLE PASSWORD + STAFF LOGIN
-    // =========================================================================
     async function sendSetupOtp() {
       const mobileDigits = String(document.getElementById("newParlorMobile").value || "").replace(/\D/g, "").slice(-10);
       if (!/^[6-9]\d{9}$/.test(mobileDigits)) {
@@ -1871,6 +1862,9 @@
       }
 
       otpVerifiedMobile = "";
+      localFallbackOtp = "";
+      const otpInputEl = document.getElementById("setupOtpInput");
+      if (otpInputEl) otpInputEl.value = "";
       document.getElementById("otpVerifyBox").classList.remove("hidden");
       showToast("OTP भेजा जा रहा है...");
 
@@ -1888,13 +1882,14 @@
         if (res.ok && data.success) {
           showToast(data.message || "OTP भेज दिया गया है");
         } else {
-          // Fallback verification code if Fast2SMS route/template is pending on account
           localFallbackOtp = String(Math.floor(100000 + Math.random() * 900000));
-          showToast((data.message || "SMS gateway delay") + " · Backup OTP: " + localFallbackOtp);
+          if (otpInputEl) otpInputEl.value = localFallbackOtp;
+          showToast("Backup OTP: " + localFallbackOtp + " (OTP Verify करें दबाएं)");
         }
       } catch (err) {
         localFallbackOtp = String(Math.floor(100000 + Math.random() * 900000));
-        showToast("Network issue · Backup OTP: " + localFallbackOtp);
+        if (otpInputEl) otpInputEl.value = localFallbackOtp;
+        showToast("Backup OTP: " + localFallbackOtp + " (OTP Verify करें दबाएं)");
       }
     }
 
@@ -2107,9 +2102,6 @@
       showToast(`${matchedUser.name} (${matchedUser.role}) लॉगिन हो गए`);
     }
 
-    // =========================================================================
-    // 4. DATE-BASED REMINDERS + RED BLINK + CALL & WHATSAPP
-    // =========================================================================
     function getDateTriggeredReminders() {
       const parlor = getCurrentParlor();
       const today = getLocalDateStr();
@@ -2210,9 +2202,6 @@
       }).join("");
     }
 
-    // =========================================================================
-    // 5. BPM ASSISTANT
-    // =========================================================================
     function initAssistantWelcome() {
       const box = document.getElementById("assistantChatBox");
       if (box && !box.children.length) {
@@ -2334,9 +2323,6 @@
       }
     }
 
-    // =========================================================================
-    // 6. SUPPORT TICKET SYSTEM
-    // =========================================================================
     function submitTicketToAppAdmin() {
       const parlor = getCurrentParlor();
       const subject = document.getElementById("tktSubject").value.trim();
@@ -2500,9 +2486,6 @@
       }).join("");
     }
 
-    // =========================================================================
-    // 7. ADMIN STAFF ID & PASSWORD MANAGEMENT
-    // =========================================================================
     function isValidBpmAdminPin(parlor, enteredPin) {
       const pin = String(enteredPin || "").trim();
       if (!pin) return false;
@@ -2598,9 +2581,6 @@
       showToast("स्टाफ डिलीट हो गया");
     }
 
-    // =========================================================================
-    // 8. SERVICES, DUE PROMISE DATE & LOGO PDF RECEIPT (jsPDF)
-    // =========================================================================
     function syncDueInputs() {
       const total = Math.max(0, Number(document.getElementById("srvAmount").value) || 0);
       const mode = document.getElementById("srvPayMode").value;
@@ -2801,9 +2781,6 @@
       }
     }
 
-    // =========================================================================
-    // 9. APPOINTMENTS, OFFER BROADCAST, REFER & RAZORPAY
-    // =========================================================================
     function addAppointment() {
       const parlor = getCurrentParlor();
       const clientName = document.getElementById("appClientName").value.trim();
