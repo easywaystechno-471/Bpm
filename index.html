@@ -219,7 +219,6 @@
       margin-top: 2px;
     }
 
-    /* Star stuck directly on top of Refer & Earn */
     .stuck-star-badge {
       position: absolute;
       top: -9px;
@@ -926,10 +925,10 @@
         </button>
 
         <button class="pill-card-btn" onclick="openReferModal()">
-          <span class="stuck-star-badge" id="stuckStarBadge">⭐ 0</span>
+          <span class="stuck-star-badge" id="stuckStarBadge">⭐ 0 (0d)</span>
           <div>
             <div class="pill-main-txt" id="referPillTitle">🎁 Refer & Earn</div>
-            <div class="pill-sub-txt" id="referPillSub">1 Star = 5d · M:2, Y:15</div>
+            <div class="pill-sub-txt" id="referPillSub">1★=5d · M:2, Y:15</div>
           </div>
           <span class="ref-rem-icon" id="referRemainingIcon" title="Bache huye referrals: Mahina (max 2) / Saal (max 15)">🎟️ M:2·Y:15</span>
         </button>
@@ -1315,7 +1314,7 @@
         </div>
       </section>
 
-      <!-- TAB 8: SUPPORT & APP ADMIN MASTER PANEL (App Admin ID + PIN, No Forgot Option) -->
+      <!-- TAB 8: SUPPORT (Hidden App Admin Panel for Normal Users) -->
       <section id="tab-support" class="tab-view hidden">
         <!-- Parlor User Ticket Submission Card -->
         <div class="card">
@@ -1334,38 +1333,38 @@
           <button class="btn btn-primary btn-block" onclick="submitTicketToAppAdmin()" data-i18n="btn_send_ticket">App Admin को टिकट भेजें</button>
         </div>
 
-        <!-- App Admin Master Authentication Card (ID + PIN Only, No Forgot Option) -->
-        <div class="card-rose">
+        <!-- Hidden App Admin Login Box (Shown only when App Admin portal is toggled open) -->
+        <div class="card-rose hidden" id="hiddenAppAdminLoginCard">
           <div class="section-title">
-            <span>🛡️ App Admin Login & ID/PIN Setup</span>
+            <span>🛡️ App Admin Login</span>
             <span class="badge" id="appAdminStatusBadge">Locked</span>
           </div>
           <div class="item-sub" id="appAdminActiveInfo" style="margin-bottom:10px;">
-            App Admin apni <strong>App Admin ID</strong> aur <strong>App Admin PIN</strong> se login karein. (Isme Forgot Password/PIN ka koi option nahi hai.)
+            Apni save ki hui App Admin ID aur PIN se login karein. (Forgot Password/PIN ka option nahi hai.)
           </div>
           <div class="grid-2">
             <div class="field">
               <label>App Admin ID *</label>
-              <input id="appAdminIdInput" class="input" placeholder="ADMIN01" style="text-transform:uppercase;" />
+              <input id="appAdminIdInput" class="input" placeholder="App Admin ID" style="text-transform:uppercase;" />
             </div>
             <div class="field">
               <label>App Admin PIN *</label>
-              <input id="appAdminPinInput" class="input" type="password" placeholder="Apna App Admin PIN" onkeydown="if(event.key==='Enter') unlockAppAdminConsole()" />
+              <input id="appAdminPinInput" class="input" type="password" placeholder="App Admin PIN" onkeydown="if(event.key==='Enter') unlockAppAdminConsole()" />
             </div>
           </div>
           <div class="row-btns">
             <button class="btn btn-primary btn-sm" id="appAdminUnlockBtn" onclick="unlockAppAdminConsole()">App Admin Login</button>
-            <button class="btn btn-soft btn-sm" onclick="toggleAppAdminSetBox()">ID / PIN Set Karein</button>
+            <button class="btn btn-soft btn-sm" onclick="toggleAppAdminSetBox()">ID / PIN Badlein</button>
             <button class="btn btn-outline btn-sm hidden" id="appAdminLockBtn" onclick="lockAppAdminConsole()">Lock</button>
+            <button class="btn btn-outline btn-sm" onclick="hideAppAdminPortal()">Hide</button>
           </div>
 
-          <!-- One-time or intentional ID + PIN Set Box -->
           <div id="appAdminSetCredentialsBox" class="card hidden" style="margin-top:12px;margin-bottom:0;">
-            <div class="section-title"><span>⚙️ App Admin ID aur PIN Set / Update Karein</span></div>
+            <div class="section-title"><span>⚙️ App Admin ID aur PIN Update Karein</span></div>
             <div class="grid-2">
               <div class="field">
                 <label>Nayi App Admin ID *</label>
-                <input id="setNewAppAdminId" class="input" placeholder="Jaise: ADMIN01" style="text-transform:uppercase;" />
+                <input id="setNewAppAdminId" class="input" placeholder="Nayi Admin ID" style="text-transform:uppercase;" />
               </div>
               <div class="field">
                 <label>Naya App Admin PIN (4+ ank/akshar) *</label>
@@ -1374,18 +1373,18 @@
             </div>
             <div class="field">
               <label>Maujooda App Admin PIN (Confirm karne ke liye) *</label>
-              <input id="confirmCurrentAppAdminPin" class="input" type="password" placeholder="Maujooda PIN (default: BPMADMIN)" />
+              <input id="confirmCurrentAppAdminPin" class="input" type="password" placeholder="Maujooda PIN" />
             </div>
             <button class="btn btn-whatsapp btn-sm btn-block" onclick="saveAppAdminCredentials()">App Admin ID & PIN Save Karein</button>
           </div>
         </div>
 
-        <!-- App Admin Only Console: All Users/Parlors Directory + Trial Extend + Tickets -->
+        <!-- App Admin Only Console (Hidden from normal users until unlocked) -->
         <div id="appAdminMasterConsole" class="hidden">
           <!-- Free Trial Days Extension Box -->
           <div class="card">
             <div class="section-title">
-              <span>⏳ App Admin: Kisi Bhi User / Parlor Ke Free Trial Days Badhayein</span>
+              <span>⏳ App Admin: Free Trial Days Badhayein</span>
               <span class="badge badge-active">Trial Extend</span>
             </div>
             <div class="field">
@@ -1412,16 +1411,35 @@
             <button class="btn btn-whatsapp btn-block" onclick="applyAppAdminTrialExtension()">Free Trial Days Badhayein (Extend Now)</button>
           </div>
 
-          <!-- All Registered Parlors & Users Directory (Searchable for Large Scale) -->
+          <!-- All Registered Parlors & Users Directory + Filter + Export/Import -->
           <div class="card">
             <div class="section-title">
-              <span>👥 App Admin: All Registered Parlors & Users Directory</span>
+              <span>👥 All Parlors & Users (Filter, Access & Import/Export)</span>
               <span class="badge badge-trial" id="totalParlorsDirectoryBadge">0 Parlors</span>
             </div>
-            <div class="field">
-              <label>Search Parlor / User (Name, Parlor ID, User ID, City, Mobile)</label>
-              <input id="adminDirectorySearchInput" class="input" placeholder="Jaise: Glamour, Mumbai, GLAMOUR01, 9826..." oninput="renderAppAdminDirectory()" />
+            <div class="grid-2">
+              <div class="field">
+                <label>Search (Name, ID, City, Mobile)</label>
+                <input id="adminDirectorySearchInput" class="input" placeholder="Search karein..." oninput="renderAppAdminDirectory()" />
+              </div>
+              <div class="field">
+                <label>Status Filter</label>
+                <select id="adminStatusFilterSelect" onchange="renderAppAdminDirectory()">
+                  <option value="ALL">Sabhi Parlors (All)</option>
+                  <option value="ACTIVE">Active Days (> 0)</option>
+                  <option value="LOW">Low Days (<= 7 Days)</option>
+                  <option value="EXPIRED">Expired (0 Days)</option>
+                </select>
+              </div>
             </div>
+
+            <div class="row-btns" style="margin-bottom:10px;">
+              <button class="btn btn-soft btn-xs" onclick="exportAdminDirectoryJson()">Export JSON</button>
+              <button class="btn btn-soft btn-xs" onclick="exportAdminDirectoryCsv()">Export CSV</button>
+              <button class="btn btn-outline btn-xs" onclick="triggerAdminImportFile()">Import JSON</button>
+              <input type="file" id="adminImportFileInput" accept=".json,application/json" class="hidden" onchange="handleAdminImportFile(event)" />
+            </div>
+
             <div id="appAdminDirectoryList"></div>
           </div>
 
@@ -1876,6 +1894,7 @@
     let lastWrittenJson = "";
     let incomeUnlocked = false;
     let isAppLoggedIn = true;
+    let isAppAdminPortalOpen = false;
     let isAppAdminUnlocked = false;
     let authenticatedParlorId = "";
     let activeOfferForSend = null;
@@ -2437,6 +2456,17 @@
       showToast(`${matchedUser.name} (${matchedUser.role}) login ho gaye`);
     }
 
+    function revealAppAdminPortal() {
+      isAppAdminPortalOpen = true;
+      renderAppAdminConsole();
+    }
+
+    function hideAppAdminPortal() {
+      isAppAdminPortalOpen = false;
+      isAppAdminUnlocked = false;
+      renderAppAdminConsole();
+    }
+
     function unlockAppAdminConsole() {
       const enteredId = String(document.getElementById("appAdminIdInput").value || "").trim().toUpperCase();
       const enteredPin = String(document.getElementById("appAdminPinInput").value || "").trim();
@@ -2451,6 +2481,7 @@
         showToast("Galat App Admin ID ya PIN");
         return;
       }
+      isAppAdminPortalOpen = true;
       isAppAdminUnlocked = true;
       document.getElementById("appAdminPinInput").value = "";
       renderAppAdminConsole();
@@ -2492,6 +2523,7 @@
       }
 
       appState.appAdmin = { id: newId, pin: newPin };
+      isAppAdminPortalOpen = true;
       isAppAdminUnlocked = true;
       document.getElementById("appAdminIdInput").value = newId;
       document.getElementById("appAdminPinInput").value = "";
@@ -2505,6 +2537,7 @@
     }
 
     function renderAppAdminConsole() {
+      const loginCard = document.getElementById("hiddenAppAdminLoginCard");
       const badge = document.getElementById("appAdminStatusBadge");
       const consoleEl = document.getElementById("appAdminMasterConsole");
       const unlockBtn = document.getElementById("appAdminUnlockBtn");
@@ -2512,8 +2545,13 @@
       const infoEl = document.getElementById("appAdminActiveInfo");
       const adminIdVal = String((appState.appAdmin && appState.appAdmin.id) || DEFAULT_APP_ADMIN_ID);
 
+      if (loginCard) {
+        if (isAppAdminPortalOpen || isAppAdminUnlocked) loginCard.classList.remove("hidden");
+        else loginCard.classList.add("hidden");
+      }
+
       if (infoEl) {
-        infoEl.innerHTML = `App Admin ID: <strong>${escapeHtml(adminIdVal)}</strong> — apni ID aur PIN se login karein. <em>(App Admin ke liye Forgot Password/PIN ka option nahi hai.)</em>`;
+        infoEl.innerHTML = `App Admin ID: <strong>${escapeHtml(adminIdVal)}</strong> — apni save ki hui ID aur PIN se login karein. <em>(Forgot Password/PIN ka option nahi hai.)</em>`;
       }
       const loginIdInput = document.getElementById("appAdminIdInput");
       if (loginIdInput && !loginIdInput.value) loginIdInput.value = adminIdVal;
@@ -2583,31 +2621,40 @@
       showToast(`${targetParlor.name} ke +${Math.round(addDays)} Free Trial Days badh gaye`);
     }
 
+    function getFilteredAdminParlors() {
+      const query = String((document.getElementById("adminDirectorySearchInput") && document.getElementById("adminDirectorySearchInput").value) || "")
+        .trim()
+        .toLowerCase();
+      const filterMode = String((document.getElementById("adminStatusFilterSelect") && document.getElementById("adminStatusFilterSelect").value) || "ALL");
+
+      return Object.values(appState.parlors || {}).filter((p) => {
+        const daysLeft = getRemainingDays(p);
+        if (filterMode === "ACTIVE" && daysLeft <= 0) return false;
+        if (filterMode === "LOW" && (daysLeft <= 0 || daysLeft > 7)) return false;
+        if (filterMode === "EXPIRED" && daysLeft > 0) return false;
+
+        if (!query) return true;
+        const staffStr = (p.staff || []).map((u) => `${u.id} ${u.name} ${u.role}`).join(" ").toLowerCase();
+        return (
+          String(p.name || "").toLowerCase().includes(query) ||
+          String(p.code || "").toLowerCase().includes(query) ||
+          String(p.city || "").toLowerCase().includes(query) ||
+          String(p.mobile || "").toLowerCase().includes(query) ||
+          staffStr.includes(query)
+        );
+      });
+    }
+
     function renderAppAdminDirectory() {
       if (!isAppAdminUnlocked) return;
       const listEl = document.getElementById("appAdminDirectoryList");
       const countBadge = document.getElementById("totalParlorsDirectoryBadge");
-      const query = String((document.getElementById("adminDirectorySearchInput") && document.getElementById("adminDirectorySearchInput").value) || "")
-        .trim()
-        .toLowerCase();
+      const filtered = getFilteredAdminParlors();
+      const totalCount = Object.values(appState.parlors || {}).length;
 
-      const allParlors = Object.values(appState.parlors || {});
       if (countBadge) {
-        countBadge.textContent = `${allParlors.length} Parlors`;
+        countBadge.textContent = `${filtered.length}/${totalCount} Parlors`;
       }
-
-      const filtered = query
-        ? allParlors.filter((p) => {
-            const staffStr = (p.staff || []).map((u) => `${u.id} ${u.name} ${u.role}`).join(" ").toLowerCase();
-            return (
-              String(p.name || "").toLowerCase().includes(query) ||
-              String(p.code || "").toLowerCase().includes(query) ||
-              String(p.city || "").toLowerCase().includes(query) ||
-              String(p.mobile || "").toLowerCase().includes(query) ||
-              staffStr.includes(query)
-            );
-          })
-        : allParlors;
 
       if (!listEl) return;
 
@@ -2634,11 +2681,129 @@
             </div>
             <div class="row-btns">
               <button class="btn btn-soft btn-xs" onclick="applyAppAdminTrialExtension('${escapeHtml(p.id)}');">+Days</button>
-              <button class="btn btn-outline btn-xs" onclick="selectExistingParlor('${escapeHtml(p.id)}');">Switch</button>
+              <button class="btn btn-primary btn-xs" onclick="adminAccessParlor('${escapeHtml(p.id)}');">Access</button>
             </div>
           </div>
         `;
       }).join("");
+    }
+
+    function adminAccessParlor(parlorId) {
+      if (!isAppAdminUnlocked) {
+        showToast("Pehle App Admin login karein");
+        return;
+      }
+      if (!appState.parlors[parlorId]) return;
+      appState.activeParlorId = parlorId;
+      enteredParlorRoomId = parlorId;
+      isAppLoggedIn = true;
+      incomeUnlocked = true;
+      persistState(true);
+      openSectionTab("home");
+      showToast(`App Admin access: ${appState.parlors[parlorId].name}`);
+    }
+
+    function downloadFileBlob(filename, content, mimeType) {
+      try {
+        const blob = new Blob([content], { type: mimeType });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+      } catch (e) {}
+    }
+
+    function exportAdminDirectoryJson() {
+      if (!isAppAdminUnlocked) {
+        showToast("Pehle App Admin login karein");
+        return;
+      }
+      const filtered = getFilteredAdminParlors();
+      const payload = {
+        exportedAt: new Date().toISOString(),
+        count: filtered.length,
+        parlors: filtered
+      };
+      downloadFileBlob(`bpm_parlors_${getLocalDateStr()}.json`, JSON.stringify(payload, null, 2), "application/json");
+      showToast(`${filtered.length} parlors JSON export ho gaye`);
+    }
+
+    function exportAdminDirectoryCsv() {
+      if (!isAppAdminUnlocked) {
+        showToast("Pehle App Admin login karein");
+        return;
+      }
+      const filtered = getFilteredAdminParlors();
+      const headers = ["Parlor Name", "Parlor ID", "City", "Mobile", "Days Left", "Valid Until", "Stars", "Clients", "Services"];
+      const rows = filtered.map((p) => [
+        `"${String(p.name || "").replace(/"/g, '""')}"`,
+        `"${String(p.code || "").replace(/"/g, '""')}"`,
+        `"${String(p.city || "").replace(/"/g, '""')}"`,
+        `"${String(p.mobile || "").replace(/"/g, '""')}"`,
+        getRemainingDays(p),
+        `"${formatDateShort(p.validUntil)}"`,
+        getAvailableStars(p),
+        (p.consumers || []).length,
+        (p.services || []).length
+      ].join(","));
+      const csvText = [headers.join(","), ...rows].join("\n");
+      downloadFileBlob(`bpm_parlors_${getLocalDateStr()}.csv`, csvText, "text/csv;charset=utf-8;");
+      showToast(`${filtered.length} parlors CSV export ho gaye`);
+    }
+
+    function triggerAdminImportFile() {
+      if (!isAppAdminUnlocked) {
+        showToast("Pehle App Admin login karein");
+        return;
+      }
+      const inp = document.getElementById("adminImportFileInput");
+      if (inp) inp.click();
+    }
+
+    function handleAdminImportFile(event) {
+      if (!isAppAdminUnlocked) {
+        showToast("Pehle App Admin login karein");
+        return;
+      }
+      const file = event && event.target && event.target.files && event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const parsed = JSON.parse(String(e.target.result || "{}"));
+          const incomingParlors = Array.isArray(parsed.parlors)
+            ? parsed.parlors
+            : (parsed.parlors && typeof parsed.parlors === "object" ? Object.values(parsed.parlors) : []);
+
+          if (!incomingParlors.length) {
+            showToast("JSON file mein koi valid parlor data nahi mila");
+            return;
+          }
+
+          let importedCount = 0;
+          for (const rawP of incomingParlors) {
+            if (!rawP || typeof rawP !== "object") continue;
+            const norm = normalizeParlor(rawP);
+            const key = norm.id || ("parlor-imp-" + Date.now() + "-" + importedCount);
+            appState.parlors[key] = { ...norm, id: key };
+            importedCount += 1;
+          }
+
+          persistState(true);
+          renderAppAdminDirectory();
+          showToast(`${importedCount} parlors data import ho gaya`);
+        } catch (err) {
+          showToast("Invalid JSON file");
+        } finally {
+          event.target.value = "";
+        }
+      };
+      reader.readAsText(file);
     }
 
     function initFirebaseLiveSync() {
@@ -4406,6 +4571,8 @@
         .replace(/>/g, "&gt;")
         .replace(/"/g, "&quot;");
     }
+
+    window.openAppAdminPortal = revealAppAdminPortal;
 
     applyLanguage();
     evaluateTenDayReferralStars(false);
