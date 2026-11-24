@@ -112,18 +112,19 @@
     .choice-sub { font-size: 10.5px; color: var(--muted); line-height: 1.25; }
 
     .parlor-banner {
-      background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
-      padding: 10px 12px; display: flex; align-items: center; justify-content: space-between;
-      gap: 8px; box-shadow: var(--shadow); margin-bottom: 10px;
+      background: var(--surface); border: 1px solid var(--line); border-radius: 18px;
+      padding: 12px 14px; display: flex; align-items: center; justify-content: space-between;
+      gap: 10px; box-shadow: var(--shadow); margin-bottom: 12px;
     }
-    .parlor-meta { display: flex; align-items: center; gap: 10px; min-width: 0; flex: 1; }
+    .parlor-meta { display: flex; align-items: center; gap: 12px; min-width: 0; flex: 1; }
     .parlor-avatar {
-      width: 44px; height: 44px; border-radius: 12px; background: var(--accent-grad);
-      color: #fff; display: grid; place-items: center; font-weight: 800; font-size: 12px; flex-shrink: 0;
+      width: 52px; height: 52px; border-radius: 16px; background: var(--accent-grad);
+      color: #fff; display: grid; place-items: center; font-weight: 800; font-size: 14px;
+      flex-shrink: 0; border: 2px solid #fce7f3; box-shadow: 0 6px 14px rgba(136, 14, 79, 0.16);
     }
-    .parlor-name { font-size: 14px; font-weight: 800; color: var(--rose-dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .parlor-sub { font-size: 11px; color: var(--muted); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .banner-right { display: flex; flex-direction: column; align-items: flex-end; gap: 5px; flex-shrink: 0; }
+    .parlor-name { font-size: 15px; font-weight: 800; color: var(--rose-dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .parlor-sub { font-size: 11.5px; color: var(--muted); margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .banner-right { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; flex-shrink: 0; }
 
     .lang-btn {
       background: #fff0f6; border: 1px solid #e7b5ce; color: var(--rose-dark);
@@ -133,16 +134,16 @@
     .sync-pill.syncing { background: var(--warn-bg); color: var(--warn); }
     .sync-pill.offline { background: var(--bad-bg); color: var(--bad); }
 
-    .top-pills-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
+    .top-pills-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
     .pill-card-btn {
-      position: relative; background: var(--surface); border: 1.5px solid #dfbdd0; border-radius: 12px;
-      padding: 8px 10px; display: flex; align-items: center; justify-content: space-between;
-      gap: 6px; cursor: pointer; text-align: left; box-shadow: 0 4px 12px rgba(136, 14, 79, 0.06);
-      min-height: 52px;
+      position: relative; background: var(--surface); border: 1.5px solid #dfbdd0; border-radius: 14px;
+      padding: 10px 12px; display: flex; align-items: center; justify-content: space-between;
+      gap: 6px; cursor: pointer; text-align: left; box-shadow: 0 6px 16px rgba(136, 14, 79, 0.06);
+      min-height: 58px;
     }
     .pill-card-btn:active { transform: scale(0.99); }
-    .pill-main-txt { font-size: 11.5px; font-weight: 800; color: var(--rose-dark); line-height: 1.15; }
-    .pill-sub-txt { font-size: 9.5px; color: var(--muted); margin-top: 2px; line-height: 1.15; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 118px; }
+    .pill-main-txt { font-size: 12px; font-weight: 800; color: var(--rose-dark); line-height: 1.2; }
+    .pill-sub-txt { font-size: 10px; color: var(--muted); margin-top: 3px; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 120px; }
 
     .stuck-star-badge {
       position: absolute; top: -8px; right: 8px;
@@ -159,7 +160,7 @@
 
     .online-move-bar {
       display: flex; align-items: center; justify-content: space-between; gap: 8px;
-      margin-bottom: 8px; padding: 6px 10px; border-radius: 12px;
+      margin-bottom: 10px; padding: 7px 12px; border-radius: 14px;
       background: #f0fdf4; border: 1px solid #86efac;
     }
     .btn-online-green {
@@ -169,25 +170,25 @@
     }
     .btn-online-green.active-move { background: #15803d; box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.25); }
 
-    .tile-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 12px; }
+    .tile-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 14px; }
     .action-tile {
-      position: relative; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 10px 6px;
-      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
-      cursor: pointer; box-shadow: 0 4px 14px rgba(136, 14, 79, 0.05); text-align: center;
+      position: relative; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 12px 6px;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px;
+      cursor: pointer; box-shadow: 0 6px 16px rgba(136, 14, 79, 0.06); text-align: center;
     }
     .action-tile.highlight { border-color: #e4a9c6; background: #fff8fc; }
     .action-tile.arranging { border: 1.5px dashed #16a34a; background: #f0fdf4; }
     .action-tile:active { transform: scale(0.97); }
-    .tile-ico { font-size: 19px; line-height: 1; }
-    .tile-lbl { font-size: 10.5px; font-weight: 700; color: var(--ink); line-height: 1.2; }
+    .tile-ico { font-size: 21px; line-height: 1; }
+    .tile-lbl { font-size: 11px; font-weight: 700; color: var(--ink); line-height: 1.2; }
     .tile-move-ctrl { display: flex; gap: 4px; margin-top: 3px; }
     .tile-move-mini {
       background: #16a34a; color: #fff; border: none; border-radius: 6px;
       padding: 2px 6px; font-size: 10px; font-weight: 800; cursor: pointer;
     }
 
-    .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px; margin-bottom: 12px; box-shadow: var(--shadow); }
-    .card-rose { background: #fff6fa; border: 1px solid #f7d6e6; border-radius: var(--radius); padding: 14px; margin-bottom: 12px; }
+    .card { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 15px; margin-bottom: 14px; box-shadow: var(--shadow); }
+    .card-rose { background: #fff6fa; border: 1px solid #f7d6e6; border-radius: 18px; padding: 15px; margin-bottom: 14px; box-shadow: 0 6px 16px rgba(136, 14, 79, 0.05); }
     .section-title { font-size: 14px; font-weight: 800; color: var(--ink); margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
 
     .badge { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 999px; font-size: 11px; font-weight: 700; }
@@ -250,9 +251,9 @@
     }
 
     .list-item {
-      border: 1px solid #f2d9e6; background: #fff; border-radius: 12px; padding: 11px 12px;
-      margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between;
-      gap: 10px; flex-wrap: wrap;
+      border: 1px solid #f2d9e6; background: #fff; border-radius: 14px; padding: 12px 14px;
+      margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between;
+      gap: 10px; flex-wrap: wrap; box-shadow: 0 4px 12px rgba(136, 14, 79, 0.04);
     }
     .list-item.unread-rem { border: 1.5px solid #e11d48; background: #fff1f2; }
     .item-title { font-size: 14px; font-weight: 700; }
@@ -379,7 +380,7 @@
   </style>
 </head>
 <body>
-  <!-- ONCE-PER-DAY MORNING/FIRST-OPEN MOTIVATIONAL CARD (No cross; closes on "दिन को अपना बना लें") -->
+  <!-- ONCE-PER-DAY MORNING/FIRST-OPEN MOTIVATIONAL CARD -->
   <div id="motivationOverlay" class="motivation-overlay hidden">
     <div class="motivation-card" onclick="event.stopPropagation()">
       <div class="motivation-top-bar">
@@ -543,14 +544,12 @@
   <!-- MAIN APP SHELL -->
   <div id="mainAppShell">
     <main class="container">
+      <!-- Top Parlor Banner with Prominent Parlor Logo -->
       <section class="parlor-banner">
         <div class="parlor-meta">
           <div class="parlor-avatar" id="parlorAvatar">BPM</div>
           <div style="min-width:0;">
-            <div class="parlor-name">
-              <span class="bpm-logo-badge" style="padding:2px 6px;font-size:9.5px;margin-right:4px;">BPM</span>
-              <span id="parlorTitle">Glamour</span>
-            </div>
+            <div class="parlor-name" id="parlorTitle">Glamour</div>
             <div class="parlor-sub" id="parlorSub">Mumbai · Glamour Admin (ADMIN)</div>
           </div>
         </div>
@@ -560,6 +559,7 @@
         </div>
       </section>
 
+      <!-- Trial & Refer Pills -->
       <section class="top-pills-row">
         <button class="pill-card-btn" onclick="openPlansModal('yearly')">
           <div style="min-width:0;">
@@ -589,6 +589,7 @@
         </div>
       </div>
 
+      <!-- 4-Column Action Tile Grid -->
       <section class="tile-grid" id="quickTileGrid"></section>
 
       <!-- TAB 1: HOME -->
@@ -1428,7 +1429,6 @@
       showToast(`टिकट ${id} App Admin को भेज दिया गया`);
     }
 
-    // Shown once per date on first open; suppressed for the rest of that date once "दिन को अपना बना लें" is clicked
     function getOrAssignDailyMotivation() {
       const now = new Date();
       const todayStr = getLocalDateStr(now);
@@ -2835,7 +2835,7 @@
       document.getElementById("referModal").classList.add("open");
     }
 
-    // Plans & Razorpay (Preserved + PhonePe/Google Pay/Paytm/UPI methods)
+    // Plans & Razorpay (Preserved)
     function openPlansModal(key = "yearly") { if (PLANS[key]) document.getElementById("planSelect").value = key; updatePlanSummary(); document.getElementById("plansModal").classList.add("open"); }
     function selectPlanAndPay(key) { if (PLANS[key]) document.getElementById("planSelect").value = key; updatePlanSummary(); startRazorpayCheckout(); }
 
