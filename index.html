@@ -196,7 +196,7 @@
         </div>
       </div>
 
-      <!-- Register New Parlor Form (Parlor ID/PIN + Admin ID/PIN + Logo) -->
+      <!-- Register New Parlor Form -->
       <div id="gateRegisterParlorCard" class="hidden">
         <div class="sub-flow-header">
           <button class="btn btn-outline btn-sm" onclick="backToEntryChoices()" data-t="backBtn">← वापस</button>
@@ -215,15 +215,15 @@
               <input type="hidden" id="gateRegLogoData" />
             </div>
           </div>
-          <div class="field"><label data-t="parlorNameLbl">Parlor का नाम *</label><input id="gateRegParlorName" class="input" placeholder="Payal Beauty Parlour" /></div>
+          <div class="field"><label data-t="parlorNameLbl">Parlor का नाम *</label><input id="gateRegParlorName" class="input" placeholder="BPM Parlor" /></div>
           <div class="grid-2">
-            <div class="field"><label data-t="cityLbl">शहर / पता</label><input id="gateRegParlorCity" class="input" placeholder="Joura" /></div>
+            <div class="field"><label data-t="cityLbl">शहर / पता</label><input id="gateRegParlorCity" class="input" placeholder="Mumbai" /></div>
             <div class="field"><label data-t="mobileLbl">मोबाइल नंबर *</label><input id="gateRegParlorMobile" class="input" type="tel" maxlength="10" placeholder="9876543210" /></div>
           </div>
           <div class="card-rose" style="padding:10px;margin-bottom:9px;">
             <div class="item-title" style="margin-bottom:6px;" data-t="step1ParlorCredTitle">1. Parlor ID और Parlor PIN सेट करें</div>
             <div class="grid-2">
-              <div class="field"><label>Parlor ID *</label><input id="gateRegParlorId" class="input" placeholder="PAYAL01" style="text-transform:uppercase;" /></div>
+              <div class="field"><label>Parlor ID *</label><input id="gateRegParlorId" class="input" placeholder="BPM01" style="text-transform:uppercase;" /></div>
               <div class="field"><label>Parlor PIN *</label><input id="gateRegParlorPin" class="input" type="password" placeholder="4+ अंक/अक्षर" /></div>
             </div>
           </div>
@@ -243,7 +243,7 @@
         </div>
       </div>
 
-      <!-- Two-Step Login: Step 1 (Parlor ID + Parlor PIN) -> Step 2 (Admin/Staff ID + PIN) -->
+      <!-- Two-Step Login -->
       <div id="gateLoginFlowWrap" class="hidden">
         <div class="sub-flow-header">
           <button class="btn btn-outline btn-sm" onclick="backToEntryChoices()" data-t="backBtn">← वापस</button>
@@ -256,7 +256,7 @@
         <div class="card" id="gateStep1ParlorCard">
           <div class="section-title"><span data-t="step1LoginTitle">🏢 1. Parlor ID व Parlor PIN से प्रवेश</span><span class="badge badge-trial" id="gateParlorStatusBadge">Step 1</span></div>
           <div class="grid-2">
-            <div class="field"><label>Parlor ID *</label><input id="gateParlorCodeInput" class="input" placeholder="Parlor ID" style="text-transform:uppercase;" /></div>
+            <div class="field"><label>Parlor ID *</label><input id="gateParlorCodeInput" class="input" placeholder="BPM01" style="text-transform:uppercase;" /></div>
             <div class="field"><label>Parlor PIN *</label><input id="gateParlorPassInput" class="input" type="password" placeholder="Parlor PIN" onkeydown="if(event.key==='Enter') loginGateParlor()" /></div>
           </div>
           <div class="row-btns">
@@ -268,7 +268,7 @@
           <div class="section-title"><span data-t="step2LoginTitle">🔑 2. Admin / Staff ID व PIN डालें</span><span class="badge badge-active" id="gateActiveParlorBadge">Verified</span></div>
           <div class="item-sub" id="gateActiveParlorUsersHint" style="margin-bottom:8px;">Admin ID या Staff ID और PIN डालें।</div>
           <div class="grid-2">
-            <div class="field"><label>Admin / Staff ID *</label><input id="gateUserIdInput" class="input" placeholder="Admin / Staff ID" style="text-transform:uppercase;" /></div>
+            <div class="field"><label>Admin / Staff ID *</label><input id="gateUserIdInput" class="input" placeholder="ADMIN01" style="text-transform:uppercase;" /></div>
             <div class="field"><label>Admin / Staff PIN *</label><input id="gateUserPassInput" class="input" type="password" placeholder="PIN" onkeydown="if(event.key==='Enter') loginGateUser()" /></div>
           </div>
           <div class="row-btns">
@@ -295,8 +295,8 @@
         <div class="parlor-meta">
           <div class="parlor-avatar" id="parlorAvatar">BPM</div>
           <div style="min-width:0;">
-            <div class="parlor-name" id="parlorTitle">Glamour</div>
-            <div class="parlor-sub" id="parlorSub">Mumbai · Glamour Admin (ADMIN)</div>
+            <div class="parlor-name" id="parlorTitle">BPM Parlor</div>
+            <div class="parlor-sub" id="parlorSub">Mumbai · BPM Admin (ADMIN)</div>
           </div>
         </div>
         <div class="banner-right">
@@ -330,8 +330,8 @@
       <!-- TAB 1: HOME -->
       <section id="tab-home" class="tab-view">
         <div class="card">
-          <div class="item-title" id="sessionUserLine">👑 Glamour Admin · ID: Glamour01 (ADMIN)</div>
-          <div class="item-sub" id="sessionParlorLine" style="margin-bottom:9px;">Parlor: Glamour</div>
+          <div class="item-title" id="sessionUserLine">👑 BPM Admin · ID: ADMIN01 (ADMIN)</div>
+          <div class="item-sub" id="sessionParlorLine" style="margin-bottom:9px;">Parlor: BPM Parlor</div>
           <div class="row-btns">
             <button class="btn btn-soft btn-sm" id="btnQuickNewStaff" onclick="openSectionTab('staff')" data-t="addStaffBtn">+ Staff ID / PIN</button>
             <button class="btn btn-soft btn-sm" onclick="lockAppSession()" data-t="pinLockBtn">PIN लॉक करें</button>
@@ -414,12 +414,12 @@
             <div class="bill-line" style="color:#15803d;"><span>Star Deduction:</span><strong id="prevStarDeduction">- ₹0 (0 Stars)</strong></div>
             <div class="bill-line"><span data-t="netPayableLbl">कस्टमर से लेने योग्य:</span><strong id="prevNetCustomerPayable">₹0</strong></div>
           </div>
-          <label class="check-row" style="background:#f0fdf4;border-color:#86efac;"><input type="checkbox" id="srvAutoSendPdfCheck" checked /><span data-t="autoWaPdfLbl">सेव होते ही PDF रसीद बनाकर कस्टमर के WhatsApp पर भेजें</span></label>
-          <button class="btn btn-whatsapp btn-block" onclick="saveServiceAndSendPdf()">Send PDF on WhatsApp</button>
+          <label class="check-row" style="background:#f0fdf4;border-color:#86efac;"><input type="checkbox" id="srvAutoSendPdfCheck" checked /><span data-t="autoWaPdfLbl">सेव होते ही PDF रसीद बनाकर कस्टमर के WhatsApp में भेजने के लिए तैयार करें</span></label>
+          <button class="btn btn-whatsapp btn-block" onclick="saveServiceAndSendPdf()" data-t="saveAndSendPdfBtn">Save & Send PDF on WhatsApp</button>
         </div>
       </section>
 
-      <!-- TAB 3: STAFF (Admin generates Staff ID & PIN inside) -->
+      <!-- TAB 3: STAFF -->
       <section id="tab-staff" class="tab-view hidden">
         <div class="card" id="staffRegisterCard">
           <div class="section-title"><span data-t="staffGenTitle">👑 Staff ID और Staff PIN जनरेट करें</span><div class="row-btns"><button class="btn btn-outline btn-xs hidden" id="cancelEditStaffBtn" onclick="cancelStaffEdit()">Cancel</button><button class="red-x" onclick="openSectionTab('home')">✕</button></div></div>
@@ -449,7 +449,7 @@
           <div class="section-title"><span data-t="newOfferTitle">🎁 नया ऑफ़र बनाएं (Logo + PDF)</span><button class="red-x" onclick="openSectionTab('home')">✕</button></div>
           <div class="field"><label data-t="offerTitleLbl">ऑफ़र का नाम *</label><input id="offTitle" class="input" /></div>
           <div class="field"><label data-t="offerDescLbl">ऑफ़र की जानकारी / रेट</label><input id="offDesc" class="input" /></div>
-          <button class="btn btn-whatsapp btn-block" onclick="addOffer()" data-t="saveOfferPdfBtn">ऑफ़र सेव करें व Send PDF on WhatsApp</button>
+          <button class="btn btn-whatsapp btn-block" onclick="addOffer()" data-t="saveOfferPdfBtn">Save & Send PDF on WhatsApp</button>
         </div>
         <div class="card"><div class="section-title"><span data-t="activeOffersTitle">एक्टिव ऑफ़र्स (PDF)</span></div><div id="offersList"></div></div>
       </section>
@@ -601,7 +601,7 @@
   <div class="modal-backdrop" id="referModal">
     <div class="modal-box">
       <div class="modal-head"><strong>Refer & Earn · Stars</strong><button class="red-x" onclick="closeModal('referModal')">✕</button></div>
-      <div class="ref-code-box"><div><div class="item-sub">Referral Code</div><div class="ref-code-text" id="myReferralCode">BPM-GLAM-1001</div></div><button class="btn btn-soft btn-sm" onclick="copyReferralCode()">Copy</button></div>
+      <div class="ref-code-box"><div><div class="item-sub">Referral Code</div><div class="ref-code-text" id="myReferralCode">BPM-PARL-1001</div></div><button class="btn btn-soft btn-sm" onclick="copyReferralCode()">Copy</button></div>
       <div class="row-btns" style="margin-bottom:9px;"><button class="btn btn-whatsapp" style="flex:1;" onclick="shareReferralOnWhatsApp()">WhatsApp Refer</button><button class="btn btn-outline btn-sm" onclick="copyApkLink()">Copy APK</button></div>
       <div class="card-rose" id="referStatsBox"></div>
     </div>
@@ -647,12 +647,12 @@
       </div>
       <div class="section-title"><span>🏪 Register New Parlor</span></div>
       <div class="field"><label>Parlor Logo</label><div style="display:flex;align-items:center;gap:10px;"><img id="newParlorLogoPreview" class="logo-upload-preview" alt="Logo" /><input id="newParlorLogoFile" type="file" accept="image/*" class="input" style="padding:6px;" onchange="handleLogoFileUpload(event,'newParlorLogoPreview','newParlorLogoData')" /><input type="hidden" id="newParlorLogoData" /></div></div>
-      <div class="field"><label>Parlor Name *</label><input id="newParlorName" class="input" /></div>
-      <div class="grid-2"><div class="field"><label>City</label><input id="newParlorCity" class="input" /></div><div class="field"><label>Mobile *</label><input id="newParlorMobile" class="input" type="tel" maxlength="10" /></div></div>
-      <div class="grid-2"><div class="field"><label>Parlor ID *</label><input id="newParlorId" class="input" style="text-transform:uppercase;" /></div><div class="field"><label>Parlor PIN *</label><input id="newParlorPin" class="input" type="password" /></div></div>
-      <div class="field"><label>Admin Name *</label><input id="newAdminName" class="input" /></div>
-      <div class="grid-2"><div class="field"><label>Admin ID *</label><input id="newAdminId" class="input" style="text-transform:uppercase;" /></div><div class="field"><label>Admin PIN *</label><input id="newAdminPin" class="input" type="password" /></div></div>
-      <div class="grid-2"><div class="field"><label>Pass Key</label><input id="newParlorPassKey" class="input" placeholder="BPM123" /></div><div class="field"><label>Referral Code</label><input id="newParlorRefCode" class="input" style="text-transform:uppercase;" /></div></div>
+      <div class="field"><label>Parlor Name *</label><input id="newParlorName" class="input" placeholder="BPM Parlor" /></div>
+      <div class="grid-2"><div class="field"><label>City</label><input id="newParlorCity" class="input" placeholder="Mumbai" /></div><div class="field"><label>Mobile *</label><input id="newParlorMobile" class="input" type="tel" maxlength="10" placeholder="9876543210" /></div></div>
+      <div class="grid-2"><div class="field"><label>Parlor ID *</label><input id="newParlorId" class="input" placeholder="BPM01" style="text-transform:uppercase;" /></div><div class="field"><label>Parlor PIN *</label><input id="newParlorPin" class="input" type="password" placeholder="4+ अंक/अक्षर" /></div></div>
+      <div class="field"><label>Admin Name *</label><input id="newAdminName" class="input" placeholder="Admin नाम" /></div>
+      <div class="grid-2"><div class="field"><label>Admin ID *</label><input id="newAdminId" class="input" placeholder="ADMIN01" style="text-transform:uppercase;" /></div><div class="field"><label>Admin PIN *</label><input id="newAdminPin" class="input" type="password" placeholder="4+ अंक/अक्षर" /></div></div>
+      <div class="grid-2"><div class="field"><label>Pass Key</label><input id="newParlorPassKey" class="input" placeholder="BPM123" /></div><div class="field"><label>Referral Code</label><input id="newParlorRefCode" class="input" placeholder="BPM-XXXX-1000" style="text-transform:uppercase;" /></div></div>
       <button class="btn btn-primary btn-block" onclick="registerNewParlor()">Register Parlor</button>
     </div>
   </div>
@@ -706,10 +706,11 @@
         searchCustLbl: "1. सेव कस्टमर सर्च करें *", selCustLbl: "चयनित कस्टमर *", srvNameLbl: "2. सर्विस का नाम *",
         totChargeLbl: "कुल चार्ज (₹) *", paidNowLbl: "अभी मिले (₹)", payStatusLbl: "पेमेंट स्थिति",
         giveStarsLbl: "इस सर्विस पर स्टार दें", starValLbl: "1 स्टार की कीमत (₹)", netPayableLbl: "कस्टमर से लेने योग्य:",
-        autoWaPdfLbl: "सेव होते ही PDF रसीद बनाकर कस्टमर के WhatsApp पर भेजें",
+        autoWaPdfLbl: "सेव होते ही PDF रसीद बनाकर कस्टमर के WhatsApp में भेजने के लिए तैयार करें",
+        saveAndSendPdfBtn: "Save & Send PDF on WhatsApp",
         staffGenTitle: "👑 Staff ID और Staff PIN जनरेट करें", staffNameLbl: "Staff नाम *", saveStaffBtn: "Staff ID व PIN Save करें",
         regStaffListTitle: "रजिस्टर्ड स्टाफ और एडमिन", newOfferTitle: "🎁 नया ऑफ़र बनाएं (Logo + PDF)",
-        offerTitleLbl: "ऑफ़र का नाम *", offerDescLbl: "ऑफ़र की जानकारी / रेट", saveOfferPdfBtn: "ऑफ़र सेव करें व Send PDF on WhatsApp",
+        offerTitleLbl: "ऑफ़र का नाम *", offerDescLbl: "ऑफ़र की जानकारी / रेट", saveOfferPdfBtn: "Save & Send PDF on WhatsApp",
         activeOffersTitle: "एक्टिव ऑफ़र्स (PDF)", saveCustTitle: "👩 कस्टमर डेटा सेव करें", custNameLbl: "कस्टमर का नाम *",
         notesLbl: "नोट्स / पसंद", saveCustBtn: "कस्टमर सेव करें", newAppTitle: "📅 नया अपॉइंटमेंट",
         dateLbl: "तारीख *", timeLbl: "समय *", fixAppBtn: "अपॉइंटमेंट फिक्स करें", fixedAppTitle: "तय किए गए अपॉइंटमेंट्स",
@@ -741,10 +742,11 @@
         searchCustLbl: "1. Search Saved Customer *", selCustLbl: "Selected Customer *", srvNameLbl: "2. Service Name *",
         totChargeLbl: "Total Charge (₹) *", paidNowLbl: "Paid Now (₹)", payStatusLbl: "Payment Status",
         giveStarsLbl: "Award Stars on Service", starValLbl: "Value of 1 Star (₹)", netPayableLbl: "Net Customer Payable:",
-        autoWaPdfLbl: "Generate Receipt PDF & open Customer WhatsApp on Save",
+        autoWaPdfLbl: "Generate PDF & open WhatsApp share ready to send on Save",
+        saveAndSendPdfBtn: "Save & Send PDF on WhatsApp",
         staffGenTitle: "👑 Generate Staff ID & Staff PIN", staffNameLbl: "Staff Name *", saveStaffBtn: "Save Staff ID & PIN",
         regStaffListTitle: "Registered Staff & Admin", newOfferTitle: "🎁 Create New Offer (Logo + PDF)",
-        offerTitleLbl: "Offer Title *", offerDescLbl: "Offer Details / Rate", saveOfferPdfBtn: "Save Offer & Send PDF on WhatsApp",
+        offerTitleLbl: "Offer Title *", offerDescLbl: "Offer Details / Rate", saveOfferPdfBtn: "Save & Send PDF on WhatsApp",
         activeOffersTitle: "Active Offers (PDF)", saveCustTitle: "👩 Save Customer Data", custNameLbl: "Customer Name *",
         notesLbl: "Notes / Preference", saveCustBtn: "Save Customer", newAppTitle: "📅 New Appointment",
         dateLbl: "Date *", timeLbl: "Time *", fixAppBtn: "Fix Appointment", fixedAppTitle: "Scheduled Appointments",
@@ -783,7 +785,7 @@
     const getLocalDateStr = (d = new Date()) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
     const sanitizeWhatsAppPhone = (p) => { const d = String(p || "").replace(/\D/g, ""); return d.length === 10 ? "91" + d : d; };
     const escapeHtml = (s) => String(s || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
-    const generateReferralCode = (name = "BPM") => `BPM-${(String(name).replace(/[^a-zA-Z]/g, "").toUpperCase().slice(0, 5) || "USER")}-${Math.floor(1000 + Math.random() * 9000)}`;
+    const generateReferralCode = (name = "BPM") => `BPM-${(String(name).replace(/[^a-zA-Z]/g, "").toUpperCase().slice(0, 5) || "PARL")}-${Math.floor(1000 + Math.random() * 9000)}`;
     const getRemainingDays = (p) => Math.max(0, Math.ceil(((Number(p.validUntil) || Date.now()) - Date.now()) / DAY_MS));
     const formatDateShort = (ts) => Number(ts) > 0 ? new Date(Number(ts)).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" }) : "—";
     const closeModal = (id) => document.getElementById(id)?.classList.remove("open");
@@ -859,19 +861,19 @@
       return {
         appMeta: { latestVersion: CURRENT_APP_VERSION, apkUrl: APK_DIRECT_URL, updateNotes: "Update" },
         appAdmin: { id: DEFAULT_APP_ADMIN_ID, pin: DEFAULT_APP_ADMIN_PIN },
-        activeParlorId: "parlor-glamour",
+        activeParlorId: "parlor-bpm",
         parlors: {
-          "parlor-glamour": {
-            id: "parlor-glamour", code: "GLAMOUR01", name: "Glamour", city: "Mumbai", mobile: "", logoDataUrl: "",
+          "parlor-bpm": {
+            id: "parlor-bpm", code: "BPM01", name: "BPM Parlor", city: "Mumbai", mobile: "", logoDataUrl: "",
             appPin: "1234", parlorPassword: "1234", passKey: "BPM123",
-            activeUser: { id: "GLAMOUR01", name: "Glamour Admin", role: "ADMIN" },
+            activeUser: { id: "ADMIN01", name: "BPM Admin", role: "ADMIN" },
             trialStartedAt: now, validUntil: now + TRIAL_DAYS * DAY_MS, planName: "30-Day Free Trial",
-            referralCode: "BPM-GLAM-1001", referralCount: 0, bonusDaysEarned: 0, starsEarned: 0, starsRedeemed: 0,
+            referralCode: "BPM-PARL-1001", referralCount: 0, bonusDaysEarned: 0, starsEarned: 0, starsRedeemed: 0,
             referralLogs: [], monitoredReferrals: [], notifications: [], payments: [],
             consumers: [{ id: "c1", name: "Anjali Verma", phone: "9826000001", note: "Facial", starsEarned: 2, starsRedeemed: 0 }],
             services: [{ id: "s1", consumerName: "Anjali Verma", consumerPhone: "9826000001", name: "Gold Facial", grossAmount: 650, starDeduction: 0, starsRedeemedCount: 0, amount: 650, paidAmount: 650, dueAmount: 0, starsAwarded: 2, promiseDate: "", settled: true, reminderChecked: true, date: today }],
             appointments: [], offers: [{ id: "o1", title: "Bridal & Party Glow", desc: "Complete skin & hair package" }],
-            staff: [{ id: "GLAMOUR01", name: "Glamour Admin", role: "ADMIN", pin: "1234", permissions: { serviceBilling: true, offersSend: true, customerFeed: true, dueCollect: true, appointments: true } }],
+            staff: [{ id: "ADMIN01", name: "BPM Admin", role: "ADMIN", pin: "1234", permissions: { serviceBilling: true, offersSend: true, customerFeed: true, dueCollect: true, appointments: true } }],
             tickets: []
           }
         }
@@ -879,15 +881,15 @@
     }
 
     function normalizeParlor(p) {
-      const now = Date.now(), s = p || {}, code = String(s.code || "GLAMOUR01").trim().toUpperCase();
-      const staff = (Array.isArray(s.staff) && s.staff.length ? s.staff : [{ id: code, name: "Admin", role: "ADMIN", pin: "1234" }]).map((u, i) => ({
-        id: String(u.id || (i === 0 ? code : "STAFF" + (i + 1))).trim().toUpperCase(), name: String(u.name || "User").trim(),
+      const now = Date.now(), s = p || {}, code = String(s.code || "BPM01").trim().toUpperCase();
+      const staff = (Array.isArray(s.staff) && s.staff.length ? s.staff : [{ id: "ADMIN01", name: "BPM Admin", role: "ADMIN", pin: "1234" }]).map((u, i) => ({
+        id: String(u.id || (i === 0 ? "ADMIN01" : "STAFF" + (i + 1))).trim().toUpperCase(), name: String(u.name || "User").trim(),
         role: String(u.role || "STAFF").trim().toUpperCase(), pin: String(u.pin || "1234").trim(),
         permissions: u.permissions || { serviceBilling: true, offersSend: true, customerFeed: true, dueCollect: String(u.role || "").toUpperCase() === "ADMIN", appointments: true }
       }));
       const admin = staff.find((u) => u.role === "ADMIN") || staff[0], pin = String(s.parlorPassword || s.appPin || admin.pin || "1234").trim();
       return {
-        id: s.id || ("parlor-" + Math.random().toString(36).slice(2, 8)), code, name: s.name || "Glamour", city: s.city || "Mumbai",
+        id: s.id || ("parlor-" + Math.random().toString(36).slice(2, 8)), code, name: s.name || "BPM Parlor", city: s.city || "Mumbai",
         mobile: String(s.mobile || "").replace(/\D/g, "").slice(-10), logoDataUrl: String(s.logoDataUrl || ""),
         appPin: pin, parlorPassword: pin, passKey: String(s.passKey || "BPM123").trim(),
         activeUser: s.activeUser || { id: admin.id, name: admin.name, role: admin.role },
@@ -1028,7 +1030,7 @@
 
     function createParlorFromInputs(prefix) {
       const g = (s) => document.getElementById(prefix + s)?.value.trim() || "";
-      const name = g("ParlorName"), city = g("ParlorCity") || "Joura", mobile = g("ParlorMobile").replace(/\D/g, "").slice(-10);
+      const name = g("ParlorName"), city = g("ParlorCity") || "Mumbai", mobile = g("ParlorMobile").replace(/\D/g, "").slice(-10);
       const parlorCode = g("ParlorId").toUpperCase(), parlorPin = g("ParlorPin");
       const adminName = g("AdminName"), adminId = g("AdminId").toUpperCase(), adminPin = g("AdminPin");
       const passKey = g("PassKey") || "BPM123", refCode = g("RefCode").toUpperCase(), logoDataUrl = g("LogoData");
@@ -1094,7 +1096,7 @@
       showToast(`${match.name} (${match.role}) लॉगिन हो गए`);
     }
 
-    // Reliable PDF Generation (Clean Layout matching screenshot) + Direct Customer WhatsApp Flow
+    // PDF Generation + Direct Customer WhatsApp Chat Flow (Native File Share First, Safe Fallback)
     function getParlorLogoForPdf(p) {
       if (p?.logoDataUrl && String(p.logoDataUrl).startsWith("data:image")) return p.logoDataUrl;
       const c = document.createElement("canvas"); c.width = 160; c.height = 160; const ctx = c.getContext("2d");
@@ -1115,15 +1117,29 @@
       document.body.appendChild(a); a.click(); document.body.removeChild(a);
     }
 
-    function savePdfBlobAndOpenCustomerWhatsApp(doc, fileName, phone, waSummaryText) {
+    async function deliverPdfToCustomerWhatsApp(doc, fileName, phone, shareTitle, waText) {
+      if (!doc) return showToast("PDF तैयार नहीं हो सकी");
       const blob = doc.output("blob");
+      const pdfFile = new File([blob], fileName, { type: "application/pdf" });
+
+      // Primary flow: Native share sheet so WhatsApp opens with PDF attached & Send button ready
+      try {
+        if (navigator.canShare?.({ files: [pdfFile] }) && typeof navigator.share === "function") {
+          await navigator.share({ files: [pdfFile], title: shareTitle, text: waText });
+          return;
+        }
+      } catch (err) {
+        if (err?.name === "AbortError") return;
+      }
+
+      // Fallback flow: Download PDF + open customer's WhatsApp chat directly
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url; a.download = fileName;
       document.body.appendChild(a); a.click(); document.body.removeChild(a);
       setTimeout(() => URL.revokeObjectURL(url), 8000);
-      showToast(`PDF (${fileName}) सेव हो गई — WhatsApp खुल रहा है`);
-      setTimeout(() => openCustomerWhatsAppDirect(phone, waSummaryText), 450);
+      showToast(`${fileName} तैयार — कस्टमर के WhatsApp पर जा रहे हैं`);
+      setTimeout(() => openCustomerWhatsAppDirect(phone, waText), 350);
     }
 
     function buildReceiptPdfDoc(p, s) {
@@ -1176,11 +1192,10 @@
     function sendReceiptPdfToCustomerWhatsApp(serviceId) {
       const p = getCurrentParlor(), s = (p.services || []).find((x) => x.id === serviceId);
       if (!s) return;
-      const doc = buildReceiptPdfDoc(p, s);
-      if (!doc) return showToast("PDF लाइब्रेरी लोड हो रही है, दोबारा दबाएं");
-      const fileName = `Receipt_${String(s.consumerName).replace(/\s+/g, "_")}.pdf`;
-      const msg = `*${p.name}* (${p.city})\nनमस्ते ${s.consumerName} जी, आपकी *${s.name}* सर्विस की PDF रसीद (₹${s.amount}) डाउनलोड हो गई है — कृपया अटैच करें।`;
-      savePdfBlobAndOpenCustomerWhatsApp(doc, fileName, s.consumerPhone, msg);
+      const receiptNo = String(s.id || "").replace(/\D/g, "").slice(-6) || "0043";
+      const fileName = `Receipt_RCP${receiptNo}.pdf`;
+      const msg = `*${p.name}* (${p.city})\n${s.consumerName} जी, आपकी *${s.name}* रसीद (₹${s.amount}) तैयार है।`;
+      deliverPdfToCustomerWhatsApp(buildReceiptPdfDoc(p, s), fileName, s.consumerPhone, fileName, msg);
     }
 
     function buildOfferPdfDoc(p, offer) {
@@ -1199,11 +1214,10 @@
     }
 
     function shareOfferPdfViaWhatsApp(offer, phone = "") {
-      const p = getCurrentParlor(), doc = buildOfferPdfDoc(p, offer);
-      if (!doc) return showToast("PDF लाइब्रेरी लोड हो रही है, दोबारा दबाएं");
+      const p = getCurrentParlor();
       const fileName = `Offer_${String(offer.title).replace(/\s+/g, "_")}.pdf`;
-      const msg = `*${p.name}* की ओर से खास ऑफ़र: *${offer.title}* (${offer.desc || ""}) — PDF डाउनलोड हो गई है, कृपया अटैच करें।`;
-      savePdfBlobAndOpenCustomerWhatsApp(doc, fileName, phone || p.mobile, msg);
+      const msg = `*${p.name}* (${p.city})\nखास ऑफ़र: *${offer.title}* (${offer.desc || ""})`;
+      deliverPdfToCustomerWhatsApp(buildOfferPdfDoc(p, offer), fileName, phone || p.mobile, fileName, msg);
     }
     const downloadActiveOfferPdf = () => activeOfferForSend && shareOfferPdfViaWhatsApp(activeOfferForSend, "");
     const sendActiveOfferPdfToWhatsApp = () => activeOfferForSend && shareOfferPdfViaWhatsApp(activeOfferForSend, getCurrentParlor().mobile);
@@ -1231,7 +1245,6 @@
       shareOfferPdfViaWhatsApp(activeOfferForSend, c.phone);
     }
 
-    // Services & Stars Billing
     const getCustomerById = (p, id) => (p.consumers || []).find((c) => c.id === id) || null;
     const getCustomerByName = (p, name) => (p.consumers || []).find((c) => String(c.name).trim() === String(name).trim()) || null;
     const getCustomerStarStats = (p, name) => { const c = getCustomerByName(p, name), e = Number(c?.starsEarned || 0), r = Number(c?.starsRedeemed || 0); return { earned: e, redeemed: r, available: Math.max(0, e - r) }; };
@@ -1300,7 +1313,6 @@
       if (s) { s.paidAmount = s.amount; s.dueAmount = 0; s.settled = true; s.reminderChecked = true; persistState(true); showToast("Due Settled"); }
     }
 
-    // Consumers, Appointments, Staff Generation (Inside Admin), Reminders, Assistant, Tickets
     function saveConsumerEntry() {
       const p = getCurrentParlor(), editId = document.getElementById("editingConsumerId").value, name = document.getElementById("conName").value.trim(), phone = document.getElementById("conPhone").value.trim(), note = document.getElementById("conNote").value.trim();
       if (!name || !phone) return showToast("Enter name & mobile");
@@ -1433,7 +1445,6 @@
       Object.entries(vals).forEach(([k, v]) => { const el = document.getElementById("inc-" + k); if (el) el.textContent = incomeUnlocked ? `₹${Math.round(v).toLocaleString("en-IN")}` : "••••••"; });
     }
 
-    // Plans & Razorpay (Unchanged)
     function openPlansModal(k = "yearly") { document.getElementById("planSelect").value = k; updatePlanSummary(); document.getElementById("plansModal")?.classList.add("open"); }
     function selectPlanAndPay(k) { document.getElementById("planSelect").value = k; updatePlanSummary(); startRazorpayCheckout(); }
     function updatePlanSummary() {
@@ -1470,7 +1481,7 @@
 
     function openForgotPasswordModal() {
       const p = (verifiedParlorIdForStep2 && appState.parlors[verifiedParlorIdForStep2]) || getCurrentParlor();
-      document.getElementById("fpUserIdInput").value = p.staff?.[0]?.id || p.code;
+      document.getElementById("fpUserIdInput").value = p.staff?.[0]?.id || "ADMIN01";
       document.getElementById("forgotPasswordModal")?.classList.add("open");
     }
     function generateAdminForgotPin() {
