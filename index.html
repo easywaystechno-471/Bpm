@@ -3,6 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
   <title>Beauty Parlour Management</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -534,11 +537,11 @@
   <!-- MAIN APP SHELL -->
   <div id="mainAppShell">
     <main class="container">
-      <!-- APP UPDATE NOTIFICATION BANNER (Shown when a newer version is available) -->
+      <!-- AUTO APP UPDATE NOTIFICATION BANNER (Shown automatically on app open when a newer build/version exists) -->
       <section id="appUpdateBanner" class="update-banner hidden">
         <div style="min-width:0;flex:1;">
-          <div class="update-banner-title" id="appUpdateTitle">🚀 नया ऐप अपडेट उपलब्ध है (v2.0)</div>
-          <div class="update-banner-sub" id="appUpdateNotes">नए फ़ीचर्स और सुधार के लिए Update दबाएं।</div>
+          <div class="update-banner-title" id="appUpdateTitle">🚀 नया ऐप अपडेट उपलब्ध है</div>
+          <div class="update-banner-sub" id="appUpdateNotes">लेटेस्ट ऐप पाने के लिए Update दबाएं।</div>
         </div>
         <button class="btn btn-whatsapp btn-sm" onclick="triggerAppUpdateInstall()">Update</button>
       </section>
@@ -1034,7 +1037,7 @@
 
         <div id="appAdminMasterConsole" class="hidden">
           <div class="card">
-            <div class="section-title"><span>🚀 App Version & Update Broadcast</span><span class="badge badge-active" id="currentAppVerBadge">v1.0</span></div>
+            <div class="section-title"><span>🚀 Auto App Update Broadcast</span><span class="badge badge-active" id="currentAppVerBadge">v1.0</span></div>
             <div class="grid-2">
               <div class="field"><label>Latest Version Number *</label><input id="adminLatestVerInput" class="input" placeholder="जैसे: 2.0" /></div>
               <div class="field"><label>APK Download Link *</label><input id="adminApkUrlInput" class="input" placeholder="https://.../app-release.apk" /></div>
@@ -1101,6 +1104,21 @@
       <button class="nav-btn" id="nav-assistant" onclick="openSectionTab('assistant')"><span class="nav-ico">✨</span><span data-i18n="nav_assistant">BPM असिस्टेंट</span></button>
       <button class="nav-btn" id="nav-support" onclick="handleSupportNavTap()"><span class="nav-ico">🛟</span><span data-i18n="nav_support">सपोर्ट</span></button>
     </nav>
+  </div>
+
+  <!-- AUTO UPDATE POPUP MODAL (Shown automatically when app opens with a newer version) -->
+  <div class="modal-backdrop" id="autoUpdateModal">
+    <div class="modal-box">
+      <div class="modal-head">
+        <strong id="autoUpdateModalTitle">🚀 नया ऐप अपडेट उपलब्ध है</strong>
+        <button class="red-x" onclick="closeModal('autoUpdateModal')">✕</button>
+      </div>
+      <div class="card-rose" style="margin-bottom:12px;">
+        <div class="item-title" id="autoUpdateModalVer">Version</div>
+        <div class="item-sub" id="autoUpdateModalDesc" style="margin-top:6px;color:var(--ink);"></div>
+      </div>
+      <button class="btn btn-whatsapp btn-block" style="padding:12px;" onclick="triggerAppUpdateInstall()">Update Now (डाउनलोड व इंस्टॉल करें)</button>
+    </div>
   </div>
 
   <!-- CUSTOMER SERVICE DETAILS & STAR HISTORY MODAL -->
@@ -1366,7 +1384,7 @@
       }
     };
 
-    const STORAGE_KEY = "bpm_state_glamour_v1", DEVICE_INIT_KEY = "bpm_device_initialized_v1", ACTIVE_PARLOR_SESSION_KEY = "bpm_active_parlor_session_v1", TILE_ORDER_KEY = "bpm_tile_order_v1", DAILY_QUOTE_KEY = "bpm_daily_quote_v1";
+    const STORAGE_KEY = "bpm_state_glamour_v1", DEVICE_INIT_KEY = "bpm_device_initialized_v1", ACTIVE_PARLOR_SESSION_KEY = "bpm_active_parlor_session_v1", TILE_ORDER_KEY = "bpm_tile_order_v1", DAILY_QUOTE_KEY = "bpm_daily_quote_v1", DISMISSED_UPDATE_VER_KEY = "bpm_dismissed_update_ver_v1";
     let currentLang = localStorage.getItem("bpm_lang") || "hi";
     let tileOrder = (() => {
       try {
@@ -1387,6 +1405,7 @@
     let enteredParlorRoomId = authenticatedParlorId;
     let activeOfferForSend = null, offerSendQueue = [], offerQueueIndex = 0, adminTicketsMap = {};
     let supportTapCount = 0, supportTapResetTimer = null, autoLockTimer = null, lastActivityTs = Date.now();
+    let autoUpdateModalShownForVer = "";
 
     const getLocalDateStr = (d = new Date()) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
     const formatTodayIndianDate = (d = new Date()) => d.toLocaleDateString("hi-IN", { day: "2-digit", month: "long", year: "numeric" });
@@ -1666,17 +1685,29 @@
         const t = document.getElementById("appUpdateTitle");
         const n = document.getElementById("appUpdateNotes");
         if (t) t.textContent = `🚀 नया ऐप अपडेट उपलब्ध है (v${meta.latestVersion})`;
-        if (n) n.textContent = meta.updateNotes || "नए फ़ीचर्स और सुधार के लिए Update दबाएं।";
+        if (n) n.textContent = meta.updateNotes || "लेटेस्ट ऐप पाने के लिए Update दबाएं।";
+
+        if (autoUpdateModalShownForVer !== meta.latestVersion) {
+          autoUpdateModalShownForVer = meta.latestVersion;
+          const mt = document.getElementById("autoUpdateModalTitle");
+          const mv = document.getElementById("autoUpdateModalVer");
+          const md = document.getElementById("autoUpdateModalDesc");
+          if (mt) mt.textContent = `🚀 नया ऐप अपडेट उपलब्ध है`;
+          if (mv) mv.textContent = `Current: v${CURRENT_APP_VERSION} → Latest: v${meta.latestVersion}`;
+          if (md) md.textContent = meta.updateNotes || "नया वर्ज़न आ गया है। Update दबाकर नया ऐप डाउनलोड/इंस्टॉल करें।";
+          document.getElementById("autoUpdateModal")?.classList.add("open");
+        }
       }
     }
 
     function triggerAppUpdateInstall() {
       const apkUrl = String(appState.appMeta?.apkUrl || APK_DIRECT_URL).trim() || APK_DIRECT_URL;
-      showToast("नया ऐप अपडेट डाउनलोड हो रहा है — डाउनलोड पूरा होने पर Install/Update दबाएं");
+      closeModal("autoUpdateModal");
+      showToast("नया ऐप अपडेट डाउनलोड हो रहा है — डाउनलोड होते ही Install/Update दबाएं");
       try {
         const a = document.createElement("a");
         a.href = apkUrl;
-        a.download = "BPM-Update.apk";
+        a.download = `BPM-v${appState.appMeta?.latestVersion || "latest"}.apk`;
         a.target = "_blank";
         a.rel = "noopener noreferrer";
         document.body.appendChild(a);
@@ -1691,11 +1722,12 @@
       if (!isAppAdminUnlocked) return showToast("पहले App Admin लॉगिन करें");
       const ver = String(document.getElementById("adminLatestVerInput")?.value || "").trim();
       const apk = String(document.getElementById("adminApkUrlInput")?.value || "").trim() || APK_DIRECT_URL;
-      const notes = String(document.getElementById("adminUpdateNotesInput")?.value || "").trim() || "नए फ़ीचर्स और सुधार के लिए Update दबाएं।";
+      const notes = String(document.getElementById("adminUpdateNotesInput")?.value || "").trim() || "लेटेस्ट ऐप पाने के लिए Update दबाएं।";
       if (!ver) return showToast("नया वर्ज़न नंबर डालें (जैसे: 2.0)");
       appState.appMeta = { latestVersion: ver, apkUrl: apk, updateNotes: notes };
+      autoUpdateModalShownForVer = "";
       persistState(true);
-      showToast(`Update v${ver} सभी यूज़र्स के लिए लाइव कर दिया गया`);
+      showToast(`Auto Update v${ver} सभी यूज़र्स के लिए भेज दिया गया`);
     }
 
     function openCustomerServiceDetailsModal(customerId) {
