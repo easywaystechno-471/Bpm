@@ -9,6 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet" />
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
   <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
@@ -26,7 +27,8 @@
     .auth-gate-wrap{max-width:540px;margin:10px auto 20px;padding:0 14px}
     .hidden{display:none!important}
 
-    .update-banner{background:linear-gradient(135deg,#0f172a,#1e3a8a);color:#fff;border:1.5px solid #60a5fa;border-radius:16px;padding:11px 14px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+    .update-banner{background:linear-gradient(135deg,#0f172a,#1e3a8a);color:#fff;border:1.5px solid #60a5fa;border-radius:16px;padding:11px 14px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+    .broadcast-banner{background:linear-gradient(135deg,#880e4f,#4a148c);color:#fff;border:1.5px solid #f472b6;border-radius:16px;padding:11px 14px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;gap:10px}
     .pin-lock-screen{min-height:calc(100vh - 30px);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px 12px;text-align:center}
     .lock-icon-circle{width:64px;height:64px;border-radius:50%;background:var(--accent-grad);color:#fff;display:grid;place-items:center;font-size:26px;margin-bottom:10px}
     .pin-dots-row{display:flex;justify-content:center;gap:12px;margin:14px 0 20px}
@@ -87,7 +89,7 @@
     .plan-card.popular{border-color:var(--rose);background:#fff8fb}.plan-price{font-size:19px;font-weight:800;color:var(--rose-dark)}.plan-meta{font-size:11.5px;color:var(--muted)}
 
     .btn{border:none;border-radius:11px;padding:9px 13px;font-size:13px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:5px;text-decoration:none}
-    .btn-primary{background:var(--accent-grad);color:#fff}.btn-razorpay{background:#072654;color:#fff}.btn-whatsapp{background:#16a34a;color:#fff}.btn-call{background:#0284c7;color:#fff}.btn-soft{background:#fce7f3;color:var(--rose-dark)}.btn-danger{background:#fee2e2;color:#b91c1c}.btn-outline{background:#fff;color:var(--ink);border:1px solid #dfc0d0}
+    .btn-primary{background:var(--accent-grad);color:#fff}.btn-razorpay{background:#072654;color:#fff}.btn-google{background:#fff;color:#1f2937;border:1.5px solid #d1d5db}.btn-whatsapp{background:#16a34a;color:#fff}.btn-call{background:#0284c7;color:#fff}.btn-soft{background:#fce7f3;color:var(--rose-dark)}.btn-danger{background:#fee2e2;color:#b91c1c}.btn-outline{background:#fff;color:var(--ink);border:1px solid #dfc0d0}
     .btn-sm{padding:7px 10px;font-size:12px;border-radius:9px}.btn-xs{padding:5px 8px;font-size:11px;border-radius:8px}.btn-block{width:100%}
     .row-btns{display:flex;flex-wrap:wrap;gap:6px}
     .field{margin-bottom:9px}.field label{display:block;font-size:12px;font-weight:700;color:var(--muted);margin-bottom:4px}
@@ -96,6 +98,7 @@
     .list-item{border:1px solid #f2d9e6;background:#fff;border-radius:13px;padding:11px 13px;margin-bottom:9px;display:flex;align-items:center;justify-content:space-between;gap:9px;flex-wrap:wrap}
     .list-item.unread-rem{border:1.5px solid #e11d48;background:#fff1f2}
     .item-title{font-size:13.5px;font-weight:700}.item-sub{font-size:12px;color:var(--muted);margin-top:2px}
+    .cred-chip{background:#fff5f9;border:1px solid #f2b8d4;border-radius:10px;padding:7px 10px;margin-top:6px;font-size:11.5px;color:var(--ink)}
     .bill-breakdown-box{background:#fff5f9;border:1.5px solid #f2b8d4;border-radius:12px;padding:9px 11px;margin-bottom:10px;font-size:12.5px}
     .bill-line{display:flex;justify-content:space-between;margin-bottom:4px}
     .check-row{display:flex;align-items:center;gap:9px;border:1px solid #f2d9e6;background:#fff;border-radius:11px;padding:8px 11px;margin-bottom:7px;cursor:pointer}
@@ -143,7 +146,6 @@
 
   <!-- AUTH & 1-MINUTE IDLE LOCK GATE -->
   <section id="appAuthGate" class="auth-gate-wrap hidden">
-    <!-- 1-Min Idle App Lock Keypad -->
     <div id="quickPinKeypadView" class="pin-lock-screen hidden">
       <div class="lock-icon-circle">🔒</div>
       <div style="font-size:20px;font-weight:800;" data-t="unlockApp">Unlock App</div>
@@ -169,7 +171,6 @@
       </div>
     </div>
 
-    <!-- Clean Entry Screen + Register / Two-Step Login -->
     <div id="fullRegisterLoginView">
       <div id="entryChoicesLanding" class="entry-home-screen">
         <div class="entry-top-strip">
@@ -283,6 +284,16 @@
   <!-- MAIN APP SHELL -->
   <div id="mainAppShell">
     <main class="container">
+      <!-- BROADCAST BANNER (Special Notification / Greetings from App Admin) -->
+      <section id="appBroadcastBanner" class="broadcast-banner hidden">
+        <div style="min-width:0;flex:1;">
+          <div style="font-size:13px;font-weight:800;" id="appBroadcastTitle">📢 सूचना</div>
+          <div style="font-size:11.5px;color:#fce7f3;margin-top:2px;" id="appBroadcastMsg"></div>
+        </div>
+        <button class="btn btn-soft btn-xs" onclick="dismissBroadcastBanner()">✓</button>
+      </section>
+
+      <!-- AUTO APP UPDATE BANNER -->
       <section id="appUpdateBanner" class="update-banner hidden">
         <div style="min-width:0;flex:1;">
           <div style="font-size:13px;font-weight:800;" id="appUpdateTitle" data-t="updateAvail">🚀 नया ऐप अपडेट उपलब्ध है</div>
@@ -518,35 +529,66 @@
           <button class="btn btn-primary btn-block" onclick="submitTicketToAppAdmin()" data-t="sendTktBtn">App Admin को टिकट भेजें</button>
         </div>
 
+        <!-- App Admin Login Card (ID/PIN + Gmail/Google Sign-In) -->
         <div class="card-rose hidden" id="hiddenAppAdminLoginCard">
           <div class="section-title"><span>🛡️ App Admin Portal</span><span class="badge" id="appAdminStatusBadge">Locked</span></div>
+          <div class="item-sub" style="margin-bottom:8px;">App Admin ID/PIN या अपने Gmail (Google) से लॉगिन करें (अन्य सेक्शन पर जाते ही Auto-Logout होगा)।</div>
           <div class="grid-2">
-            <div class="field"><label>App Admin ID *</label><input id="appAdminIdInput" class="input" style="text-transform:uppercase;" /></div>
-            <div class="field"><label>App Admin PIN *</label><input id="appAdminPinInput" class="input" type="password" /></div>
+            <div class="field"><label>App Admin ID *</label><input id="appAdminIdInput" class="input" placeholder="ADMIN01" style="text-transform:uppercase;" /></div>
+            <div class="field"><label>App Admin PIN *</label><input id="appAdminPinInput" class="input" type="password" placeholder="PIN" /></div>
           </div>
           <div class="row-btns">
-            <button class="btn btn-primary btn-sm" onclick="unlockAppAdminConsole()">Login</button>
+            <button class="btn btn-primary btn-sm" style="flex:1;" onclick="unlockAppAdminConsole()">ID/PIN Login</button>
+            <button class="btn btn-google btn-sm" style="flex:1;" onclick="loginAppAdminWithGoogle()">G Gmail / Google</button>
             <button class="btn btn-outline btn-sm" onclick="hideAppAdminPortal()">Hide</button>
           </div>
         </div>
 
+        <!-- App Admin Master Console -->
         <div id="appAdminMasterConsole" class="hidden">
-          <div class="card">
-            <div class="section-title"><span>🚀 Auto App Update Broadcast</span></div>
-            <div class="grid-2">
-              <div class="field"><label>Latest Version *</label><input id="adminLatestVerInput" class="input" placeholder="2.0" /></div>
-              <div class="field"><label>APK Link *</label><input id="adminApkUrlInput" class="input" /></div>
+          <div class="card-rose">
+            <div class="section-title">
+              <span>🛡️ App Admin Master</span>
+              <div class="row-btns">
+                <span class="badge badge-active" id="appAdminAuthIdentity">Unlocked</span>
+                <button class="btn btn-danger btn-xs" onclick="lockAppAdminConsole()">Auto/Manual Lock</button>
+              </div>
             </div>
-            <div class="field"><label>Update Notes</label><input id="adminUpdateNotesInput" class="input" /></div>
-            <button class="btn btn-primary btn-block" onclick="publishAppUpdateNotice()">Update Notification भेजें</button>
+            <div class="item-sub">किसी अन्य टैब पर जाते ही यह अपने-आप लॉक हो जाएगा।</div>
           </div>
+
+          <!-- Broadcast: Special Notification / Version Update / Greetings -->
           <div class="card">
-            <div class="section-title"><span>⏳ Free Trial Days बढ़ाएं</span></div>
-            <div class="field"><label>Parlor *</label><select id="extendTrialParlorSelect"></select></div>
-            <div class="field"><label>Days *</label><input id="extendTrialDaysInput" class="input" type="number" value="15" /></div>
-            <button class="btn btn-whatsapp btn-block" onclick="applyAppAdminTrialExtension()">Days बढ़ाएं</button>
+            <div class="section-title"><span>📢 Broadcast (Notification · Update · Greetings)</span></div>
+            <div class="grid-2">
+              <div class="field"><label>Broadcast Type</label><select id="broadcastTypeSelect"><option value="NOTIFICATION">Special Notification</option><option value="GREETING">Greetings (शुभकामना)</option><option value="VERSION_UPDATE">Version Update</option></select></div>
+              <div class="field"><label>Latest Version (यदि Update)</label><input id="adminLatestVerInput" class="input" placeholder="2.0" /></div>
+            </div>
+            <div class="field"><label>शीर्षक / Title *</label><input id="adminBroadcastTitleInput" class="input" placeholder="विशेष सूचना / दीपावली शुभकामनाएं" /></div>
+            <div class="field"><label>संदेश / Notes *</label><input id="adminBroadcastMsgInput" class="input" placeholder="सभी पार्लर्स के लिए संदेश..." /></div>
+            <div class="field"><label>APK Link (यदि Update)</label><input id="adminApkUrlInput" class="input" /></div>
+            <button class="btn btn-primary btn-block" onclick="publishAppAdminBroadcast()">सभी पार्लर्स पर Broadcast भेजें</button>
           </div>
-          <div class="card"><div class="section-title"><span>👥 All Parlors</span><span class="badge badge-trial" id="totalParlorsDirectoryBadge">0</span></div><div id="appAdminDirectoryList"></div></div>
+
+          <!-- Add Trial Days & Stars to Any Parlor -->
+          <div class="card">
+            <div class="section-title"><span>⏳ Days व ⭐ Stars भेजें</span></div>
+            <div class="field"><label>Parlor चुनें *</label><select id="extendTrialParlorSelect"></select></div>
+            <div class="grid-2">
+              <div class="field"><label>Extra Days</label><input id="extendTrialDaysInput" class="input" type="number" value="15" /></div>
+              <div class="field"><label>Send Stars (⭐)</label><input id="sendAdminStarsInput" class="input" type="number" value="5" /></div>
+            </div>
+            <div class="row-btns">
+              <button class="btn btn-whatsapp btn-sm" style="flex:1;" onclick="applyAppAdminTrialExtension()">+ Days बढ़ाएं</button>
+              <button class="btn btn-soft btn-sm" style="flex:1;" onclick="sendStarsFromAppAdmin()">+ ⭐ Stars भेजें</button>
+            </div>
+          </div>
+
+          <!-- All Parlors with IDs, PINs, Staff Creds & Access Button -->
+          <div class="card">
+            <div class="section-title"><span>👥 All Parlors (IDs & PINs)</span><span class="badge badge-trial" id="totalParlorsDirectoryBadge">0</span></div>
+            <div id="appAdminDirectoryList"></div>
+          </div>
         </div>
       </section>
     </main>
@@ -662,6 +704,7 @@
   <script>
     const CURRENT_APP_VERSION = "1.0", RAZORPAY_KEY_ID = "rzp_live_U33fOg4q9BEcIY";
     const DEFAULT_APP_ADMIN_ID = "ADMIN01", DEFAULT_APP_ADMIN_PIN = "BPMADMIN";
+    const DEFAULT_APP_ADMIN_EMAIL = ""; // यहाँ अपना Gmail पता डालें (उदा. "yourname@gmail.com")
     const FIREBASE_CONFIG = {
       apiKey: "AIzaSyD5n8P4e4Qylr9fh02f4e9d04zyJcWE9Xw", authDomain: "bpm1-52e92.firebaseapp.com",
       databaseURL: "https://bpm1-52e92-default-rtdb.firebaseio.com", projectId: "bpm1-52e92",
@@ -766,8 +809,8 @@
     let isAppLoggedIn = Boolean(localStorage.getItem(LOGGED_IN_FLAG_KEY));
     let registeredParlorId = localStorage.getItem(REGISTERED_PARLOR_ID_KEY) || "";
     let verifiedParlorIdForStep2 = "", entrySubView = "choices", quickUnlockKeypadActive = false, enteredKeypadPin = "";
-    let isAppAdminPortalOpen = false, isAppAdminUnlocked = false, activeOfferForSend = null, offerSendQueue = [], offerQueueIndex = 0;
-    let supportTapCount = 0, supportTapResetTimer = null, autoLockTimer = null, lastActivityTs = Date.now(), autoUpdateModalShownForVer = "";
+    let isAppAdminPortalOpen = false, isAppAdminUnlocked = false, appAdminAuthMethod = "", activeOfferForSend = null, offerSendQueue = [], offerQueueIndex = 0;
+    let supportTapCount = 0, supportTapResetTimer = null, autoLockTimer = null, lastActivityTs = Date.now(), autoUpdateModalShownForVer = "", broadcastDismissedId = "";
 
     const t = (k) => (I18N[currentLang] && I18N[currentLang][k]) || I18N.hi[k] || k;
     function applyLanguageToDom() {
@@ -860,7 +903,8 @@
       const now = Date.now(), today = getLocalDateStr();
       return {
         appMeta: { latestVersion: CURRENT_APP_VERSION, apkUrl: APK_DIRECT_URL, updateNotes: "Update" },
-        appAdmin: { id: DEFAULT_APP_ADMIN_ID, pin: DEFAULT_APP_ADMIN_PIN },
+        broadcast: { id: "", type: "NOTIFICATION", title: "", message: "" },
+        appAdmin: { id: DEFAULT_APP_ADMIN_ID, pin: DEFAULT_APP_ADMIN_PIN, email: DEFAULT_APP_ADMIN_EMAIL },
         activeParlorId: "parlor-bpm",
         parlors: {
           "parlor-bpm": {
@@ -912,7 +956,8 @@
       const keys = Object.keys(parlors); if (!keys.length) return fb;
       return {
         appMeta: { latestVersion: String(raw.appMeta?.latestVersion || CURRENT_APP_VERSION), apkUrl: String(raw.appMeta?.apkUrl || APK_DIRECT_URL), updateNotes: String(raw.appMeta?.updateNotes || "Update") },
-        appAdmin: { id: String(raw.appAdmin?.id || DEFAULT_APP_ADMIN_ID).toUpperCase(), pin: String(raw.appAdmin?.pin || DEFAULT_APP_ADMIN_PIN) },
+        broadcast: { id: String(raw.broadcast?.id || ""), type: String(raw.broadcast?.type || "NOTIFICATION"), title: String(raw.broadcast?.title || ""), message: String(raw.broadcast?.message || "") },
+        appAdmin: { id: String(raw.appAdmin?.id || DEFAULT_APP_ADMIN_ID).toUpperCase(), pin: String(raw.appAdmin?.pin || DEFAULT_APP_ADMIN_PIN), email: String(raw.appAdmin?.email || DEFAULT_APP_ADMIN_EMAIL).trim().toLowerCase() },
         activeParlorId: (registeredParlorId && parlors[registeredParlorId]) ? registeredParlorId : (parlors[raw.activeParlorId] ? raw.activeParlorId : keys[0]),
         parlors
       };
@@ -958,7 +1003,7 @@
       if (!isAppLoggedIn || !registeredParlorId) return;
       autoLockTimer = setTimeout(() => {
         if (isAppLoggedIn && registeredParlorId && Date.now() - lastActivityTs >= AUTO_LOCK_IDLE_MS - 150) {
-          isAppLoggedIn = false; quickUnlockKeypadActive = true; enteredKeypadPin = ""; incomeUnlocked = false; incomeSlotsExpanded = false;
+          isAppLoggedIn = false; quickUnlockKeypadActive = true; enteredKeypadPin = ""; incomeUnlocked = false; incomeSlotsExpanded = false; isAppAdminUnlocked = false; appAdminAuthMethod = "";
           try { localStorage.removeItem(LOGGED_IN_FLAG_KEY); } catch (e) {}
           renderAuthShell(); showToast("1 मिनट निष्क्रियता पर ऐप लॉक हो गया");
         }
@@ -987,7 +1032,7 @@
 
     function lockAppSession() {
       if (!registeredParlorId) return showToast("पहले पार्लर रजिस्टर करें");
-      isAppLoggedIn = false; quickUnlockKeypadActive = true; enteredKeypadPin = ""; incomeUnlocked = false; incomeSlotsExpanded = false;
+      isAppLoggedIn = false; quickUnlockKeypadActive = true; enteredKeypadPin = ""; incomeUnlocked = false; incomeSlotsExpanded = false; isAppAdminUnlocked = false; appAdminAuthMethod = "";
       try { localStorage.removeItem(LOGGED_IN_FLAG_KEY); } catch (e) {}
       clearTimeout(autoLockTimer); renderAuthShell();
     }
@@ -997,13 +1042,13 @@
       if (cur?.activeUser && String(cur.activeUser.role).toUpperCase() !== "ADMIN") {
         const admin = (cur.staff || []).find((u) => u.role === "ADMIN") || cur.staff[0];
         if (admin) cur.activeUser = { id: admin.id, name: admin.name, role: admin.role };
-        isAppLoggedIn = false; quickUnlockKeypadActive = false; verifiedParlorIdForStep2 = cur.id; entrySubView = "login";
+        isAppLoggedIn = false; quickUnlockKeypadActive = false; verifiedParlorIdForStep2 = cur.id; entrySubView = "login"; isAppAdminUnlocked = false; appAdminAuthMethod = "";
         try { localStorage.removeItem(LOGGED_IN_FLAG_KEY); } catch (e) {}
         clearTimeout(autoLockTimer); persistState(true); renderAuthShell(); updateStep2UserLoginCard();
         showToast("यूज़र लॉग आउट — अब Admin/Staff ID व PIN डालें");
         return;
       }
-      isAppLoggedIn = false; quickUnlockKeypadActive = false; verifiedParlorIdForStep2 = ""; entrySubView = "choices"; incomeUnlocked = false; incomeSlotsExpanded = false;
+      isAppLoggedIn = false; quickUnlockKeypadActive = false; verifiedParlorIdForStep2 = ""; entrySubView = "choices"; incomeUnlocked = false; incomeSlotsExpanded = false; isAppAdminUnlocked = false; appAdminAuthMethod = "";
       try { localStorage.removeItem(LOGGED_IN_FLAG_KEY); } catch (e) {}
       clearTimeout(autoLockTimer);
       ["gateParlorCodeInput", "gateParlorPassInput", "gateUserIdInput", "gateUserPassInput"].forEach((id) => { const el = document.getElementById(id); if (el) el.value = ""; });
@@ -1096,7 +1141,7 @@
       showToast(`${match.name} (${match.role}) लॉगिन हो गए`);
     }
 
-    // PDF Generation + Direct Customer WhatsApp Chat Flow (Native File Share First, Safe Fallback)
+    // PDF Generation + Direct Customer WhatsApp Chat Flow
     function getParlorLogoForPdf(p) {
       if (p?.logoDataUrl && String(p.logoDataUrl).startsWith("data:image")) return p.logoDataUrl;
       const c = document.createElement("canvas"); c.width = 160; c.height = 160; const ctx = c.getContext("2d");
@@ -1122,7 +1167,6 @@
       const blob = doc.output("blob");
       const pdfFile = new File([blob], fileName, { type: "application/pdf" });
 
-      // Primary flow: Native share sheet so WhatsApp opens with PDF attached & Send button ready
       try {
         if (navigator.canShare?.({ files: [pdfFile] }) && typeof navigator.share === "function") {
           await navigator.share({ files: [pdfFile], title: shareTitle, text: waText });
@@ -1132,7 +1176,6 @@
         if (err?.name === "AbortError") return;
       }
 
-      // Fallback flow: Download PDF + open customer's WhatsApp chat directly
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url; a.download = fileName;
@@ -1445,6 +1488,7 @@
       Object.entries(vals).forEach(([k, v]) => { const el = document.getElementById("inc-" + k); if (el) el.textContent = incomeUnlocked ? `₹${Math.round(v).toLocaleString("en-IN")}` : "••••••"; });
     }
 
+    // Plans & Razorpay (Unchanged)
     function openPlansModal(k = "yearly") { document.getElementById("planSelect").value = k; updatePlanSummary(); document.getElementById("plansModal")?.classList.add("open"); }
     function selectPlanAndPay(k) { document.getElementById("planSelect").value = k; updatePlanSummary(); startRazorpayCheckout(); }
     function updatePlanSummary() {
@@ -1518,33 +1562,99 @@
       p.tickets.unshift(tkt); document.getElementById("tktSubject").value = ""; document.getElementById("tktMessage").value = ""; persistState(true); showToast(`Ticket ${id} Sent`);
     }
 
+    // APP ADMIN: Gmail/Google + ID/PIN Login, View All IDs/PINs, Days/Stars, Broadcast & Auto-Logout on Tab Leave
     function handleSupportNavTap() {
       openSectionTab("support"); supportTapCount++; clearTimeout(supportTapResetTimer);
       supportTapResetTimer = setTimeout(() => { supportTapCount = 0; }, 3000);
-      if (supportTapCount >= 10) { supportTapCount = 0; isAppAdminPortalOpen = true; renderAppAdminConsole(); }
+      if (supportTapCount >= 10) { supportTapCount = 0; isAppAdminPortalOpen = true; renderAppAdminConsole(); showToast("App Admin Portal खुला"); }
     }
-    function hideAppAdminPortal() { isAppAdminPortalOpen = false; isAppAdminUnlocked = false; renderAppAdminConsole(); }
+    function hideAppAdminPortal() { isAppAdminPortalOpen = false; isAppAdminUnlocked = false; appAdminAuthMethod = ""; renderAppAdminConsole(); }
+    function lockAppAdminConsole() { isAppAdminUnlocked = false; appAdminAuthMethod = ""; renderAppAdminConsole(); showToast("App Admin लॉक हो गया"); }
+
     function unlockAppAdminConsole() {
-      if (document.getElementById("appAdminIdInput").value.trim().toUpperCase() === appState.appAdmin.id && document.getElementById("appAdminPinInput").value.trim() === appState.appAdmin.pin) { isAppAdminUnlocked = true; renderAppAdminConsole(); }
-      else showToast("Wrong App Admin ID/PIN");
+      const idVal = document.getElementById("appAdminIdInput").value.trim().toUpperCase();
+      const pinVal = document.getElementById("appAdminPinInput").value.trim();
+      if (idVal === appState.appAdmin.id && pinVal === appState.appAdmin.pin) {
+        isAppAdminUnlocked = true; appAdminAuthMethod = `ID:${idVal}`; incomeUnlocked = true; renderAll(); showToast("App Admin Unlocked");
+      } else showToast("गलत App Admin ID या PIN");
     }
-    function publishAppUpdateNotice() {
-      const ver = document.getElementById("adminLatestVerInput").value.trim(), apk = document.getElementById("adminApkUrlInput").value.trim() || APK_DIRECT_URL, notes = document.getElementById("adminUpdateNotesInput").value.trim();
-      if (!ver) return; appState.appMeta = { latestVersion: ver, apkUrl: apk, updateNotes: notes || "Update" }; persistState(true); showToast("Update Broadcast Sent");
+
+    async function loginAppAdminWithGoogle() {
+      try {
+        if (!firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG);
+        if (!firebase.auth) return showToast("Google Auth उपलब्ध नहीं है, ID/PIN से लॉगिन करें");
+        const provider = new firebase.auth.GoogleAuthProvider();
+        provider.setCustomParameters({ prompt: "select_account" });
+        const res = await firebase.auth().signInWithPopup(provider);
+        const email = String(res?.user?.email || "").trim().toLowerCase();
+        const allowed = String(appState.appAdmin?.email || DEFAULT_APP_ADMIN_EMAIL || "").trim().toLowerCase();
+        if (allowed && email !== allowed) {
+          await firebase.auth().signOut().catch(() => {});
+          return showToast(`केवल ${allowed} से ही App Admin खुलेगा`);
+        }
+        isAppAdminUnlocked = true; appAdminAuthMethod = email || "Google"; incomeUnlocked = true; renderAll();
+        showToast(`Google से लॉगिन सफल (${email || "Admin"})`);
+      } catch (err) {
+        showToast("Google पॉप-अप/WebView अवरोध — ID/PIN से लॉगिन करें");
+      }
     }
+
+    function publishAppAdminBroadcast() {
+      const bType = document.getElementById("broadcastTypeSelect").value;
+      const title = document.getElementById("adminBroadcastTitleInput").value.trim();
+      const msg = document.getElementById("adminBroadcastMsgInput").value.trim();
+      const ver = document.getElementById("adminLatestVerInput").value.trim();
+      const apk = document.getElementById("adminApkUrlInput").value.trim() || APK_DIRECT_URL;
+      if (!title || !msg) return showToast("शीर्षक और संदेश लिखें");
+      appState.broadcast = { id: "BC-" + Date.now(), type: bType, title, message: msg };
+      if (bType === "VERSION_UPDATE" && ver) {
+        appState.appMeta = { latestVersion: ver, apkUrl: apk, updateNotes: msg };
+      }
+      broadcastDismissedId = "";
+      persistState(true);
+      showToast("Broadcast सभी पार्लर्स को भेज दिया गया");
+    }
+
+    function dismissBroadcastBanner() {
+      broadcastDismissedId = appState.broadcast?.id || "";
+      document.getElementById("appBroadcastBanner")?.classList.add("hidden");
+    }
+
     function triggerAppUpdateInstall() { closeModal("autoUpdateModal"); window.open(appState.appMeta?.apkUrl || APK_DIRECT_URL, "_blank"); }
+
     function applyAppAdminTrialExtension() {
       const p = appState.parlors[document.getElementById("extendTrialParlorSelect").value], d = Number(document.getElementById("extendTrialDaysInput").value);
-      if (p && d > 0) { p.validUntil = Math.max(Date.now(), Number(p.validUntil) || Date.now()) + d * DAY_MS; persistState(true); showToast(`+${d} Days Added`); }
+      if (p && d > 0) { p.validUntil = Math.max(Date.now(), Number(p.validUntil) || Date.now()) + d * DAY_MS; persistState(true); showToast(`${p.name}: +${d} Days Added`); }
     }
+
+    function sendStarsFromAppAdmin() {
+      const p = appState.parlors[document.getElementById("extendTrialParlorSelect").value], st = Math.max(0, Math.floor(Number(document.getElementById("sendAdminStarsInput").value) || 0));
+      if (p && st > 0) { p.starsEarned = Number(p.starsEarned || 0) + st; persistState(true); showToast(`${p.name}: +${st} ⭐ Stars Sent`); }
+    }
+
+    function accessParlorAsAppAdmin(parlorId) {
+      if (!isAppAdminUnlocked) return;
+      const target = appState.parlors[parlorId]; if (!target) return;
+      setActiveParlorLocal(target.id, true);
+      incomeUnlocked = true;
+      openSectionTab("home");
+      showToast(`${target.name} (${target.code}) में प्रवेश किया — वापस आने पर Auto-Logout होगा`);
+    }
+
     function renderAppAdminConsole() {
       document.getElementById("hiddenAppAdminLoginCard")?.classList.toggle("hidden", !(isAppAdminPortalOpen || isAppAdminUnlocked));
       document.getElementById("appAdminMasterConsole")?.classList.toggle("hidden", !isAppAdminUnlocked);
       if (!isAppAdminUnlocked) return;
+      document.getElementById("appAdminAuthIdentity").textContent = appAdminAuthMethod || "Unlocked";
       const list = Object.values(appState.parlors || {});
-      document.getElementById("extendTrialParlorSelect").innerHTML = list.map((p) => `<option value="${p.id}">${escapeHtml(p.name)} (${p.code})</option>`).join("");
+      const sel = document.getElementById("extendTrialParlorSelect"), prev = sel.value;
+      sel.innerHTML = list.map((p) => `<option value="${p.id}">${escapeHtml(p.name)} (${p.code})</option>`).join("");
+      if (prev && appState.parlors[prev]) sel.value = prev;
       document.getElementById("totalParlorsDirectoryBadge").textContent = `${list.length} Parlors`;
-      document.getElementById("appAdminDirectoryList").innerHTML = list.map((p) => `<div class="list-item"><div><div class="item-title">${escapeHtml(p.name)} (${p.code})</div><div class="item-sub">${getRemainingDays(p)}d left</div></div></div>`).join("");
+      document.getElementById("appAdminDirectoryList").innerHTML = list.map((p) => {
+        const staffCreds = (p.staff || []).map((u) => `${escapeHtml(u.role)} [${escapeHtml(u.id)} / PIN:${escapeHtml(u.pin)}]`).join(" · ");
+        return `<div class="list-item"><div style="width:100%;"><div class="item-title">${escapeHtml(p.name)} (${escapeHtml(p.code)}) <span class="badge badge-trial">${getRemainingDays(p)}d left · ⭐${getAvailableStars(p)}</span></div><div class="item-sub">${escapeHtml(p.city)} ${p.mobile ? "· 📞 " + escapeHtml(p.mobile) : ""}</div><div class="cred-chip"><strong>Parlor ID:</strong> ${escapeHtml(p.code)} · <strong>Parlor PIN:</strong> ${escapeHtml(p.parlorPassword || p.appPin)}<br/><strong>Users:</strong> ${staffCreds}</div><div class="row-btns" style="margin-top:8px;"><button class="btn btn-primary btn-xs" onclick="accessParlorAsAppAdmin('${p.id}')">👁️ Access Parlor</button></div></div></div>`;
+      }).join("");
     }
 
     function toggleButtonArrangeMode() { arrangeModeActive = !arrangeModeActive; renderQuickTiles(); }
@@ -1569,6 +1679,16 @@
     function renderAll() {
       applyLanguageToDom();
       const p = getCurrentParlor(), days = getRemainingDays(p), isAdm = isPrimaryParlorAdmin(p);
+
+      const bc = appState.broadcast;
+      const showBc = Boolean(bc && bc.id && bc.id !== broadcastDismissedId && (bc.title || bc.message));
+      document.getElementById("appBroadcastBanner")?.classList.toggle("hidden", !showBc);
+      if (showBc) {
+        const ico = bc.type === "GREETING" ? "🎉" : (bc.type === "VERSION_UPDATE" ? "🚀" : "📢");
+        document.getElementById("appBroadcastTitle").textContent = `${ico} ${bc.title}`;
+        document.getElementById("appBroadcastMsg").textContent = bc.message;
+      }
+
       const showUpd = isNewerVersionAvailable(appState.appMeta?.latestVersion, CURRENT_APP_VERSION);
       document.getElementById("appUpdateBanner")?.classList.toggle("hidden", !showUpd);
       if (showUpd && isAppLoggedIn && autoUpdateModalShownForVer !== appState.appMeta.latestVersion) {
@@ -1617,11 +1737,17 @@
       document.getElementById("appointmentsList").innerHTML = p.appointments.map((a) => `<div class="list-item"><div><div class="item-title">${escapeHtml(a.clientName)} — ${escapeHtml(a.serviceType)}</div><div class="item-sub">${a.date} ${a.time}</div></div></div>`).join("") || `<div class="item-sub">No appointments.</div>`;
     }
 
+    // Auto-logout App Admin whenever leaving the Support section
     function openSectionTab(tab) {
+      if (isAppAdminUnlocked && tab !== "support") {
+        isAppAdminUnlocked = false;
+        appAdminAuthMethod = "";
+      }
       document.querySelectorAll(".tab-view").forEach((el) => el.classList.add("hidden"));
       document.getElementById(`tab-${tab}`)?.classList.remove("hidden");
       document.querySelectorAll(".nav-btn").forEach((b) => b.classList.remove("active"));
       document.getElementById(`nav-${tab}`)?.classList.add("active");
+      if (tab !== "support") renderAppAdminConsole();
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
