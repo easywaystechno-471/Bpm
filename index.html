@@ -189,7 +189,7 @@
           <div class="entry-big-slide" onclick="chooseGateMode('login')">
             <span class="entry-big-ico">🔑</span>
             <div class="entry-big-title" data-t="loginRegParlorBtn">लॉग इन विद रजिस्टर्ड पार्लर</div>
-            <div class="entry-big-sub" data-t="loginRegParlorSub">Parlor ID/PIN → Admin/Staff ID/PIN</div>
+            <div class="entry-big-sub" data-t="loginRegParlorSub">Parlor ID/PIN या Pass Key → Admin/Staff ID/PIN</div>
           </div>
         </div>
         <div style="display:flex;justify-content:center;">
@@ -237,14 +237,14 @@
             </div>
           </div>
           <div class="grid-2">
-            <div class="field"><label>Pass Key (PIN Reset) *</label><input id="gateRegPassKey" class="input" placeholder="BPM123" /></div>
+            <div class="field"><label>Pass Key (PIN / Access) *</label><input id="gateRegPassKey" class="input" placeholder="BPM123" /></div>
             <div class="field"><label data-t="refCodeOptLbl">Referral Code (वैकल्पिक)</label><input id="gateRegRefCode" class="input" style="text-transform:uppercase;" placeholder="BPM-XXXX-1000" /></div>
           </div>
           <button class="btn btn-primary btn-block" onclick="registerParlorFromGate()" data-t="submitRegBtn">रजिस्टर योर पार्लर</button>
         </div>
       </div>
 
-      <!-- Two-Step Login -->
+      <!-- Two-Step Login (Parlor PIN or Pass Key -> Admin/Staff ID & PIN) -->
       <div id="gateLoginFlowWrap" class="hidden">
         <div class="sub-flow-header">
           <button class="btn btn-outline btn-sm" onclick="backToEntryChoices()" data-t="backBtn">← वापस</button>
@@ -255,10 +255,10 @@
           </div>
         </div>
         <div class="card" id="gateStep1ParlorCard">
-          <div class="section-title"><span data-t="step1LoginTitle">🏢 1. Parlor ID व Parlor PIN से प्रवेश</span><span class="badge badge-trial" id="gateParlorStatusBadge">Step 1</span></div>
+          <div class="section-title"><span data-t="step1LoginTitle">🏢 1. Parlor ID व Parlor PIN / Pass Key</span><span class="badge badge-trial" id="gateParlorStatusBadge">Step 1</span></div>
           <div class="grid-2">
             <div class="field"><label>Parlor ID *</label><input id="gateParlorCodeInput" class="input" placeholder="BPM01" style="text-transform:uppercase;" /></div>
-            <div class="field"><label>Parlor PIN *</label><input id="gateParlorPassInput" class="input" type="password" placeholder="Parlor PIN" onkeydown="if(event.key==='Enter') loginGateParlor()" /></div>
+            <div class="field"><label>Parlor PIN या Pass Key *</label><input id="gateParlorPassInput" class="input" type="password" placeholder="Parlor PIN या Pass Key" onkeydown="if(event.key==='Enter') loginGateParlor()" /></div>
           </div>
           <div class="row-btns">
             <button class="btn btn-primary" style="flex:1;" onclick="loginGateParlor()" data-t="enterParlorBtn">Parlor में प्रवेश करें</button>
@@ -267,7 +267,7 @@
         </div>
         <div class="card-rose hidden" id="gateUserLoginCard">
           <div class="section-title"><span data-t="step2LoginTitle">🔑 2. Admin / Staff ID व PIN डालें</span><span class="badge badge-active" id="gateActiveParlorBadge">Verified</span></div>
-          <div class="item-sub" id="gateActiveParlorUsersHint" style="margin-bottom:8px;">Admin ID या Staff ID और PIN डालें।</div>
+          <div class="item-sub" id="gateActiveParlorUsersHint" style="margin-bottom:8px;">Admin ID या Staff ID और PIN डालें (PIN भूले हों तो Forgot PIN / Pass Key से रीसेट करें)।</div>
           <div class="grid-2">
             <div class="field"><label>Admin / Staff ID *</label><input id="gateUserIdInput" class="input" placeholder="ADMIN01" style="text-transform:uppercase;" /></div>
             <div class="field"><label>Admin / Staff PIN *</label><input id="gateUserPassInput" class="input" type="password" placeholder="PIN" onkeydown="if(event.key==='Enter') loginGateUser()" /></div>
@@ -284,7 +284,6 @@
   <!-- MAIN APP SHELL -->
   <div id="mainAppShell">
     <main class="container">
-      <!-- BROADCAST BANNER (Special Notification / Greetings from App Admin) -->
       <section id="appBroadcastBanner" class="broadcast-banner hidden">
         <div style="min-width:0;flex:1;">
           <div style="font-size:13px;font-weight:800;" id="appBroadcastTitle">📢 सूचना</div>
@@ -293,7 +292,6 @@
         <button class="btn btn-soft btn-xs" onclick="dismissBroadcastBanner()">✓</button>
       </section>
 
-      <!-- AUTO APP UPDATE BANNER -->
       <section id="appUpdateBanner" class="update-banner hidden">
         <div style="min-width:0;flex:1;">
           <div style="font-size:13px;font-weight:800;" id="appUpdateTitle" data-t="updateAvail">🚀 नया ऐप अपडेट उपलब्ध है</div>
@@ -529,7 +527,6 @@
           <button class="btn btn-primary btn-block" onclick="submitTicketToAppAdmin()" data-t="sendTktBtn">App Admin को टिकट भेजें</button>
         </div>
 
-        <!-- App Admin Login Card (ID/PIN + Gmail/Google Sign-In) -->
         <div class="card-rose hidden" id="hiddenAppAdminLoginCard">
           <div class="section-title"><span>🛡️ App Admin Portal</span><span class="badge" id="appAdminStatusBadge">Locked</span></div>
           <div class="item-sub" style="margin-bottom:8px;">App Admin ID/PIN या अपने Gmail (Google) से लॉगिन करें (अन्य सेक्शन पर जाते ही Auto-Logout होगा)।</div>
@@ -544,7 +541,6 @@
           </div>
         </div>
 
-        <!-- App Admin Master Console -->
         <div id="appAdminMasterConsole" class="hidden">
           <div class="card-rose">
             <div class="section-title">
@@ -557,7 +553,6 @@
             <div class="item-sub">किसी अन्य टैब पर जाते ही यह अपने-आप लॉक हो जाएगा।</div>
           </div>
 
-          <!-- Broadcast: Special Notification / Version Update / Greetings -->
           <div class="card">
             <div class="section-title"><span>📢 Broadcast (Notification · Update · Greetings)</span></div>
             <div class="grid-2">
@@ -570,7 +565,6 @@
             <button class="btn btn-primary btn-block" onclick="publishAppAdminBroadcast()">सभी पार्लर्स पर Broadcast भेजें</button>
           </div>
 
-          <!-- Add Trial Days & Stars to Any Parlor -->
           <div class="card">
             <div class="section-title"><span>⏳ Days व ⭐ Stars भेजें</span></div>
             <div class="field"><label>Parlor चुनें *</label><select id="extendTrialParlorSelect"></select></div>
@@ -584,7 +578,6 @@
             </div>
           </div>
 
-          <!-- All Parlors with IDs, PINs, Staff Creds & Access Button -->
           <div class="card">
             <div class="section-title"><span>👥 All Parlors (IDs & PINs)</span><span class="badge badge-trial" id="totalParlorsDirectoryBadge">0</span></div>
             <div id="appAdminDirectoryList"></div>
@@ -601,6 +594,23 @@
       <button class="nav-btn" id="nav-assistant" onclick="openSectionTab('assistant')"><span class="nav-ico">✨</span><span data-t="navAsst">BPM असिस्टेंट</span></button>
       <button class="nav-btn" id="nav-support" onclick="handleSupportNavTap()"><span class="nav-ico">🛟</span><span data-t="navSup">सपोर्ट</span></button>
     </nav>
+  </div>
+
+  <!-- DELETE PARLOR ACCOUNT CONFIRMATION MODAL -->
+  <div class="modal-backdrop" id="deleteParlorAccountModal">
+    <div class="modal-box">
+      <div class="modal-head"><strong style="color:var(--bad);">🗑️ Delete Parlor Account</strong><button class="red-x" onclick="closeModal('deleteParlorAccountModal')">✕</button></div>
+      <input type="hidden" id="deletingTargetParlorId" />
+      <div class="card-rose" id="deleteParlorTargetInfo" style="margin-bottom:10px;"></div>
+      <div class="field">
+        <label>App Admin Password / PIN डालें (पक्का डिलीट करने के लिए) *</label>
+        <input id="confirmDeleteAppAdminPassInput" class="input" type="password" placeholder="App Admin Password / PIN" onkeydown="if(event.key==='Enter') confirmAndDeleteParlorAccount()" />
+      </div>
+      <div class="row-btns">
+        <button class="btn btn-danger" style="flex:1;" onclick="confirmAndDeleteParlorAccount()">🗑️ Delete Account (पूरा डेटा हटाएं)</button>
+        <button class="btn btn-outline" onclick="closeModal('deleteParlorAccountModal')">Cancel</button>
+      </div>
+    </div>
   </div>
 
   <!-- MODALS -->
@@ -627,11 +637,11 @@
 
   <div class="modal-backdrop" id="forgotPasswordModal">
     <div class="modal-box">
-      <div class="modal-head"><strong>PIN Reset</strong><button class="red-x" onclick="closeModal('forgotPasswordModal')">✕</button></div>
-      <div class="field"><label>Pass Key *</label><input id="fpPassKeyInput" class="input" type="password" /></div>
+      <div class="modal-head"><strong>PIN Reset (Pass Key)</strong><button class="red-x" onclick="closeModal('forgotPasswordModal')">✕</button></div>
+      <div class="field"><label>Pass Key *</label><input id="fpPassKeyInput" class="input" type="password" placeholder="BPM123" /></div>
       <button class="btn btn-soft btn-sm btn-block" style="margin-bottom:8px;" onclick="generateAdminForgotPin()">⚡ Auto OTP व नया PIN</button>
       <div class="field"><label>OTP</label><input id="fpAutoOtpInput" class="input" readonly /></div>
-      <div class="field"><label>Admin ID *</label><input id="fpUserIdInput" class="input" style="text-transform:uppercase;" /></div>
+      <div class="field"><label>Admin / User ID *</label><input id="fpUserIdInput" class="input" style="text-transform:uppercase;" /></div>
       <div class="grid-2">
         <div class="field"><label>New PIN *</label><input id="fpNewPinInput" class="input" /></div>
         <div class="field"><label>Confirm *</label><input id="fpConfirmPinInput" class="input" /></div>
@@ -704,7 +714,7 @@
   <script>
     const CURRENT_APP_VERSION = "1.0", RAZORPAY_KEY_ID = "rzp_live_U33fOg4q9BEcIY";
     const DEFAULT_APP_ADMIN_ID = "ADMIN01", DEFAULT_APP_ADMIN_PIN = "BPMADMIN";
-    const DEFAULT_APP_ADMIN_EMAIL = ""; // यहाँ अपना Gmail पता डालें (उदा. "yourname@gmail.com")
+    const DEFAULT_APP_ADMIN_EMAIL = "";
     const FIREBASE_CONFIG = {
       apiKey: "AIzaSyD5n8P4e4Qylr9fh02f4e9d04zyJcWE9Xw", authDomain: "bpm1-52e92.firebaseapp.com",
       databaseURL: "https://bpm1-52e92-default-rtdb.firebaseio.com", projectId: "bpm1-52e92",
@@ -730,13 +740,13 @@
       hi: {
         langBtn: "English", claimDay: "दिन को अपना बना लें", unlockApp: "ऐप अनलॉक करें",
         regNewParlorBtn: "रजिस्टर योर न्यू पार्लर", regNewParlorSub: "Parlor ID/PIN व Admin ID/PIN बनाएं",
-        loginRegParlorBtn: "लॉग इन विद रजिस्टर्ड पार्लर", loginRegParlorSub: "Parlor ID/PIN → Admin/Staff ID/PIN",
+        loginRegParlorBtn: "लॉग इन विद रजिस्टर्ड पार्लर", loginRegParlorSub: "Parlor ID/PIN या Pass Key → Admin/Staff ID/PIN",
         backBtn: "← वापस", regFormTitle: "🏪 रजिस्टर योर न्यू पार्लर (30 दिन Free Trial)",
         parlorLogoLbl: "Parlor Logo (ऑफ़र व PDF रसीद में लगेगा)", parlorNameLbl: "Parlor का नाम *",
         cityLbl: "शहर / पता", mobileLbl: "मोबाइल नंबर *",
         step1ParlorCredTitle: "1. Parlor ID और Parlor PIN सेट करें", step2AdminCredTitle: "2. Admin ID और Admin PIN सेट करें",
         adminNameLbl: "Admin नाम *", refCodeOptLbl: "Referral Code (वैकल्पिक)", submitRegBtn: "रजिस्टर योर पार्लर",
-        step1LoginTitle: "🏢 1. Parlor ID व Parlor PIN से प्रवेश", enterParlorBtn: "Parlor में प्रवेश करें",
+        step1LoginTitle: "🏢 1. Parlor ID व Parlor PIN / Pass Key", enterParlorBtn: "Parlor में प्रवेश करें",
         step2LoginTitle: "🔑 2. Admin / Staff ID व PIN डालें", enterInsideBtn: "पार्लर के अंदर प्रवेश करें", exitParlorBtn: "Parlor बाहर करें",
         updateAvail: "🚀 नया ऐप अपडेट उपलब्ध है", onlineLayout: "🟢 Online Buttons Layout", moveBtns: "🟢 Move Buttons",
         addStaffBtn: "+ Staff ID / PIN", pinLockBtn: "PIN लॉक करें", switchParlorBtn: "Switch / Naya Parlor",
@@ -766,13 +776,13 @@
       en: {
         langBtn: "हिंदी", claimDay: "Make Today Yours", unlockApp: "Unlock App",
         regNewParlorBtn: "Register Your New Parlor", regNewParlorSub: "Create Parlor ID/PIN & Admin ID/PIN",
-        loginRegParlorBtn: "Login With Registered Parlor", loginRegParlorSub: "Parlor ID/PIN → Admin/Staff ID/PIN",
+        loginRegParlorBtn: "Login With Registered Parlor", loginRegParlorSub: "Parlor ID/PIN or Pass Key → Admin/Staff ID/PIN",
         backBtn: "← Back", regFormTitle: "🏪 Register Your New Parlor (30 Days Free Trial)",
         parlorLogoLbl: "Parlor Logo (Used in Offer & Receipt PDF)", parlorNameLbl: "Parlor Name *",
         cityLbl: "City / Address", mobileLbl: "Mobile Number *",
         step1ParlorCredTitle: "1. Set Parlor ID & Parlor PIN", step2AdminCredTitle: "2. Set Admin ID & Admin PIN",
         adminNameLbl: "Admin Name *", refCodeOptLbl: "Referral Code (Optional)", submitRegBtn: "Register Your Parlor",
-        step1LoginTitle: "🏢 1. Enter Parlor ID & Parlor PIN", enterParlorBtn: "Enter Parlor",
+        step1LoginTitle: "🏢 1. Parlor ID & Parlor PIN / Pass Key", enterParlorBtn: "Enter Parlor",
         step2LoginTitle: "🔑 2. Enter Admin / Staff ID & PIN", enterInsideBtn: "Enter Inside Parlor", exitParlorBtn: "Exit Parlor",
         updateAvail: "🚀 New App Update Available", onlineLayout: "🟢 Online Buttons Layout", moveBtns: "🟢 Move Buttons",
         addStaffBtn: "+ Staff ID / PIN", pinLockBtn: "PIN Lock", switchParlorBtn: "Switch / New Parlor",
@@ -974,9 +984,11 @@
       return Boolean(u?.permissions?.[key]);
     }
 
+    // Allows Parlor PIN, appPin, or Parlor Pass Key so forgotten Parlor ID/PIN can enter Step 1 with Pass Key
     const checkParlorCredentials = (p, pass) => {
       const c = String(pass || "").trim();
-      return c && (c === String(p.parlorPassword).trim() || c === String(p.appPin).trim());
+      const pk = String(p.passKey || "BPM123").trim();
+      return Boolean(c && (c === String(p.parlorPassword).trim() || c === String(p.appPin).trim() || (pk && c === pk)));
     };
     const isValidParlorAdminPin = (p, pin) => {
       const c = String(pin || "").trim();
@@ -1105,12 +1117,16 @@
     function registerNewParlor() { if (createParlorFromInputs("new")) closeModal("parlorModal"); }
 
     function loginGateParlor() {
-      const code = String(document.getElementById("gateParlorCodeInput").value || "").trim().toUpperCase(), pass = String(document.getElementById("gateParlorPassInput").value || "").trim();
+      const code = String(document.getElementById("gateParlorCodeInput").value || "").trim().toUpperCase();
+      const pass = String(document.getElementById("gateParlorPassInput").value || "").trim();
       const target = Object.values(appState.parlors || {}).find((p) => String(p.code).toUpperCase() === code);
-      if (!target || !checkParlorCredentials(target, pass)) return showToast("गलत Parlor ID या Parlor PIN");
-      verifiedParlorIdForStep2 = target.id; document.getElementById("gateParlorPassInput").value = "";
-      updateStep2UserLoginCard(); document.getElementById("gateUserIdInput")?.focus();
-      showToast(`${target.name} सत्यापित — अब Admin/Staff ID व PIN डालें`);
+      if (!target || !checkParlorCredentials(target, pass)) return showToast("गलत Parlor ID या Parlor PIN / Pass Key");
+      const usedPassKey = pass === String(target.passKey || "BPM123").trim() && pass !== String(target.parlorPassword).trim();
+      verifiedParlorIdForStep2 = target.id;
+      document.getElementById("gateParlorPassInput").value = "";
+      updateStep2UserLoginCard();
+      document.getElementById("gateUserIdInput")?.focus();
+      showToast(usedPassKey ? `Pass Key से ${target.name} में प्रवेश — अब Admin/Staff ID व PIN डालें` : `${target.name} सत्यापित — अब Admin/Staff ID व PIN डालें`);
     }
 
     function logoutParlorStepBack() {
@@ -1131,7 +1147,7 @@
 
     function loginGateUser() {
       const room = verifiedParlorIdForStep2 ? appState.parlors[verifiedParlorIdForStep2] : null;
-      if (!room) return showToast("पहले Parlor ID व Parlor PIN डालें");
+      if (!room) return showToast("पहले Parlor ID व Parlor PIN / Pass Key डालें");
       const uId = String(document.getElementById("gateUserIdInput").value || "").trim().toUpperCase(), pass = String(document.getElementById("gateUserPassInput").value || "").trim();
       const match = (room.staff || []).find((u) => String(u.id).toUpperCase() === uId && String(u.pin).trim() === pass);
       if (!match) return showToast("Admin/Staff ID या PIN गलत है");
@@ -1526,6 +1542,7 @@
     function openForgotPasswordModal() {
       const p = (verifiedParlorIdForStep2 && appState.parlors[verifiedParlorIdForStep2]) || getCurrentParlor();
       document.getElementById("fpUserIdInput").value = p.staff?.[0]?.id || "ADMIN01";
+      document.getElementById("fpPassKeyInput").value = "";
       document.getElementById("forgotPasswordModal")?.classList.add("open");
     }
     function generateAdminForgotPin() {
@@ -1534,10 +1551,16 @@
     }
     function saveForgotNewPassword() {
       const p = (verifiedParlorIdForStep2 && appState.parlors[verifiedParlorIdForStep2]) || getCurrentParlor();
+      const passKeyVal = document.getElementById("fpPassKeyInput").value.trim();
+      const validKey = String(p.passKey || "BPM123").trim();
+      if (!passKeyVal || passKeyVal !== validKey) return showToast("गलत Pass Key — PIN रीसेट नहीं हुआ");
+      const uIdVal = document.getElementById("fpUserIdInput").value.trim().toUpperCase();
       const pin1 = document.getElementById("fpNewPinInput").value.trim(), pin2 = document.getElementById("fpConfirmPinInput").value.trim();
       if (pin1.length < 4 || pin1 !== pin2) return showToast("Enter 4+ char PIN");
-      p.appPin = pin1; p.parlorPassword = pin1; if (p.staff?.[0]) p.staff[0].pin = pin1;
-      persistState(true); closeModal("forgotPasswordModal"); showToast(`New PIN (${pin1}) Saved`);
+      p.appPin = pin1; p.parlorPassword = pin1;
+      const targetStaff = (p.staff || []).find((u) => String(u.id).toUpperCase() === uIdVal) || p.staff?.[0];
+      if (targetStaff) targetStaff.pin = pin1;
+      persistState(true); closeModal("forgotPasswordModal"); showToast(`Pass Key verified — नया PIN (${pin1}) Save हो गया`);
     }
 
     function sendAssistantQuery() {
@@ -1562,7 +1585,7 @@
       p.tickets.unshift(tkt); document.getElementById("tktSubject").value = ""; document.getElementById("tktMessage").value = ""; persistState(true); showToast(`Ticket ${id} Sent`);
     }
 
-    // APP ADMIN: Gmail/Google + ID/PIN Login, View All IDs/PINs, Days/Stars, Broadcast & Auto-Logout on Tab Leave
+    // APP ADMIN: Gmail/Google + ID/PIN Login, View/Access/Delete Parlors, Days/Stars, Broadcast & Auto-Logout
     function handleSupportNavTap() {
       openSectionTab("support"); supportTapCount++; clearTimeout(supportTapResetTimer);
       supportTapResetTimer = setTimeout(() => { supportTapCount = 0; }, 3000);
@@ -1641,6 +1664,48 @@
       showToast(`${target.name} (${target.code}) में प्रवेश किया — वापस आने पर Auto-Logout होगा`);
     }
 
+    function openDeleteParlorAccountModal(parlorId) {
+      if (!isAppAdminUnlocked) return showToast("पहले App Admin से लॉगिन करें");
+      const target = appState.parlors[parlorId]; if (!target) return;
+      document.getElementById("deletingTargetParlorId").value = target.id;
+      document.getElementById("confirmDeleteAppAdminPassInput").value = "";
+      document.getElementById("deleteParlorTargetInfo").innerHTML = `<div class="item-title">${escapeHtml(target.name)} (${escapeHtml(target.code)})</div><div class="item-sub">Customers: ${target.consumers.length} · Services: ${target.services.length} · Staff: ${target.staff.length}</div>`;
+      document.getElementById("deleteParlorAccountModal")?.classList.add("open");
+      setTimeout(() => document.getElementById("confirmDeleteAppAdminPassInput")?.focus(), 120);
+    }
+
+    function confirmAndDeleteParlorAccount() {
+      if (!isAppAdminUnlocked) return showToast("App Admin लॉक है");
+      const passInput = document.getElementById("confirmDeleteAppAdminPassInput").value.trim();
+      const validPass = String(appState.appAdmin?.pin || DEFAULT_APP_ADMIN_PIN).trim();
+      if (!passInput || passInput !== validPass) return showToast("गलत App Admin Password/PIN — अकाउंट डिलीट नहीं हुआ");
+
+      const targetId = document.getElementById("deletingTargetParlorId").value;
+      const target = appState.parlors[targetId];
+      if (!target) return closeModal("deleteParlorAccountModal");
+
+      const deletedName = target.name;
+      delete appState.parlors[targetId];
+
+      const remainingKeys = Object.keys(appState.parlors);
+      if (!remainingKeys.length) {
+        const fresh = createDefaultState();
+        appState.parlors = fresh.parlors;
+        appState.activeParlorId = fresh.activeParlorId;
+        registeredParlorId = fresh.activeParlorId;
+      } else if (appState.activeParlorId === targetId || registeredParlorId === targetId) {
+        const nextId = remainingKeys[0];
+        appState.activeParlorId = nextId;
+        registeredParlorId = nextId;
+      }
+      try { localStorage.setItem(REGISTERED_PARLOR_ID_KEY, registeredParlorId); } catch (e) {}
+
+      lastWrittenJson = "";
+      persistState(true);
+      closeModal("deleteParlorAccountModal");
+      showToast(`${deletedName} का अकाउंट और पूरा डेटा हर जगह से डिलीट हो गया`);
+    }
+
     function renderAppAdminConsole() {
       document.getElementById("hiddenAppAdminLoginCard")?.classList.toggle("hidden", !(isAppAdminPortalOpen || isAppAdminUnlocked));
       document.getElementById("appAdminMasterConsole")?.classList.toggle("hidden", !isAppAdminUnlocked);
@@ -1653,7 +1718,7 @@
       document.getElementById("totalParlorsDirectoryBadge").textContent = `${list.length} Parlors`;
       document.getElementById("appAdminDirectoryList").innerHTML = list.map((p) => {
         const staffCreds = (p.staff || []).map((u) => `${escapeHtml(u.role)} [${escapeHtml(u.id)} / PIN:${escapeHtml(u.pin)}]`).join(" · ");
-        return `<div class="list-item"><div style="width:100%;"><div class="item-title">${escapeHtml(p.name)} (${escapeHtml(p.code)}) <span class="badge badge-trial">${getRemainingDays(p)}d left · ⭐${getAvailableStars(p)}</span></div><div class="item-sub">${escapeHtml(p.city)} ${p.mobile ? "· 📞 " + escapeHtml(p.mobile) : ""}</div><div class="cred-chip"><strong>Parlor ID:</strong> ${escapeHtml(p.code)} · <strong>Parlor PIN:</strong> ${escapeHtml(p.parlorPassword || p.appPin)}<br/><strong>Users:</strong> ${staffCreds}</div><div class="row-btns" style="margin-top:8px;"><button class="btn btn-primary btn-xs" onclick="accessParlorAsAppAdmin('${p.id}')">👁️ Access Parlor</button></div></div></div>`;
+        return `<div class="list-item"><div style="width:100%;"><div class="item-title">${escapeHtml(p.name)} (${escapeHtml(p.code)}) <span class="badge badge-trial">${getRemainingDays(p)}d left · ⭐${getAvailableStars(p)}</span></div><div class="item-sub">${escapeHtml(p.city)} ${p.mobile ? "· 📞 " + escapeHtml(p.mobile) : ""} · Cust:${p.consumers.length} · Srv:${p.services.length}</div><div class="cred-chip"><strong>Parlor ID:</strong> ${escapeHtml(p.code)} · <strong>Parlor PIN:</strong> ${escapeHtml(p.parlorPassword || p.appPin)} · <strong>Pass Key:</strong> ${escapeHtml(p.passKey || "BPM123")}<br/><strong>Users:</strong> ${staffCreds}</div><div class="row-btns" style="margin-top:8px;"><button class="btn btn-primary btn-xs" onclick="accessParlorAsAppAdmin('${p.id}')">👁️ Access Parlor</button><button class="btn btn-danger btn-xs" onclick="openDeleteParlorAccountModal('${p.id}')">🗑️ Delete Account</button></div></div></div>`;
       }).join("");
     }
 
@@ -1737,7 +1802,6 @@
       document.getElementById("appointmentsList").innerHTML = p.appointments.map((a) => `<div class="list-item"><div><div class="item-title">${escapeHtml(a.clientName)} — ${escapeHtml(a.serviceType)}</div><div class="item-sub">${a.date} ${a.time}</div></div></div>`).join("") || `<div class="item-sub">No appointments.</div>`;
     }
 
-    // Auto-logout App Admin whenever leaving the Support section
     function openSectionTab(tab) {
       if (isAppAdminUnlocked && tab !== "support") {
         isAppAdminUnlocked = false;
