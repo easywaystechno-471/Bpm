@@ -7,7 +7,7 @@
   <title>Beauty Parlour Management</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet" />
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
@@ -21,7 +21,7 @@
       --ok:#15803d; --ok-bg:#dcfce7; --warn:#b45309; --warn-bg:#fef3c7; --bad:#b91c1c; --bad-bg:#fee2e2;
       --shadow:0 8px 24px rgba(136,14,79,.08);
     }
-    *{box-sizing:border-box;margin:0;padding:0;font-family:'Plus Jakarta Sans',system-ui,sans-serif}
+    *{box-sizing:border-box;margin:0;padding:0;font-family:'Plus Jakarta Sans','Noto Sans Devanagari',system-ui,sans-serif}
     body{background:var(--bg);color:var(--ink);min-height:100vh;padding:8px 0 92px}
     .container{max-width:720px;margin:0 auto;padding:8px 14px 14px}
     .auth-gate-wrap{max-width:540px;margin:10px auto 20px;padding:0 14px}
@@ -39,10 +39,14 @@
     .key-pad-btn.fn-key{background:#fff0f6;color:var(--rose-dark);font-size:14px}
 
     .bpm-logo-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;background:#fff0f6;color:var(--rose-dark);border:1.5px solid #f472b6;font-size:11px;font-weight:800}
-    .entry-home-screen{min-height:calc(100vh - 44px);display:flex;flex-direction:column;justify-content:center;gap:18px}
-    .entry-top-strip,.sub-flow-header{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
+    .entry-home-screen{min-height:calc(100vh - 44px);display:flex;flex-direction:column;justify-content:center;gap:16px}
+    .entry-brand-hero{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;margin:2px 0 4px}
+    .entry-hero-logo-box{width:118px;height:118px;border-radius:26px;box-shadow:0 12px 28px rgba(194,24,91,.22);border:2px solid #f472b6;background:linear-gradient(145deg,#d81b60 0%,#9d174d 65%,#6b21a8 100%);display:grid;place-items:center;overflow:hidden}
+    .entry-hero-title{font-size:18px;font-weight:800;color:var(--rose-dark);margin-top:10px;letter-spacing:.2px}
+    .entry-hero-sub{font-size:11.5px;color:var(--muted);margin-top:2px}
+    .entry-top-strip,.sub-flow-header{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:4px}
     .entry-center-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-    .entry-big-slide{background:#fff;border:2px solid #e6bfd2;border-radius:20px;padding:24px 12px;min-height:156px;text-align:center;cursor:pointer;box-shadow:var(--shadow);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px}
+    .entry-big-slide{background:#fff;border:2px solid #e6bfd2;border-radius:20px;padding:22px 12px;min-height:152px;text-align:center;cursor:pointer;box-shadow:var(--shadow);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px}
     .entry-big-slide.primary-slide{background:#fff5f9;border-color:var(--rose)}
     .entry-big-ico{font-size:32px}.entry-big-title{font-size:14.5px;font-weight:800;color:var(--rose-dark);line-height:1.25}.entry-big-sub{font-size:11.5px;color:var(--muted)}
     .logo-upload-preview{width:54px;height:54px;border-radius:14px;object-fit:cover;border:1.5px solid #e6bfd2;background:#fff5f9;flex-shrink:0}
@@ -99,6 +103,8 @@
     .list-item.unread-rem{border:1.5px solid #e11d48;background:#fff1f2}
     .item-title{font-size:13.5px;font-weight:700}.item-sub{font-size:12px;color:var(--muted);margin-top:2px}
     .cred-chip{background:#fff5f9;border:1px solid #f2b8d4;border-radius:10px;padding:7px 10px;margin-top:6px;font-size:11.5px;color:var(--ink)}
+    .passkey-alert-card{background:#fff0f6;border:2px solid var(--rose);border-radius:16px;padding:13px;margin-bottom:12px}
+    .passkey-code-highlight{font-size:16px;font-weight:800;color:var(--rose-dark);background:#fff;border:1.5px dashed var(--rose);border-radius:10px;padding:7px 10px;margin:7px 0;text-align:center}
     .bill-breakdown-box{background:#fff5f9;border:1.5px solid #f2b8d4;border-radius:12px;padding:9px 11px;margin-bottom:10px;font-size:12.5px}
     .bill-line{display:flex;justify-content:space-between;margin-bottom:4px}
     .check-row{display:flex;align-items:center;gap:9px;border:1px solid #f2d9e6;background:#fff;border-radius:11px;padding:8px 11px;margin-bottom:7px;cursor:pointer}
@@ -172,6 +178,7 @@
     </div>
 
     <div id="fullRegisterLoginView">
+      <!-- FIRST PAGE: BPM Logo Icon at Top Center + ब्यूटी पार्लर मैनेजमेंट below -->
       <div id="entryChoicesLanding" class="entry-home-screen">
         <div class="entry-top-strip">
           <span class="bpm-logo-badge">✦ BPM</span>
@@ -180,6 +187,32 @@
             <span class="sync-pill" id="gateSyncBadge">Cloud Synced ✓</span>
           </div>
         </div>
+
+        <div class="entry-brand-hero">
+          <div class="entry-hero-logo-box" aria-label="BPM Logo">
+            <svg viewBox="0 0 120 120" width="118" height="118" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="bpmHeroBg" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#e11d64"/>
+                  <stop offset="60%" stop-color="#9d174d"/>
+                  <stop offset="100%" stop-color="#6b21a8"/>
+                </linearGradient>
+              </defs>
+              <rect width="120" height="120" rx="26" fill="url(#bpmHeroBg)"/>
+              <!-- Lotus emblem above P -->
+              <path d="M60 18 C55 25, 55 31, 60 35 C65 31, 65 25, 60 18 Z" fill="#fbcfe8" stroke="#fff" stroke-width="1.6"/>
+              <path d="M51 23 C46 27, 48 34, 57 35 C54 30, 53 26, 51 23 Z" fill="#f472b6" stroke="#fff" stroke-width="1.5"/>
+              <path d="M69 23 C74 27, 72 34, 63 35 C66 30, 67 26, 69 23 Z" fill="#f472b6" stroke="#fff" stroke-width="1.5"/>
+              <!-- BPM Bold Letters with Face Silhouette -->
+              <text x="60" y="84" text-anchor="middle" font-size="40" font-weight="900" fill="#ffffff" stroke="#500724" stroke-width="1.4" letter-spacing="1.5">BPM</text>
+              <path d="M47 41 C42 45, 42 52, 45 56 L42 59 L45 61 C44 66, 46 72, 43 79 C40 86, 47 93, 56 91 C61 90, 60 83, 55 81" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="48" cy="51" r="1.4" fill="#fff"/>
+            </svg>
+          </div>
+          <div class="entry-hero-title">ब्यूटी पार्लर मैनेजमेंट</div>
+          <div class="entry-hero-sub">Beauty Parlour Management</div>
+        </div>
+
         <div class="entry-center-grid">
           <div class="entry-big-slide primary-slide" onclick="chooseGateMode('register')">
             <span class="entry-big-ico">🏪</span>
@@ -281,6 +314,20 @@
   <!-- MAIN APP SHELL -->
   <div id="mainAppShell">
     <main class="container">
+      <section id="newParlorPassKeyCard" class="passkey-alert-card hidden">
+        <div class="section-title" style="margin-bottom:4px;">
+          <span>🔑 आपकी नई Pass Key और क्रेडेंशियल तैयार हैं</span>
+          <button class="red-x" onclick="dismissPassKeyCard()">✕</button>
+        </div>
+        <div class="item-sub">यह टेक्स्ट फ़ाइल (<strong>BPM Pass Key</strong>) आपके Downloads फ़ोल्डर में सेव की गई है—भविष्य में लॉगिन व रिकवरी के लिए सुरक्षित रखें।</div>
+        <div class="passkey-code-highlight" id="newParlorPassKeyText">AASTHA@4829</div>
+        <div class="item-sub" id="newParlorCredSummaryText" style="margin-bottom:8px;"></div>
+        <div class="row-btns">
+          <button class="btn btn-primary btn-sm" style="flex:1;" onclick="downloadCurrentParlorPassKeyFile()">📥 Download BPM Pass Key (.txt)</button>
+          <button class="btn btn-soft btn-sm" onclick="copyCurrentPassKey()">Copy</button>
+        </div>
+      </section>
+
       <section id="appBroadcastBanner" class="broadcast-banner hidden">
         <div style="min-width:0;flex:1;">
           <div style="font-size:13px;font-weight:800;" id="appBroadcastTitle">📢 सूचना</div>
@@ -346,14 +393,21 @@
           </div>
         </div>
 
+        <!-- PIN INCOME SLOTS (Auto-Locked when switching sections) -->
         <div class="card-rose hidden" id="parlorIncomeSection">
-          <div class="section-title"><span data-t="incomeTitle">💰 पार्लर इनकम (PIN सुरक्षित)</span><button class="btn btn-soft btn-xs" onclick="promptIncomeUnlock()" data-t="viewPinBtn">🔒 PIN से देखें</button></div>
+          <div class="section-title">
+            <span data-t="incomeTitle">💰 पार्लर इनकम (मुख्य एडमिन PIN सुरक्षित)</span>
+            <div class="row-btns">
+              <button class="btn btn-soft btn-xs" onclick="openPinIncomeAuthModal()">🔒 Admin ID/PIN</button>
+              <button class="btn btn-outline btn-xs" onclick="autoLockPinIncome()">Lock</button>
+            </div>
+          </div>
           <div id="incomeSlotsContainer">
-            <div class="income-row" onclick="promptIncomeUnlock()"><div class="income-label" data-t="incDaily">आज की इनकम (Daily)</div><div class="income-val dots-rose" id="inc-daily">••••••</div></div>
-            <div class="income-row" onclick="promptIncomeUnlock()"><div class="income-label" data-t="incMonthly">इस महीने की इनकम (Monthly)</div><div class="income-val dots-rose" id="inc-monthly">••••••</div></div>
-            <div class="income-row" onclick="promptIncomeUnlock()"><div class="income-label" data-t="incQuarterly">तिमाही इनकम (Quarterly)</div><div class="income-val dots-rose" id="inc-quarterly">••••••</div></div>
-            <div class="income-row" onclick="promptIncomeUnlock()"><div class="income-label" data-t="incAnnually">सालाना इनकम (Annually)</div><div class="income-val dots-rose" id="inc-annually">••••••</div></div>
-            <div class="income-row" onclick="promptIncomeUnlock()"><div class="income-label" data-t="incAlltime">अब तक की कुल इनकम (All-Time)</div><div class="income-val dots-green" id="inc-alltime">••••••</div></div>
+            <div class="income-row" onclick="handleIncomeSlotTap()"><div class="income-label" data-t="incDaily">आज की इनकम (Daily)</div><div class="income-val dots-rose" id="inc-daily">••••••</div></div>
+            <div class="income-row" onclick="handleIncomeSlotTap()"><div class="income-label" data-t="incMonthly">मंथली इनकम (Monthly)</div><div class="income-val dots-rose" id="inc-monthly">••••••</div></div>
+            <div class="income-row" onclick="handleIncomeSlotTap()"><div class="income-label" data-t="incHalfYearly">छमाही इनकम (Half-Yearly)</div><div class="income-val dots-rose" id="inc-halfyearly">••••••</div></div>
+            <div class="income-row" onclick="handleIncomeSlotTap()"><div class="income-label" data-t="incAnnually">सालाना इनकम (Annual)</div><div class="income-val dots-rose" id="inc-annually">••••••</div></div>
+            <div class="income-row" onclick="handleIncomeSlotTap()"><div class="income-label" data-t="incAlltime">अब तक की कुल इनकम (All-Time)</div><div class="income-val dots-green" id="inc-alltime">••••••</div></div>
           </div>
         </div>
 
@@ -425,7 +479,7 @@
         </div>
       </section>
 
-      <!-- TAB 3: STAFF (Parlor Admin can create, edit, reset ID/PIN & delete users/staff) -->
+      <!-- TAB 3: STAFF -->
       <section id="tab-staff" class="tab-view hidden">
         <div class="card" id="staffRegisterCard">
           <div class="section-title"><span data-t="staffGenTitle">👑 Staff ID और Staff PIN जनरेट / रीसेट करें</span><div class="row-btns"><button class="btn btn-outline btn-xs hidden" id="cancelEditStaffBtn" onclick="cancelStaffEdit()">Cancel</button><button class="red-x" onclick="openSectionTab('home')">✕</button></div></div>
@@ -453,8 +507,8 @@
       <section id="tab-offers" class="tab-view hidden">
         <div class="card">
           <div class="section-title"><span data-t="newOfferTitle">🎁 नया ऑफ़र बनाएं (Logo + PDF)</span><button class="red-x" onclick="openSectionTab('home')">✕</button></div>
-          <div class="field"><label data-t="offerTitleLbl">ऑफ़र का नाम *</label><input id="offTitle" class="input" /></div>
-          <div class="field"><label data-t="offerDescLbl">ऑफ़र की जानकारी / रेट</label><input id="offDesc" class="input" /></div>
+          <div class="field"><label data-t="offerTitleLbl">ऑफ़र का नाम *</label><input id="offTitle" class="input" placeholder="उदा. ब्राइडल ग्लो पैकेज" /></div>
+          <div class="field"><label data-t="offerDescLbl">ऑफ़र की जानकारी / रेट</label><input id="offDesc" class="input" placeholder="उदा. फेशियल + हेयर कट विशेष ऑफर" /></div>
           <button class="btn btn-whatsapp btn-block" onclick="addOffer()" data-t="saveOfferPdfBtn">Save & Send PDF on WhatsApp</button>
         </div>
         <div class="card"><div class="section-title"><span data-t="activeOffersTitle">एक्टिव ऑफ़र्स (PDF)</span></div><div id="offersList"></div></div>
@@ -550,7 +604,6 @@
             <div class="item-sub">अन्य टैब पर जाने पर सेशन बना रहेगा; लॉग आउट करने के लिए ऊपर <strong>Log Out</strong> बटन दबाएं।</div>
           </div>
 
-          <!-- Edit Any Parlor's ID & Pass Key -->
           <div class="card">
             <div class="section-title"><span>🔑 Parlor ID व Pass Key बदलें (App Admin)</span></div>
             <div class="field"><label>Parlor चुनें *</label><select id="editCredParlorSelect" onchange="loadSelectedParlorCredsIntoAdminForm()"></select></div>
@@ -602,6 +655,17 @@
       <button class="nav-btn" id="nav-assistant" onclick="openSectionTab('assistant')"><span class="nav-ico">✨</span><span data-t="navAsst">BPM असिस्टेंट</span></button>
       <button class="nav-btn" id="nav-support" onclick="handleSupportNavTap()"><span class="nav-ico">🛟</span><span data-t="navSup">सपोर्ट</span></button>
     </nav>
+  </div>
+
+  <!-- PIN INCOME PRIMARY ADMIN AUTH MODAL -->
+  <div class="modal-backdrop" id="pinIncomeAuthModal">
+    <div class="modal-box">
+      <div class="modal-head"><strong>🔒 मुख्य एडमिन PIN इनकम</strong><button class="red-x" onclick="closeModal('pinIncomeAuthModal')">✕</button></div>
+      <div class="item-sub" style="margin-bottom:8px;">केवल पार्लर के मुख्य एडमिन (Primary Admin) की Admin ID और PIN/Password से इनकम विवरण खुलेगा।</div>
+      <div class="field"><label>मुख्य Admin ID *</label><input id="pinIncomeAdminIdInput" class="input" placeholder="ADMIN01" style="text-transform:uppercase;" /></div>
+      <div class="field"><label>मुख्य Admin PIN / Password *</label><input id="pinIncomeAdminPinInput" class="input" type="password" placeholder="Admin PIN" onkeydown="if(event.key==='Enter') verifyAndUnlockPinIncome()" /></div>
+      <button class="btn btn-primary btn-block" onclick="verifyAndUnlockPinIncome()">🔓 इनकम देखें</button>
+    </div>
   </div>
 
   <!-- DELETE PARLOR ACCOUNT CONFIRMATION MODAL -->
@@ -758,9 +822,9 @@
         step2LoginTitle: "🔑 2. Admin / Staff ID व PIN डालें", enterInsideBtn: "पार्लर के अंदर प्रवेश करें", exitParlorBtn: "Parlor बाहर करें",
         updateAvail: "🚀 नया ऐप अपडेट उपलब्ध है", onlineLayout: "🟢 Online Buttons Layout", moveBtns: "🟢 Move Buttons",
         addStaffBtn: "+ Staff ID / PIN", pinLockBtn: "PIN लॉक करें", switchParlorBtn: "Switch / Naya Parlor",
-        incomeTitle: "💰 पार्लर इनकम (PIN सुरक्षित)", viewPinBtn: "🔒 PIN से देखें",
-        incDaily: "आज की इनकम (Daily)", incMonthly: "इस महीने की इनकम (Monthly)", incQuarterly: "तिमाही इनकम (Quarterly)",
-        incAnnually: "सालाना इनकम (Annually)", incAlltime: "अब तक की कुल इनकम (All-Time)",
+        incomeTitle: "💰 पार्लर इनकम (मुख्य एडमिन PIN सुरक्षित)",
+        incDaily: "आज की इनकम (Daily)", incMonthly: "मंथली इनकम (Monthly)", incHalfYearly: "छमाही इनकम (Half-Yearly)",
+        incAnnually: "सालाना इनकम (Annual)", incAlltime: "अब तक की कुल इनकम (All-Time)",
         totCust: "कुल कस्टमर", totSrv: "कुल सर्विस", dueListTitle: "⏰ बाकी पैसे की लिस्ट (Due Payments)",
         allSrvTitle: "💆‍♀️ दी गई सभी सर्विसेज (PDF Receipt)", newSrvBtn: "+ नई सर्विस",
         savedCustTitle: "👩 सेव कस्टमर्स की लिस्ट", giveSrvTitle: "💆‍♀️ कस्टमर चुनें व सर्विस दें",
@@ -794,8 +858,8 @@
         step2LoginTitle: "🔑 2. Enter Admin / Staff ID & PIN", enterInsideBtn: "Enter Inside Parlor", exitParlorBtn: "Exit Parlor",
         updateAvail: "🚀 New App Update Available", onlineLayout: "🟢 Online Buttons Layout", moveBtns: "🟢 Move Buttons",
         addStaffBtn: "+ Staff ID / PIN", pinLockBtn: "PIN Lock", switchParlorBtn: "Switch / New Parlor",
-        incomeTitle: "💰 Parlor Income (PIN Protected)", viewPinBtn: "🔒 View with PIN",
-        incDaily: "Today's Income (Daily)", incMonthly: "This Month Income (Monthly)", incQuarterly: "Quarterly Income",
+        incomeTitle: "💰 Parlor Income (Primary Admin PIN Protected)",
+        incDaily: "Today's Income (Daily)", incMonthly: "Monthly Income", incHalfYearly: "Half-Yearly Income",
         incAnnually: "Annual Income", incAlltime: "Total Income (All-Time)",
         totCust: "Total Customers", totSrv: "Total Services", dueListTitle: "⏰ Due Payments List",
         allSrvTitle: "💆‍♀️ All Services Given (PDF Receipt)", newSrvBtn: "+ New Service",
@@ -829,6 +893,7 @@
     let verifiedParlorIdForStep2 = "", entrySubView = "choices", quickUnlockKeypadActive = false, enteredKeypadPin = "";
     let isAppAdminPortalOpen = false, isAppAdminUnlocked = false, appAdminAuthMethod = "", activeOfferForSend = null, offerSendQueue = [], offerQueueIndex = 0;
     let supportTapCount = 0, supportTapResetTimer = null, autoLockTimer = null, lastActivityTs = Date.now(), autoUpdateModalShownForVer = "", broadcastDismissedId = "";
+    let pendingPassKeyCardParlorId = "";
 
     const t = (k) => (I18N[currentLang] && I18N[currentLang][k]) || I18N.hi[k] || k;
     function applyLanguageToDom() {
@@ -843,7 +908,6 @@
       showToast(currentLang === "en" ? "Language switched to English" : "भाषा हिंदी में बदल गई");
     }
 
-    // Generates Pass Key like AASTHA@4829 from parlor name (without "beauty parlour") + @ + 4 digits
     function generateAutoPassKey(parlorName = "BPM") {
       const cleaned = String(parlorName || "BPM")
         .replace(/\bbeauty\b|\bparlour\b|\bparlor\b|\bsalon\b|\bspa\b|\bstudio\b/gi, "")
@@ -853,6 +917,46 @@
       const fourDigits = String(Math.floor(1000 + Math.random() * 9000));
       return `${cleaned}@${fourDigits}`;
     }
+
+    function buildParlorCredentialsText(p) {
+      const admin = (p.staff || []).find((u) => u.role === "ADMIN") || p.staff?.[0] || {};
+      return [
+        "=== BPM PASS KEY & CREDENTIALS ===",
+        `Parlor Name : ${p.name}`,
+        `City / Mobile: ${p.city || "-"} / ${p.mobile || "-"}`,
+        `Parlor ID   : ${p.code}`,
+        `Parlor PIN  : ${p.parlorPassword || p.appPin}`,
+        `Admin Name  : ${admin.name || "Admin"}`,
+        `Admin ID    : ${admin.id || "ADMIN01"}`,
+        `Admin PIN   : ${admin.pin || p.appPin}`,
+        `Pass Key    : ${p.passKey}`,
+        `Saved Date  : ${getLocalDateStr()}`
+      ].join("\n");
+    }
+
+    function downloadParlorPassKeyFile(p) {
+      if (!p) return showToast("पार्लर डेटा उपलब्ध नहीं है");
+      const safeName = String(p.name || "Parlor").replace(/[^a-zA-Z0-9_-]/g, "_") || "Parlor";
+      const fileName = `BPM_Pass_Key_${safeName}.txt`;
+      const content = buildParlorCredentialsText(p);
+      const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(url), 6000);
+      showToast(`${fileName} डाउनलोड/सेव के लिए भेजा गया`);
+    }
+
+    const downloadCurrentParlorPassKeyFile = () => downloadParlorPassKeyFile(appState.parlors[pendingPassKeyCardParlorId] || getCurrentParlor());
+    const copyCurrentPassKey = () => {
+      const p = appState.parlors[pendingPassKeyCardParlorId] || getCurrentParlor();
+      navigator.clipboard?.writeText(p?.passKey || "").then(() => showToast("Pass Key कॉपी हो गई"));
+    };
+    const dismissPassKeyCard = () => { pendingPassKeyCardParlorId = ""; document.getElementById("newParlorPassKeyCard")?.classList.add("hidden"); };
 
     const getLocalDateStr = (d = new Date()) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
     const sanitizeWhatsAppPhone = (p) => { const d = String(p || "").replace(/\D/g, ""); return d.length === 10 ? "91" + d : d; };
@@ -866,6 +970,15 @@
       const el = document.getElementById("toast"); if (!el) return;
       el.textContent = msg; el.classList.add("show");
       clearTimeout(window.__toastTimer); window.__toastTimer = setTimeout(() => el.classList.remove("show"), 2600);
+    }
+
+    function copyPhoneNumberToClipboard(phone) {
+      const digits = String(phone || "").replace(/\D/g, "");
+      if (!digits) return;
+      const formatted = digits.length === 10 ? "91" + digits : digits;
+      if (navigator.clipboard?.writeText) {
+        navigator.clipboard.writeText(formatted).then(() => showToast(`Copied: ${formatted}`)).catch(() => {});
+      }
     }
 
     function isNewerVersionAvailable(latest, current) {
@@ -1058,7 +1171,7 @@
       const staffMatch = (p.staff || []).find((u) => String(u.pin).trim() === enteredKeypadPin);
       if (enteredKeypadPin === target || staffMatch) {
         if (staffMatch) p.activeUser = { id: staffMatch.id, name: staffMatch.name, role: staffMatch.role };
-        enteredKeypadPin = ""; quickUnlockKeypadActive = false; incomeUnlocked = isPrimaryParlorAdmin(p);
+        enteredKeypadPin = ""; quickUnlockKeypadActive = false; incomeUnlocked = false; incomeSlotsExpanded = false;
         setActiveParlorLocal(p.id, true); resetInactivityAutoLock(); renderAuthShell(); showToast("App Unlocked");
       } else if (enteredKeypadPin.length >= max) { enteredKeypadPin = ""; renderKeypadDots(); showToast("Wrong PIN"); }
     }
@@ -1077,7 +1190,7 @@
       if (cur?.activeUser && String(cur.activeUser.role).toUpperCase() !== "ADMIN") {
         const admin = (cur.staff || []).find((u) => u.role === "ADMIN") || cur.staff[0];
         if (admin) cur.activeUser = { id: admin.id, name: admin.name, role: admin.role };
-        isAppLoggedIn = false; quickUnlockKeypadActive = false; verifiedParlorIdForStep2 = cur.id; entrySubView = "login";
+        isAppLoggedIn = false; quickUnlockKeypadActive = false; verifiedParlorIdForStep2 = cur.id; entrySubView = "login"; incomeUnlocked = false; incomeSlotsExpanded = false;
         try { localStorage.removeItem(LOGGED_IN_FLAG_KEY); } catch (e) {}
         clearTimeout(autoLockTimer); persistState(true); renderAuthShell(); updateStep2UserLoginCard();
         showToast("यूज़र लॉग आउट — अब Admin/Staff ID व PIN डालें");
@@ -1132,7 +1245,9 @@
         referralCode: generateReferralCode(name),
         staff: [{ id: adminId, name: adminName, role: "ADMIN", pin: adminPin, permissions: { serviceBilling: true, offersSend: true, customerFeed: true, dueCollect: true, appointments: true } }]
       });
-      setActiveParlorLocal(newId, true); incomeUnlocked = true; resetInactivityAutoLock(); persistState(true); renderAuthShell();
+      pendingPassKeyCardParlorId = newId;
+      setActiveParlorLocal(newId, true); incomeUnlocked = false; incomeSlotsExpanded = false; resetInactivityAutoLock(); persistState(true); renderAuthShell();
+      downloadParlorPassKeyFile(appState.parlors[newId]);
       showToast(`${name} रजिस्टर — Pass Key: ${autoPassKey}`);
       return newId;
     }
@@ -1176,20 +1291,141 @@
       const match = (room.staff || []).find((u) => String(u.id).toUpperCase() === uId && String(u.pin).trim() === pass);
       if (!match) return showToast("Admin/Staff ID या PIN गलत है");
       room.activeUser = { id: match.id, name: match.name, role: match.role };
-      setActiveParlorLocal(room.id, true); verifiedParlorIdForStep2 = ""; incomeUnlocked = match.role === "ADMIN";
+      setActiveParlorLocal(room.id, true); verifiedParlorIdForStep2 = ""; incomeUnlocked = false; incomeSlotsExpanded = false;
       document.getElementById("gateUserPassInput").value = ""; resetInactivityAutoLock(); persistState(true); renderAuthShell(); openSectionTab("home");
       showToast(`${match.name} (${match.role}) लॉगिन हो गए`);
     }
 
-    // PDF Generation + Direct Customer WhatsApp Chat Flow
+    // Canvas-based Hindi/Devanagari Renderer for Offer & Receipt PDFs so Hindi & matras never break
     function getParlorLogoForPdf(p) {
       if (p?.logoDataUrl && String(p.logoDataUrl).startsWith("data:image")) return p.logoDataUrl;
-      const c = document.createElement("canvas"); c.width = 160; c.height = 160; const ctx = c.getContext("2d");
-      const g = ctx.createLinearGradient(0, 0, 160, 160); g.addColorStop(0, "#d81b60"); g.addColorStop(1, "#7b1fa2");
-      ctx.fillStyle = g; ctx.fillRect(0, 0, 160, 160);
-      ctx.fillStyle = "#fff"; ctx.font = "800 44px sans-serif"; ctx.textAlign = "center"; ctx.fillText("BPM", 80, 88);
-      ctx.font = "700 18px sans-serif"; ctx.fillText("PBP", 80, 118);
+      const c = document.createElement("canvas"); c.width = 200; c.height = 200; const ctx = c.getContext("2d");
+      const g = ctx.createLinearGradient(0, 0, 200, 200); g.addColorStop(0, "#d81b60"); g.addColorStop(1, "#7b1fa2");
+      ctx.fillStyle = g; ctx.fillRect(0, 0, 200, 200);
+      ctx.fillStyle = "#fff"; ctx.font = "800 54px 'Noto Sans Devanagari', sans-serif"; ctx.textAlign = "center"; ctx.fillText("BPM", 100, 112);
+      ctx.font = "700 20px 'Noto Sans Devanagari', sans-serif"; ctx.fillText("PARLOUR", 100, 148);
       return c.toDataURL("image/png");
+    }
+
+    function wrapCanvasLines(ctx, text, maxWidth) {
+      const paragraphs = String(text || "").split("\n"), lines = [];
+      for (const para of paragraphs) {
+        const words = para.split(/\s+/).filter(Boolean);
+        if (!words.length) { lines.push(""); continue; }
+        let cur = words[0];
+        for (let i = 1; i < words.length; i++) {
+          const test = cur + " " + words[i];
+          if (ctx.measureText(test).width <= maxWidth) cur = test;
+          else { lines.push(cur); cur = words[i]; }
+        }
+        lines.push(cur);
+      }
+      return lines;
+    }
+
+    function renderOfferPosterDataUrl(p, offer, logoImgEl) {
+      const scale = 2, w = 520, h = 740;
+      const c = document.createElement("canvas"); c.width = w * scale; c.height = h * scale;
+      const ctx = c.getContext("2d"); ctx.scale(scale, scale);
+
+      ctx.fillStyle = "#fff7fb"; ctx.fillRect(0, 0, w, h);
+      ctx.strokeStyle = "#c2185b"; ctx.lineWidth = 4;
+      ctx.strokeRect(18, 18, w - 36, h - 36);
+
+      // Top-center Parlor Logo
+      const logoSize = 96, logoX = (w - logoSize) / 2, logoY = 38;
+      ctx.save();
+      ctx.beginPath(); ctx.roundRect(logoX, logoY, logoSize, logoSize, 22); ctx.clip();
+      if (logoImgEl?.complete && logoImgEl.naturalWidth > 0) ctx.drawImage(logoImgEl, logoX, logoY, logoSize, logoSize);
+      ctx.restore();
+      ctx.strokeStyle = "#e4a9c6"; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.roundRect(logoX, logoY, logoSize, logoSize, 22); ctx.stroke();
+
+      ctx.fillStyle = "#880e4f"; ctx.font = "800 22px 'Noto Sans Devanagari', sans-serif"; ctx.textAlign = "center";
+      ctx.fillText(`${p.name} (${p.code})`, w / 2, logoY + logoSize + 30);
+
+      ctx.fillStyle = "#6e5563"; ctx.font = "600 14px 'Noto Sans Devanagari', sans-serif";
+      ctx.fillText(`${p.city || ""}${p.mobile ? " · " + p.mobile : ""}`, w / 2, logoY + logoSize + 54);
+
+      // Highlight box for Offer Title & Details in crisp Devanagari
+      const boxX = 36, boxY = 228, boxW = w - 72, boxH = 380;
+      ctx.fillStyle = "#fce7f3";
+      ctx.beginPath(); ctx.roundRect(boxX, boxY, boxW, boxH, 20); ctx.fill();
+
+      ctx.fillStyle = "#c2185b"; ctx.font = "800 17px 'Noto Sans Devanagari', sans-serif";
+      ctx.fillText("विशेष पार्लर ऑफ़र · SPECIAL OFFER", w / 2, boxY + 38);
+
+      ctx.fillStyle = "#24131c"; ctx.font = "800 26px 'Noto Sans Devanagari', sans-serif";
+      const titleLines = wrapCanvasLines(ctx, offer.title, boxW - 36);
+      let ty = boxY + 86;
+      for (const ln of titleLines) { ctx.fillText(ln, w / 2, ty); ty += 36; }
+
+      ctx.fillStyle = "#4a3540"; ctx.font = "600 19px 'Noto Sans Devanagari', sans-serif";
+      const descLines = wrapCanvasLines(ctx, offer.desc || "", boxW - 44);
+      let dy = Math.max(ty + 18, boxY + 185);
+      for (const ln of descLines) { ctx.fillText(ln, w / 2, dy); dy += 28; }
+
+      ctx.fillStyle = "#880e4f"; ctx.font = "700 14px 'Noto Sans Devanagari', sans-serif";
+      ctx.fillText("ब्यूटी पार्लर मैनेजमेंट · BPM", w / 2, h - 36);
+
+      return c.toDataURL("image/png");
+    }
+
+    function renderReceiptSheetDataUrl(p, s, logoImgEl) {
+      const scale = 2, w = 520, h = 740;
+      const c = document.createElement("canvas"); c.width = w * scale; c.height = h * scale;
+      const ctx = c.getContext("2d"); ctx.scale(scale, scale);
+      const receiptNo = String(s.id || "").replace(/\D/g, "").slice(-6) || "381020";
+
+      ctx.fillStyle = "#ffffff"; ctx.fillRect(0, 0, w, h);
+      ctx.strokeStyle = "#e6bfd2"; ctx.lineWidth = 3;
+      ctx.strokeRect(16, 16, w - 32, h - 32);
+
+      // Top-center Parlor Logo + Hindi Header
+      const logoSize = 84, logoX = (w - logoSize) / 2, logoY = 32;
+      ctx.save();
+      ctx.beginPath(); ctx.roundRect(logoX, logoY, logoSize, logoSize, 18); ctx.clip();
+      if (logoImgEl?.complete && logoImgEl.naturalWidth > 0) ctx.drawImage(logoImgEl, logoX, logoY, logoSize, logoSize);
+      ctx.restore();
+
+      ctx.fillStyle = "#880e4f"; ctx.font = "800 22px 'Noto Sans Devanagari', sans-serif"; ctx.textAlign = "center";
+      ctx.fillText(`BPM | ${p.name}`, w / 2, logoY + logoSize + 28);
+      ctx.fillStyle = "#6e5563"; ctx.font = "600 14px 'Noto Sans Devanagari', sans-serif";
+      ctx.fillText(`${p.city || ""} · रसीद नं.: ${receiptNo} · दिनांक: ${s.date}`, w / 2, logoY + logoSize + 50);
+
+      ctx.strokeStyle = "#f0d7e4"; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(32, 204); ctx.lineTo(w - 32, 204); ctx.stroke();
+
+      ctx.textAlign = "left"; ctx.fillStyle = "#24131c"; ctx.font = "700 17px 'Noto Sans Devanagari', sans-serif";
+      let y = 240;
+      const rows = [
+        `कस्टमर का नाम: ${s.consumerName}`,
+        `मोबाइल नंबर: ${s.consumerPhone || "-"}`,
+        `सर्विस का नाम: ${s.name}`,
+        `कुल चार्ज: ₹${s.grossAmount || s.amount}`,
+        `स्टार कटौती (${s.starsRedeemedCount || 0} Stars): -₹${s.starDeduction || 0}`,
+        `देय / ली गई राशि: ₹${s.amount}`,
+        `अभी मिले: ₹${s.paidAmount} · मिले स्टार: +${s.starsAwarded || 0}`,
+        Number(s.dueAmount) > 0 ? `बाकी राशि: ₹${s.dueAmount} (वादा तिथि: ${s.promiseDate || "-"})` : "पेमेंट स्थिति: पूरा भुगतान प्राप्त ✓"
+      ];
+      for (const r of rows) {
+        const lines = wrapCanvasLines(ctx, r, w - 64);
+        for (const ln of lines) { ctx.fillText(ln, 32, y); y += 34; }
+        y += 6;
+      }
+
+      ctx.textAlign = "center"; ctx.fillStyle = "#c2185b"; ctx.font = "700 14px 'Noto Sans Devanagari', sans-serif";
+      ctx.fillText("धन्यवाद! फिर पधारें — ब्यूटी पार्लर मैनेजमेंट", w / 2, h - 34);
+
+      return c.toDataURL("image/png");
+    }
+
+    function buildPdfFromCanvasDataUrl(dataUrl) {
+      if (!window.jspdf?.jsPDF || !dataUrl) return null;
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF({ unit: "mm", format: "a5" });
+      doc.addImage(dataUrl, "PNG", 6, 6, 136, 198);
+      return doc;
     }
 
     function openCustomerWhatsAppDirect(phone, textMsg) {
@@ -1202,14 +1438,17 @@
       document.body.appendChild(a); a.click(); document.body.removeChild(a);
     }
 
+    // FMS-like flow: auto-copy customer phone number, share/download PDF, and trigger WhatsApp chat
     async function deliverPdfToCustomerWhatsApp(doc, fileName, phone, shareTitle, waText) {
       if (!doc) return showToast("PDF तैयार नहीं हो सकी");
+      copyPhoneNumberToClipboard(phone);
       const blob = doc.output("blob");
       const pdfFile = new File([blob], fileName, { type: "application/pdf" });
 
       try {
         if (navigator.canShare?.({ files: [pdfFile] }) && typeof navigator.share === "function") {
           await navigator.share({ files: [pdfFile], title: shareTitle, text: waText });
+          setTimeout(() => openCustomerWhatsAppDirect(phone, waText), 250);
           return;
         }
       } catch (err) {
@@ -1221,55 +1460,18 @@
       a.href = url; a.download = fileName;
       document.body.appendChild(a); a.click(); document.body.removeChild(a);
       setTimeout(() => URL.revokeObjectURL(url), 8000);
-      showToast(`${fileName} तैयार — कस्टमर के WhatsApp पर जा रहे हैं`);
+      showToast(`${fileName} तैयार — WhatsApp चैट खुल रही है`);
       setTimeout(() => openCustomerWhatsAppDirect(phone, waText), 350);
     }
 
-    function buildReceiptPdfDoc(p, s) {
-      if (!window.jspdf?.jsPDF) return null;
-      const { jsPDF } = window.jspdf, doc = new jsPDF({ unit: "mm", format: "a5" });
-      const receiptNo = String(s.id || "").replace(/\D/g, "").slice(-6) || "381020";
-      const cust = getCustomerByName(p, s.consumerName);
-      const availStars = cust ? Math.max(0, Number(cust.starsEarned || 0) - Number(cust.starsRedeemed || 0)) : Number(s.starsAwarded || 0);
-
-      try { doc.addImage(getParlorLogoForPdf(p), "PNG", 12, 10, 22, 22); } catch (e) {}
-      doc.setFont("helvetica", "bold"); doc.setFontSize(14); doc.setTextColor(136, 14, 79);
-      doc.text(`BPM | ${String(p.name)}`, 38, 17);
-      doc.setFont("helvetica", "normal"); doc.setFontSize(10); doc.setTextColor(95, 80, 90);
-      doc.text(`${p.city} · Receipt No: ${receiptNo}`, 38, 23);
-      doc.text(`Service Date: ${s.date}`, 38, 29);
-
-      doc.setDrawColor(230, 200, 215); doc.line(12, 36, 136, 36);
-
-      doc.setFont("helvetica", "bold"); doc.setFontSize(11); doc.setTextColor(36, 19, 28);
-      doc.text("Customer Details", 12, 46);
-      doc.setFont("helvetica", "normal"); doc.setFontSize(10.5);
-      doc.text(`Name: ${s.consumerName}`, 12, 53);
-      doc.text(`Phone: ${s.consumerPhone || "-"}`, 12, 60);
-
-      doc.setFont("helvetica", "bold"); doc.setFontSize(11);
-      doc.text("Service & Star Deduction Summary", 12, 72);
-      doc.setFont("helvetica", "normal"); doc.setFontSize(10.5);
-      doc.text(`Service: ${s.name}`, 12, 79);
-      doc.text(`Total Service Charge: Rs. ${s.grossAmount || s.amount}`, 12, 86);
-      doc.setTextColor(21, 128, 61);
-      doc.text(`Star Deduction (${s.starsRedeemedCount || 0} Stars): - Rs. ${s.starDeduction || 0}`, 12, 93);
-
-      doc.setFont("helvetica", "bold"); doc.setTextColor(136, 14, 79);
-      doc.text(`Customer Payable / Taken: Rs. ${s.amount}`, 12, 102);
-
-      doc.setFont("helvetica", "normal"); doc.setTextColor(36, 19, 28);
-      doc.text(`Paid Now: Rs. ${s.paidAmount} | Stars Earned: +${s.starsAwarded || 0} | Avail Stars: ${availStars}`, 12, 110);
-
-      doc.setFont("helvetica", "bold");
-      if (Number(s.dueAmount) > 0) {
-        doc.setTextColor(185, 28, 28);
-        doc.text(`Payment Status: DUE Rs. ${s.dueAmount} (Promise: ${s.promiseDate || "-"})`, 12, 119);
-      } else {
-        doc.setTextColor(21, 128, 61);
-        doc.text("Payment Status: PAID IN FULL", 12, 119);
-      }
-      return doc;
+    function createReceiptPdfWithHindiAndLogo(p, s, onReady) {
+      const img = new Image();
+      img.onload = () => {
+        const canvasUrl = renderReceiptSheetDataUrl(p, s, img);
+        onReady(buildPdfFromCanvasDataUrl(canvasUrl));
+      };
+      img.onerror = () => onReady(buildPdfFromCanvasDataUrl(renderReceiptSheetDataUrl(p, s, null)));
+      img.src = getParlorLogoForPdf(p);
     }
 
     function sendReceiptPdfToCustomerWhatsApp(serviceId) {
@@ -1277,30 +1479,25 @@
       if (!s) return;
       const receiptNo = String(s.id || "").replace(/\D/g, "").slice(-6) || "0043";
       const fileName = `Receipt_RCP${receiptNo}.pdf`;
-      const msg = `*${p.name}* (${p.city})\n${s.consumerName} जी, आपकी *${s.name}* रसीद (₹${s.amount}) तैयार है।`;
-      deliverPdfToCustomerWhatsApp(buildReceiptPdfDoc(p, s), fileName, s.consumerPhone, fileName, msg);
+      const msg = `*${p.name}* (${p.city || ""})\n${s.consumerName} जी, आपकी *${s.name}* रसीद (₹${s.amount}) तैयार है।`;
+      createReceiptPdfWithHindiAndLogo(p, s, (doc) => deliverPdfToCustomerWhatsApp(doc, fileName, s.consumerPhone, fileName, msg));
     }
 
-    function buildOfferPdfDoc(p, offer) {
-      if (!window.jspdf?.jsPDF) return null;
-      const { jsPDF } = window.jspdf, doc = new jsPDF({ unit: "mm", format: "a5" });
-      doc.setFillColor(255, 245, 249); doc.rect(0, 0, 148, 210, "F");
-      doc.setDrawColor(194, 24, 91); doc.roundedRect(8, 8, 132, 194, 6, 6, "S");
-      try { doc.addImage(getParlorLogoForPdf(p), "PNG", 14, 14, 24, 24); } catch (e) {}
-      doc.setFont("helvetica", "bold"); doc.setFontSize(16); doc.setTextColor(136, 14, 79); doc.text(`BPM | ${String(p.name)}`, 42, 22);
-      doc.setFont("helvetica", "normal"); doc.setFontSize(10); doc.setTextColor(110, 85, 99); doc.text(`${p.city} ${p.mobile ? "· " + p.mobile : ""}`, 42, 29);
-      doc.setFillColor(252, 231, 243); doc.roundedRect(14, 50, 120, 88, 5, 5, "F");
-      doc.setFont("helvetica", "bold"); doc.setFontSize(13); doc.setTextColor(194, 24, 91); doc.text("SPECIAL PARLOUR OFFER", 74, 64, { align: "center" });
-      doc.setFontSize(15); doc.setTextColor(36, 19, 28); doc.text(doc.splitTextToSize(String(offer.title), 106), 74, 78, { align: "center" });
-      doc.setFont("helvetica", "normal"); doc.setFontSize(11); doc.text(doc.splitTextToSize(String(offer.desc || ""), 106), 74, 98, { align: "center" });
-      return doc;
+    function createOfferPdfWithHindiAndLogo(p, offer, onReady) {
+      const img = new Image();
+      img.onload = () => {
+        const canvasUrl = renderOfferPosterDataUrl(p, offer, img);
+        onReady(buildPdfFromCanvasDataUrl(canvasUrl));
+      };
+      img.onerror = () => onReady(buildPdfFromCanvasDataUrl(renderOfferPosterDataUrl(p, offer, null)));
+      img.src = getParlorLogoForPdf(p);
     }
 
     function shareOfferPdfViaWhatsApp(offer, phone = "") {
       const p = getCurrentParlor();
-      const fileName = `Offer_${String(offer.title).replace(/\s+/g, "_")}.pdf`;
-      const msg = `*${p.name}* (${p.city})\nखास ऑफ़र: *${offer.title}* (${offer.desc || ""})`;
-      deliverPdfToCustomerWhatsApp(buildOfferPdfDoc(p, offer), fileName, phone || p.mobile, fileName, msg);
+      const fileName = `Offer_${String(offer.title || "Offer").replace(/\s+/g, "_")}.pdf`;
+      const msg = `*${p.name}* (${p.city || ""})\nखास ऑफ़र: *${offer.title}*${offer.desc ? " (" + offer.desc + ")" : ""}`;
+      createOfferPdfWithHindiAndLogo(p, offer, (doc) => deliverPdfToCustomerWhatsApp(doc, fileName, phone || p.mobile, fileName, msg));
     }
     const downloadActiveOfferPdf = () => activeOfferForSend && shareOfferPdfViaWhatsApp(activeOfferForSend, "");
     const sendActiveOfferPdfToWhatsApp = () => activeOfferForSend && shareOfferPdfViaWhatsApp(activeOfferForSend, getCurrentParlor().mobile);
@@ -1456,7 +1653,6 @@
       document.getElementById("remindersCenterList").innerHTML = list.length ? list.map((r) => `<div class="list-item ${r.checked ? "" : "unread-rem"}" onclick="toggleReminderChecked('${r.type}','${r.id}')"><div><div class="item-title">${r.checked ? "✅" : "🔴"} ${escapeHtml(r.title)}</div><div class="item-sub">${escapeHtml(r.sub)}</div></div><button class="btn btn-soft btn-xs">${r.checked ? "Checked" : "Check ✓"}</button></div>`).join("") : `<div class="item-sub">No pending reminders.</div>`;
     }
 
-    // Parlor Admin manages/resets Staff/User ID & PIN
     function autoGenerateStaffCreds() {
       document.getElementById("stfUserId").value = "STF" + Math.floor(100 + Math.random() * 899);
       document.getElementById("stfPin").value = String(Math.floor(1000 + Math.random() * 9000));
@@ -1510,24 +1706,77 @@
       persistState(true); closeModal("parlorModal"); showToast("Updated");
     }
 
-    function togglePinIncomeSlots() { if (!isPrimaryParlorAdmin()) return showToast("Admin Only"); incomeSlotsExpanded = !incomeSlotsExpanded; if (!incomeSlotsExpanded) incomeUnlocked = false; renderIncome(); if (incomeSlotsExpanded && !incomeUnlocked) promptIncomeUnlock(); }
-    function promptIncomeUnlock() {
-      const p = getCurrentParlor(); incomeSlotsExpanded = true;
-      const pin = prompt("Admin / Parlor PIN:");
-      if (pin && isValidParlorAdminPin(p, pin)) { incomeUnlocked = true; renderIncome(); } else if (pin) showToast("Wrong PIN");
+    // PIN Income: Primary Admin ID + PIN/Password auth + Auto-Lock on switching options/tabs
+    function autoLockPinIncome() {
+      incomeUnlocked = false;
+      incomeSlotsExpanded = false;
+      renderIncome();
     }
+
+    function openPinIncomeAuthModal() {
+      const p = getCurrentParlor();
+      const primaryAdmin = (p.staff || []).find((u) => u.role === "ADMIN") || p.staff?.[0];
+      document.getElementById("pinIncomeAdminIdInput").value = primaryAdmin?.id || "";
+      document.getElementById("pinIncomeAdminPinInput").value = "";
+      document.getElementById("pinIncomeAuthModal")?.classList.add("open");
+      setTimeout(() => document.getElementById("pinIncomeAdminPinInput")?.focus(), 100);
+    }
+
+    function verifyAndUnlockPinIncome() {
+      const p = getCurrentParlor();
+      const enteredId = String(document.getElementById("pinIncomeAdminIdInput")?.value || "").trim().toUpperCase();
+      const enteredPin = String(document.getElementById("pinIncomeAdminPinInput")?.value || "").trim();
+      const primaryAdmin = (p.staff || []).find((u) => u.role === "ADMIN") || p.staff?.[0];
+
+      if (!primaryAdmin || enteredId !== String(primaryAdmin.id || "").toUpperCase() || enteredPin !== String(primaryAdmin.pin || "").trim()) {
+        return showToast("केवल मुख्य पार्लर एडमिन की सही Admin ID व PIN/Password डालें");
+      }
+
+      incomeUnlocked = true;
+      incomeSlotsExpanded = true;
+      closeModal("pinIncomeAuthModal");
+      openSectionTab("home");
+      renderIncome();
+      showToast("मुख्य एडमिन सत्यापित — इनकम विवरण खुल गया");
+    }
+
+    function togglePinIncomeSlots() {
+      if (incomeUnlocked) {
+        autoLockPinIncome();
+        showToast("PIN इनकम लॉक हो गई");
+        return;
+      }
+      incomeSlotsExpanded = true;
+      renderIncome();
+      openPinIncomeAuthModal();
+    }
+
+    function handleIncomeSlotTap() {
+      if (!incomeUnlocked) openPinIncomeAuthModal();
+    }
+
     function renderIncome() {
-      const p = getCurrentParlor(), show = isPrimaryParlorAdmin(p) && (incomeSlotsExpanded || incomeUnlocked);
+      const p = getCurrentParlor(), show = incomeSlotsExpanded || incomeUnlocked;
       document.getElementById("parlorIncomeSection")?.classList.toggle("hidden", !show);
       const today = getLocalDateStr(), now = new Date();
-      let daily = 0, monthly = 0, quarterly = 0, annually = 0, alltime = 0;
+      let daily = 0, monthly = 0, halfyearly = 0, annually = 0, alltime = 0;
       for (const s of p.services) {
         const amt = Number(s.paidAmount ?? s.amount ?? 0), d = new Date(s.date); alltime += amt;
         if (s.date === today) daily += amt;
-        if (!isNaN(d) && d.getFullYear() === now.getFullYear()) { annually += amt; if (d.getMonth() === now.getMonth()) monthly += amt; if (Math.floor(d.getMonth() / 3) === Math.floor(now.getMonth() / 3)) quarterly += amt; }
+        if (!isNaN(d) && d.getFullYear() === now.getFullYear()) {
+          annually += amt;
+          if (d.getMonth() === now.getMonth()) monthly += amt;
+          if (Math.floor(d.getMonth() / 6) === Math.floor(now.getMonth() / 6)) halfyearly += amt;
+        }
       }
-      const vals = { daily, monthly, quarterly, annually, alltime };
-      Object.entries(vals).forEach(([k, v]) => { const el = document.getElementById("inc-" + k); if (el) el.textContent = incomeUnlocked ? `₹${Math.round(v).toLocaleString("en-IN")}` : "••••••"; });
+      const vals = { daily, monthly, halfyearly, annually, alltime };
+      Object.entries(vals).forEach(([k, v]) => {
+        const el = document.getElementById("inc-" + k);
+        if (el) {
+          el.textContent = incomeUnlocked ? `₹${Math.round(v).toLocaleString("en-IN")}` : "••••••";
+          el.className = "income-val " + (incomeUnlocked ? (k === "alltime" ? "dots-green" : "dots-rose") : (k === "alltime" ? "dots-green" : "dots-rose"));
+        }
+      });
     }
 
     // Plans & Razorpay (Unchanged)
@@ -1565,7 +1814,6 @@
       openCustomerWhatsAppDirect("", `✨ *${p.name}* ने *Beauty Parlour Management* ऐप भेजा है!\nCode: *${p.referralCode}*\n📲 APK: ${appState.appMeta?.apkUrl || APK_DIRECT_URL}`);
     }
 
-    // Admin Credential Recovery via Auto-Generated Parlor Pass Key
     function openForgotPasswordModal() {
       const p = (verifiedParlorIdForStep2 && appState.parlors[verifiedParlorIdForStep2]) || getCurrentParlor();
       const adminUser = (p.staff || []).find((u) => u.role === "ADMIN") || p.staff?.[0];
@@ -1617,7 +1865,6 @@
       p.tickets.unshift(tkt); document.getElementById("tktSubject").value = ""; document.getElementById("tktMessage").value = ""; persistState(true); showToast(`Ticket ${id} Sent`);
     }
 
-    // APP ADMIN: Gmail/Google + ID/PIN Login, Manual Log Out (no auto-logout on tab switch), Edit ID & Pass Key, Days/Stars, Broadcast, Access & Delete
     function handleSupportNavTap() {
       openSectionTab("support"); supportTapCount++; clearTimeout(supportTapResetTimer);
       supportTapResetTimer = setTimeout(() => { supportTapCount = 0; }, 3000);
@@ -1635,7 +1882,7 @@
       const idVal = document.getElementById("appAdminIdInput").value.trim().toUpperCase();
       const pinVal = document.getElementById("appAdminPinInput").value.trim();
       if (idVal === appState.appAdmin.id && pinVal === appState.appAdmin.pin) {
-        isAppAdminUnlocked = true; appAdminAuthMethod = `ID:${idVal}`; incomeUnlocked = true; renderAll(); showToast("App Admin Unlocked");
+        isAppAdminUnlocked = true; appAdminAuthMethod = `ID:${idVal}`; renderAll(); showToast("App Admin Unlocked");
       } else showToast("गलत App Admin ID या PIN");
     }
 
@@ -1652,7 +1899,7 @@
           await firebase.auth().signOut().catch(() => {});
           return showToast(`केवल ${allowed} से ही App Admin खुलेगा`);
         }
-        isAppAdminUnlocked = true; appAdminAuthMethod = email || "Google"; incomeUnlocked = true; renderAll();
+        isAppAdminUnlocked = true; appAdminAuthMethod = email || "Google"; renderAll();
         showToast(`Google से लॉगिन सफल (${email || "Admin"})`);
       } catch (err) {
         showToast("Google पॉप-अप/WebView अवरोध — ID/PIN से लॉगिन करें");
@@ -1717,12 +1964,15 @@
     }
 
     function accessParlorAsAppAdmin(parlorId) {
-      if (!isAppAdminUnlocked) return;
+      if (!isAppAdminUnlocked) return showToast("पहले App Admin से लॉगिन करें");
       const target = appState.parlors[parlorId]; if (!target) return;
       setActiveParlorLocal(target.id, true);
-      incomeUnlocked = true;
+      incomeUnlocked = false;
+      incomeSlotsExpanded = false;
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(normalizeState(appState))); } catch (e) {}
+      renderAll();
       openSectionTab("home");
-      showToast(`${target.name} (${target.code}) में प्रवेश किया — App Admin लॉगिन बना रहेगा`);
+      showToast(`${target.name} (${target.code}) का पूरा डेटा खुल गया`);
     }
 
     function openDeleteParlorAccountModal(parlorId) {
@@ -1786,7 +2036,7 @@
       document.getElementById("totalParlorsDirectoryBadge").textContent = `${list.length} Parlors`;
       document.getElementById("appAdminDirectoryList").innerHTML = list.map((p) => {
         const staffCreds = (p.staff || []).map((u) => `${escapeHtml(u.role)} [${escapeHtml(u.id)} / PIN:${escapeHtml(u.pin)}]`).join(" · ");
-        return `<div class="list-item"><div style="width:100%;"><div class="item-title">${escapeHtml(p.name)} (${escapeHtml(p.code)}) <span class="badge badge-trial">${getRemainingDays(p)}d left · ⭐${getAvailableStars(p)}</span></div><div class="item-sub">${escapeHtml(p.city)} ${p.mobile ? "· 📞 " + escapeHtml(p.mobile) : ""} · Cust:${p.consumers.length} · Srv:${p.services.length}</div><div class="cred-chip"><strong>Parlor ID:</strong> ${escapeHtml(p.code)} · <strong>Pass Key:</strong> ${escapeHtml(p.passKey)} · <strong>Parlor PIN:</strong> ${escapeHtml(p.parlorPassword || p.appPin)}<br/><strong>Users:</strong> ${staffCreds}</div><div class="row-btns" style="margin-top:8px;"><button class="btn btn-primary btn-xs" onclick="accessParlorAsAppAdmin('${p.id}')">👁️ Access Parlor</button><button class="btn btn-danger btn-xs" onclick="openDeleteParlorAccountModal('${p.id}')">🗑️ Delete Account</button></div></div></div>`;
+        return `<div class="list-item"><div style="width:100%;"><div class="item-title">${escapeHtml(p.name)} (${escapeHtml(p.code)}) <span class="badge badge-trial">${getRemainingDays(p)}d left · ⭐${getAvailableStars(p)}</span></div><div class="item-sub">${escapeHtml(p.city)} ${p.mobile ? "· 📞 " + escapeHtml(p.mobile) : ""} · Cust:${p.consumers.length} · Srv:${p.services.length}</div><div class="cred-chip"><strong>Parlor ID:</strong> ${escapeHtml(p.code)} · <strong>Pass Key:</strong> ${escapeHtml(p.passKey)} · <strong>Parlor PIN:</strong> ${escapeHtml(p.parlorPassword || p.appPin)}<br/><strong>Users:</strong> ${staffCreds}</div><div class="row-btns" style="margin-top:8px;"><button class="btn btn-primary btn-xs" onclick="accessParlorAsAppAdmin('${p.id}')">👁️ Access Parlor</button><button class="btn btn-soft btn-xs" onclick="downloadParlorPassKeyFile(appState.parlors['${p.id}'])">📥 Pass Key .txt</button><button class="btn btn-danger btn-xs" onclick="openDeleteParlorAccountModal('${p.id}')">🗑️ Delete Account</button></div></div></div>`;
       }).join("");
     }
 
@@ -1812,6 +2062,14 @@
     function renderAll() {
       applyLanguageToDom();
       const p = getCurrentParlor(), days = getRemainingDays(p), isAdm = isPrimaryParlorAdmin(p);
+
+      const pkCardParlor = pendingPassKeyCardParlorId ? appState.parlors[pendingPassKeyCardParlorId] : null;
+      document.getElementById("newParlorPassKeyCard")?.classList.toggle("hidden", !pkCardParlor);
+      if (pkCardParlor) {
+        const adm = (pkCardParlor.staff || []).find((u) => u.role === "ADMIN") || pkCardParlor.staff?.[0] || {};
+        document.getElementById("newParlorPassKeyText").textContent = pkCardParlor.passKey;
+        document.getElementById("newParlorCredSummaryText").textContent = `Parlor ID: ${pkCardParlor.code} · Parlor PIN: ${pkCardParlor.parlorPassword || pkCardParlor.appPin} · Admin (${adm.id || "ADMIN01"}): ${adm.name || "Admin"} / PIN: ${adm.pin || pkCardParlor.appPin}`;
+      }
 
       const bc = appState.broadcast;
       const showBc = Boolean(bc && bc.id && bc.id !== broadcastDismissedId && (bc.title || bc.message));
@@ -1871,10 +2129,15 @@
     }
 
     function openSectionTab(tab) {
+      if (incomeUnlocked || incomeSlotsExpanded) {
+        incomeUnlocked = false;
+        incomeSlotsExpanded = false;
+      }
       document.querySelectorAll(".tab-view").forEach((el) => el.classList.add("hidden"));
       document.getElementById(`tab-${tab}`)?.classList.remove("hidden");
       document.querySelectorAll(".nav-btn").forEach((b) => b.classList.remove("active"));
       document.getElementById(`nav-${tab}`)?.classList.add("active");
+      renderIncome();
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
