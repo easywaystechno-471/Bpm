@@ -41,7 +41,7 @@
     .bpm-logo-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;background:#fff0f6;color:var(--rose-dark);border:1.5px solid #f472b6;font-size:11px;font-weight:800}
     .entry-home-screen{min-height:calc(100vh - 44px);display:flex;flex-direction:column;justify-content:center;gap:16px}
     .entry-brand-hero{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;margin:2px 0 4px}
-    .entry-hero-logo-box{width:118px;height:118px;border-radius:26px;box-shadow:0 12px 28px rgba(194,24,91,.22);border:2px solid #f472b6;background:linear-gradient(145deg,#d81b60 0%,#9d174d 65%,#6b21a8 100%);display:grid;place-items:center;overflow:hidden}
+    .entry-hero-logo-box{width:132px;height:132px;border-radius:30px;box-shadow:0 16px 32px rgba(136,14,79,.28);display:grid;place-items:center;overflow:visible}
     .entry-hero-title{font-size:18px;font-weight:800;color:var(--rose-dark);margin-top:10px;letter-spacing:.2px}
     .entry-hero-sub{font-size:11.5px;color:var(--muted);margin-top:2px}
     .entry-top-strip,.sub-flow-header{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:4px}
@@ -190,23 +190,43 @@
 
         <div class="entry-brand-hero">
           <div class="entry-hero-logo-box" aria-label="BPM Logo">
-            <svg viewBox="0 0 120 120" width="118" height="118" xmlns="http://www.w3.org/2000/svg">
+            <svg viewBox="0 0 240 240" width="132" height="132" xmlns="http://www.w3.org/2000/svg">
               <defs>
-                <linearGradient id="bpmHeroBg" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stop-color="#e11d64"/>
-                  <stop offset="60%" stop-color="#9d174d"/>
-                  <stop offset="100%" stop-color="#6b21a8"/>
+                <linearGradient id="bpmTileGrad" x1="0.15" y1="0.05" x2="0.85" y2="0.95">
+                  <stop offset="0%" stop-color="#df4388"/>
+                  <stop offset="52%" stop-color="#b92167"/>
+                  <stop offset="100%" stop-color="#871349"/>
                 </linearGradient>
+                <linearGradient id="bpmGlossGrad" x1="0" y1="0" x2="0.7" y2="1">
+                  <stop offset="0%" stop-color="#ffffff" stop-opacity="0.28"/>
+                  <stop offset="100%" stop-color="#ffffff" stop-opacity="0.02"/>
+                </linearGradient>
+                <filter id="bpmSoftGlow" x="-15%" y="-15%" width="130%" height="130%">
+                  <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#4a0624" flood-opacity="0.55"/>
+                </filter>
               </defs>
-              <rect width="120" height="120" rx="26" fill="url(#bpmHeroBg)"/>
-              <!-- Lotus emblem above P -->
-              <path d="M60 18 C55 25, 55 31, 60 35 C65 31, 65 25, 60 18 Z" fill="#fbcfe8" stroke="#fff" stroke-width="1.6"/>
-              <path d="M51 23 C46 27, 48 34, 57 35 C54 30, 53 26, 51 23 Z" fill="#f472b6" stroke="#fff" stroke-width="1.5"/>
-              <path d="M69 23 C74 27, 72 34, 63 35 C66 30, 67 26, 69 23 Z" fill="#f472b6" stroke="#fff" stroke-width="1.5"/>
-              <!-- BPM Bold Letters with Face Silhouette -->
-              <text x="60" y="84" text-anchor="middle" font-size="40" font-weight="900" fill="#ffffff" stroke="#500724" stroke-width="1.4" letter-spacing="1.5">BPM</text>
-              <path d="M47 41 C42 45, 42 52, 45 56 L42 59 L45 61 C44 66, 46 72, 43 79 C40 86, 47 93, 56 91 C61 90, 60 83, 55 81" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-              <circle cx="48" cy="51" r="1.4" fill="#fff"/>
+
+              <rect x="10" y="10" width="220" height="220" rx="54" fill="url(#bpmTileGrad)" stroke="#1a1216" stroke-width="8"/>
+              <path d="M 64 14 H 176 A 50 50 0 0 1 226 64 V 108 C 185 88, 115 95, 22 140 V 64 A 50 50 0 0 1 64 14 Z" fill="url(#bpmGlossGrad)"/>
+
+              <g filter="url(#bpmSoftGlow)">
+                <g transform="translate(133, 62)" stroke="#4a0624" stroke-width="2" stroke-linejoin="round">
+                  <path d="M -3 16 C -16 15, -24 7, -23 -2 C -14 -2, -7 4, -3 16 Z" fill="#f7a8cb"/>
+                  <path d="M 3 16 C 16 15, 24 7, 23 -2 C 14 -2, 7 4, 3 16 Z" fill="#f7a8cb"/>
+                  <path d="M -2 16 C -11 10, -14 -1, -10 -10 C -3 -5, -1 3, -2 16 Z" fill="#fbcfe8"/>
+                  <path d="M 2 16 C 11 10, 14 -1, 10 -10 C 3 -5, 1 3, 2 16 Z" fill="#fbcfe8"/>
+                  <path d="M 0 16 C -6 6, -6 -5, 0 -14 C 6 -5, 6 6, 0 16 Z" fill="#ffffff"/>
+                  <path d="M -23 -2 C -24 7, -16 15, -3 16 L 3 16 C 16 15, 24 7, 23 -2 C 16 -2, 12 1, 10 -10 C 5 -6, 3 -3, 0 -14 C -3 -3, -5 -6, -10 -10 C -12 1, -16 -2, -23 -2 Z" fill="none" stroke="#ffffff" stroke-width="2.4"/>
+                </g>
+
+                <path d="M 34 90 H 63 C 76 90, 84 96, 84 106 C 84 113, 79 118, 73 120 C 81 122, 86 128, 86 136 C 86 148, 77 155, 62 155 H 34 C 30 155, 28 153, 28 149 V 96 C 28 92, 30 90, 34 90 Z M 46 104 V 115 H 60 C 65 115, 68 113, 68 109.5 C 68 106, 65 104, 60 104 Z M 46 127 V 141 H 61 C 67 141, 70 138.5, 70 134 C 70 129.5, 67 127, 61 127 Z" fill="#ffffff" stroke="#4a0624" stroke-width="2.4" stroke-linejoin="round"/>
+                <path d="M 103 90 H 127 C 142 90, 151 98, 151 112 C 151 126, 142 134, 127 134 H 115 V 149 C 115 153, 113 155, 109 155 H 103 C 99 155, 97 153, 97 149 V 96 C 97 92, 99 90, 103 90 Z M 115 105 V 120 H 125 C 131 120, 134 117, 134 112.5 C 134 108, 131 105, 125 105 Z" fill="#ffffff" stroke="#4a0624" stroke-width="2.4" stroke-linejoin="round"/>
+                <path d="M 162 90 H 171 C 175 90, 177 92, 179 95 L 190 116 L 201 95 C 203 92, 205 90, 209 90 H 216 C 220 90, 222 92, 222 96 V 149 C 222 153, 220 155, 216 155 H 210 C 206 155, 204 153, 204 149 V 121 L 195 137 C 193 140, 187 140, 185 137 L 176 121 V 149 C 176 153, 174 155, 170 155 H 162 C 158 155, 156 153, 156 149 V 96 C 156 92, 158 90, 162 90 Z" fill="#ffffff" stroke="#4a0624" stroke-width="2.4" stroke-linejoin="round"/>
+
+                <path d="M 112 52 C 103 60, 99 70, 99 81 L 93 84 L 99 88 L 93 97 L 99 101 C 98 104, 96 106, 99 109 C 97 112, 98 115, 101 117 C 100 123, 102 128, 109 129 C 117 130, 123 125, 127 118 C 132 108, 134 95, 127 83 C 122 75, 114 67, 112 52 Z" fill="none" stroke="#ffffff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M 97 86 L 91 84" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round"/>
+                <path d="M 129 86 C 139 99, 138 122, 127 140 C 119 153, 120 174, 129 179 C 138 184, 144 172, 138 159 C 133 149, 124 146, 112 150 C 98 155, 86 164, 84 180" fill="none" stroke="#ffffff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+              </g>
             </svg>
           </div>
           <div class="entry-hero-title">ब्यूटी पार्लर मैनेजमेंट</div>
@@ -1296,7 +1316,6 @@
       showToast(`${match.name} (${match.role}) लॉगिन हो गए`);
     }
 
-    // Canvas-based Hindi/Devanagari Renderer for Offer & Receipt PDFs so Hindi & matras never break
     function getParlorLogoForPdf(p) {
       if (p?.logoDataUrl && String(p.logoDataUrl).startsWith("data:image")) return p.logoDataUrl;
       const c = document.createElement("canvas"); c.width = 200; c.height = 200; const ctx = c.getContext("2d");
@@ -1332,7 +1351,6 @@
       ctx.strokeStyle = "#c2185b"; ctx.lineWidth = 4;
       ctx.strokeRect(18, 18, w - 36, h - 36);
 
-      // Top-center Parlor Logo
       const logoSize = 96, logoX = (w - logoSize) / 2, logoY = 38;
       ctx.save();
       ctx.beginPath(); ctx.roundRect(logoX, logoY, logoSize, logoSize, 22); ctx.clip();
@@ -1347,7 +1365,6 @@
       ctx.fillStyle = "#6e5563"; ctx.font = "600 14px 'Noto Sans Devanagari', sans-serif";
       ctx.fillText(`${p.city || ""}${p.mobile ? " · " + p.mobile : ""}`, w / 2, logoY + logoSize + 54);
 
-      // Highlight box for Offer Title & Details in crisp Devanagari
       const boxX = 36, boxY = 228, boxW = w - 72, boxH = 380;
       ctx.fillStyle = "#fce7f3";
       ctx.beginPath(); ctx.roundRect(boxX, boxY, boxW, boxH, 20); ctx.fill();
@@ -1381,7 +1398,6 @@
       ctx.strokeStyle = "#e6bfd2"; ctx.lineWidth = 3;
       ctx.strokeRect(16, 16, w - 32, h - 32);
 
-      // Top-center Parlor Logo + Hindi Header
       const logoSize = 84, logoX = (w - logoSize) / 2, logoY = 32;
       ctx.save();
       ctx.beginPath(); ctx.roundRect(logoX, logoY, logoSize, logoSize, 18); ctx.clip();
@@ -1438,21 +1454,26 @@
       document.body.appendChild(a); a.click(); document.body.removeChild(a);
     }
 
-    // FMS-like flow: auto-copy customer phone number, share/download PDF, and trigger WhatsApp chat
+    // Both Receipt & Offer PDFs: copy customer number, attach real PDF File via navigator.share without interrupting it
     async function deliverPdfToCustomerWhatsApp(doc, fileName, phone, shareTitle, waText) {
       if (!doc) return showToast("PDF तैयार नहीं हो सकी");
       copyPhoneNumberToClipboard(phone);
       const blob = doc.output("blob");
       const pdfFile = new File([blob], fileName, { type: "application/pdf" });
 
-      try {
-        if (navigator.canShare?.({ files: [pdfFile] }) && typeof navigator.share === "function") {
-          await navigator.share({ files: [pdfFile], title: shareTitle, text: waText });
-          setTimeout(() => openCustomerWhatsAppDirect(phone, waText), 250);
-          return;
+      if (typeof navigator.share === "function") {
+        try {
+          if (!navigator.canShare || navigator.canShare({ files: [pdfFile] })) {
+            await navigator.share({
+              files: [pdfFile],
+              title: shareTitle,
+              text: waText
+            });
+            return;
+          }
+        } catch (err) {
+          if (err?.name === "AbortError") return;
         }
-      } catch (err) {
-        if (err?.name === "AbortError") return;
       }
 
       const url = URL.createObjectURL(blob);
@@ -1460,8 +1481,8 @@
       a.href = url; a.download = fileName;
       document.body.appendChild(a); a.click(); document.body.removeChild(a);
       setTimeout(() => URL.revokeObjectURL(url), 8000);
-      showToast(`${fileName} तैयार — WhatsApp चैट खुल रही है`);
-      setTimeout(() => openCustomerWhatsAppDirect(phone, waText), 350);
+      showToast(`${fileName} डाउनलोड हो गई — WhatsApp में अटैच करें`);
+      setTimeout(() => openCustomerWhatsAppDirect(phone, waText), 400);
     }
 
     function createReceiptPdfWithHindiAndLogo(p, s, onReady) {
