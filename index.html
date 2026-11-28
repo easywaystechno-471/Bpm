@@ -132,7 +132,7 @@
     .red-x{background:#fee2e2;color:#dc2626;border:1.5px solid #fca5a5;width:30px;height:30px;border-radius:999px;font-weight:800;cursor:pointer;display:inline-grid;place-items:center}
     .motivation-overlay{position:fixed;inset:0;z-index:80;background:linear-gradient(160deg,#3b0a2a,#1c0b1e);display:flex;align-items:center;justify-content:center;padding:18px}
     .motivation-card{width:100%;max-width:410px;background:#fffdf9;border:2px solid #f472b6;border-radius:20px;padding:18px 15px;text-align:center}
-    .toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#1b1217;color:#fff;padding:8px 15px;border-radius:999px;font-size:12px;font-weight:700;z-index:60;display:none;white-space:nowrap;max-width:92vw}
+    .toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#1b1217;color:#fff;padding:9px 16px;border-radius:999px;font-size:12px;font-weight:700;z-index:90;display:none;white-space:nowrap;max-width:92vw;box-shadow:0 8px 20px rgba(0,0,0,.28)}
     .toast.show{display:block}
   </style>
 </head>
@@ -527,6 +527,7 @@
       <section id="tab-offers" class="tab-view hidden">
         <div class="card">
           <div class="section-title"><span data-t="newOfferTitle">🎁 नया ऑफ़र बनाएं (Logo + PDF)</span><button class="red-x" onclick="openSectionTab('home')">✕</button></div>
+          <div class="field"><label data-t="offerTargetCustLbl">कस्टमर चुनें (Customer Data से Saved Number) *</label><select id="offTargetCustomer"></select></div>
           <div class="field"><label data-t="offerTitleLbl">ऑफ़र का नाम *</label><input id="offTitle" class="input" placeholder="उदा. ब्राइडल ग्लो पैकेज" /></div>
           <div class="field"><label data-t="offerDescLbl">ऑफ़र की जानकारी / रेट</label><input id="offDesc" class="input" placeholder="उदा. फेशियल + हेयर कट विशेष ऑफर" /></div>
           <button class="btn btn-whatsapp btn-block" onclick="addOffer()" data-t="saveOfferPdfBtn">Save & Send PDF on WhatsApp</button>
@@ -855,6 +856,7 @@
         saveAndSendPdfBtn: "Save & Send PDF on WhatsApp",
         staffGenTitle: "👑 Staff ID और Staff PIN जनरेट / रीसेट करें", staffNameLbl: "Staff / User नाम *", saveStaffBtn: "Staff ID व PIN Save / Reset करें",
         regStaffListTitle: "रजिस्टर्ड स्टाफ और एडमिन", newOfferTitle: "🎁 नया ऑफ़र बनाएं (Logo + PDF)",
+        offerTargetCustLbl: "कस्टमर चुनें (Customer Data से Saved Number) *",
         offerTitleLbl: "ऑफ़र का नाम *", offerDescLbl: "ऑफ़र की जानकारी / रेट", saveOfferPdfBtn: "Save & Send PDF on WhatsApp",
         activeOffersTitle: "एक्टिव ऑफ़र्स (PDF)", saveCustTitle: "👩 कस्टमर डेटा सेव करें", custNameLbl: "कस्टमर का नाम *",
         notesLbl: "नोट्स / पसंद", saveCustBtn: "कस्टमर सेव करें", newAppTitle: "📅 नया अपॉइंटमेंट",
@@ -891,6 +893,7 @@
         saveAndSendPdfBtn: "Save & Send PDF on WhatsApp",
         staffGenTitle: "👑 Generate / Reset Staff ID & PIN", staffNameLbl: "Staff / User Name *", saveStaffBtn: "Save / Reset Staff ID & PIN",
         regStaffListTitle: "Registered Staff & Admin", newOfferTitle: "🎁 Create New Offer (Logo + PDF)",
+        offerTargetCustLbl: "Select Customer (Saved Number from Customer Data) *",
         offerTitleLbl: "Offer Title *", offerDescLbl: "Offer Details / Rate", saveOfferPdfBtn: "Save & Send PDF on WhatsApp",
         activeOffersTitle: "Active Offers (PDF)", saveCustTitle: "👩 Save Customer Data", custNameLbl: "Customer Name *",
         notesLbl: "Notes / Preference", saveCustBtn: "Save Customer", newAppTitle: "📅 New Appointment",
@@ -979,26 +982,42 @@
     const dismissPassKeyCard = () => { pendingPassKeyCardParlorId = ""; document.getElementById("newParlorPassKeyCard")?.classList.add("hidden"); };
 
     const getLocalDateStr = (d = new Date()) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
-    const sanitizeWhatsAppPhone = (p) => { const d = String(p || "").replace(/\D/g, ""); return d.length === 10 ? "91" + d : d; };
+    const normalizeTenDigitPhone = (p) => { const d = String(p || "").replace(/\D/g, ""); return d.length >= 10 ? d.slice(-10) : d; };
+    const sanitizeWhatsAppPhone = (p) => { const d = String(p || "").replace(/\D/g, ""); return d.length === 10 ? "91" + d : (d.length > 10 ? d : ""); };
     const escapeHtml = (s) => String(s || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
     const generateReferralCode = (name = "BPM") => `BPM-${(String(name).replace(/[^a-zA-Z]/g, "").toUpperCase().slice(0, 5) || "PARL")}-${Math.floor(1000 + Math.random() * 9000)}`;
     const getRemainingDays = (p) => Math.max(0, Math.ceil(((Number(p.validUntil) || Date.now()) - Date.now()) / DAY_MS));
     const formatDateShort = (ts) => Number(ts) > 0 ? new Date(Number(ts)).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" }) : "—";
     const closeModal = (id) => document.getElementById(id)?.classList.remove("open");
 
-    function showToast(msg) {
+    function showToast(msg, durationMs = 3000) {
       const el = document.getElementById("toast"); if (!el) return;
       el.textContent = msg; el.classList.add("show");
-      clearTimeout(window.__toastTimer); window.__toastTimer = setTimeout(() => el.classList.remove("show"), 2600);
+      clearTimeout(window.__toastTimer); window.__toastTimer = setTimeout(() => el.classList.remove("show"), durationMs);
     }
 
-    function copyPhoneNumberToClipboard(phone) {
-      const digits = String(phone || "").replace(/\D/g, "");
-      if (!digits) return;
-      const formatted = digits.length === 10 ? "91" + digits : digits;
+    // Resolve the customer's saved phone number from Customer Data first
+    function resolveCustomerSavedPhone(p, customerName, fallbackPhone = "") {
+      const cust = getCustomerByName(p, customerName);
+      const rawPhone = (cust && cust.phone) ? cust.phone : fallbackPhone;
+      return normalizeTenDigitPhone(rawPhone);
+    }
+
+    function copyTextToClipboardSafe(text) {
+      if (!text) return;
       if (navigator.clipboard?.writeText) {
-        navigator.clipboard.writeText(formatted).then(() => showToast(`Copied: ${formatted}`)).catch(() => {});
+        navigator.clipboard.writeText(text).catch(() => {});
       }
+      try {
+        const ta = document.createElement("textarea");
+        ta.value = text;
+        ta.style.position = "fixed";
+        ta.style.opacity = "0";
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand("copy");
+        document.body.removeChild(ta);
+      } catch (e) {}
     }
 
     function isNewerVersionAvailable(latest, current) {
@@ -1444,20 +1463,42 @@
       return doc;
     }
 
-    function openCustomerWhatsAppDirect(phone, textMsg) {
+    function openCustomerWhatsAppChatOnly(phone) {
       const waDigits = sanitizeWhatsAppPhone(phone);
       const waUrl = waDigits.length >= 10
-        ? `https://api.whatsapp.com/send?phone=${waDigits}&text=${encodeURIComponent(textMsg)}`
-        : `https://api.whatsapp.com/send?text=${encodeURIComponent(textMsg)}`;
+        ? `https://api.whatsapp.com/send?phone=${waDigits}`
+        : `https://api.whatsapp.com/send`;
       const a = document.createElement("a");
       a.href = waUrl; a.target = "_blank"; a.rel = "noopener noreferrer";
       document.body.appendChild(a); a.click(); document.body.removeChild(a);
     }
 
-    // Both Receipt & Offer PDFs: copy customer number, attach real PDF File via navigator.share without interrupting it
+    // FMS-Style Flow for BOTH Receipt PDF & Offer PDF:
+    // 1. Copy saved customer phone number ("Copied")
+    // 2. If native Android WebView bridge exists, send PDF directly to WhatsApp JID
+    // 3. Otherwise trigger Web Share with the actual PDF File + show attaching toast
     async function deliverPdfToCustomerWhatsApp(doc, fileName, phone, shareTitle, waText) {
       if (!doc) return showToast("PDF तैयार नहीं हो सकी");
-      copyPhoneNumberToClipboard(phone);
+      const tenDigit = normalizeTenDigitPhone(phone);
+      const waDigits = sanitizeWhatsAppPhone(phone);
+      if (tenDigit) {
+        copyTextToClipboardSafe(tenDigit);
+        showToast(`Copied · PDF is being attached (number ${tenDigit} copied)`, 3800);
+      } else {
+        showToast("PDF is being attached...", 3000);
+      }
+
+      // Support native Android WebView bridge if present in APK wrapper
+      try {
+        const dataUri = doc.output("datauristring");
+        const base64Pdf = dataUri.split(",")[1] || "";
+        const bridge = window.Android || window.AndroidInterface || window.BPMNative;
+        if (bridge && typeof bridge.sendPdfToWhatsApp === "function") {
+          bridge.sendPdfToWhatsApp(base64Pdf, fileName, waDigits, waText);
+          return;
+        }
+      } catch (e) {}
+
       const blob = doc.output("blob");
       const pdfFile = new File([blob], fileName, { type: "application/pdf" });
 
@@ -1467,7 +1508,7 @@
             await navigator.share({
               files: [pdfFile],
               title: shareTitle,
-              text: waText
+              text: tenDigit ? `${waText}\n(${tenDigit})` : waText
             });
             return;
           }
@@ -1476,13 +1517,13 @@
         }
       }
 
+      // Fallback when WebView doesn't expose navigator.share for files
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url; a.download = fileName;
       document.body.appendChild(a); a.click(); document.body.removeChild(a);
       setTimeout(() => URL.revokeObjectURL(url), 8000);
-      showToast(`${fileName} डाउनलोड हो गई — WhatsApp में अटैच करें`);
-      setTimeout(() => openCustomerWhatsAppDirect(phone, waText), 400);
+      setTimeout(() => openCustomerWhatsAppChatOnly(tenDigit), 450);
     }
 
     function createReceiptPdfWithHindiAndLogo(p, s, onReady) {
@@ -1498,10 +1539,12 @@
     function sendReceiptPdfToCustomerWhatsApp(serviceId) {
       const p = getCurrentParlor(), s = (p.services || []).find((x) => x.id === serviceId);
       if (!s) return;
+      const targetPhone = resolveCustomerSavedPhone(p, s.consumerName, s.consumerPhone);
+      if (targetPhone && s.consumerPhone !== targetPhone) s.consumerPhone = targetPhone;
       const receiptNo = String(s.id || "").replace(/\D/g, "").slice(-6) || "0043";
       const fileName = `Receipt_RCP${receiptNo}.pdf`;
       const msg = `*${p.name}* (${p.city || ""})\n${s.consumerName} जी, आपकी *${s.name}* रसीद (₹${s.amount}) तैयार है।`;
-      createReceiptPdfWithHindiAndLogo(p, s, (doc) => deliverPdfToCustomerWhatsApp(doc, fileName, s.consumerPhone, fileName, msg));
+      createReceiptPdfWithHindiAndLogo(p, s, (doc) => deliverPdfToCustomerWhatsApp(doc, fileName, targetPhone, fileName, msg));
     }
 
     function createOfferPdfWithHindiAndLogo(p, offer, onReady) {
@@ -1514,21 +1557,37 @@
       img.src = getParlorLogoForPdf(p);
     }
 
+    function getSelectedOfferTargetPhone(p, explicitPhone = "") {
+      if (explicitPhone) return normalizeTenDigitPhone(explicitPhone);
+      const selCustId = document.getElementById("offTargetCustomer")?.value || "";
+      if (selCustId) {
+        const c = getCustomerById(p, selCustId);
+        if (c?.phone) return normalizeTenDigitPhone(c.phone);
+      }
+      if (p.consumers?.length && p.consumers[0]?.phone) return normalizeTenDigitPhone(p.consumers[0].phone);
+      return normalizeTenDigitPhone(p.mobile);
+    }
+
     function shareOfferPdfViaWhatsApp(offer, phone = "") {
       const p = getCurrentParlor();
+      const targetPhone = getSelectedOfferTargetPhone(p, phone);
       const fileName = `Offer_${String(offer.title || "Offer").replace(/\s+/g, "_")}.pdf`;
       const msg = `*${p.name}* (${p.city || ""})\nखास ऑफ़र: *${offer.title}*${offer.desc ? " (" + offer.desc + ")" : ""}`;
-      createOfferPdfWithHindiAndLogo(p, offer, (doc) => deliverPdfToCustomerWhatsApp(doc, fileName, phone || p.mobile, fileName, msg));
+      createOfferPdfWithHindiAndLogo(p, offer, (doc) => deliverPdfToCustomerWhatsApp(doc, fileName, targetPhone, fileName, msg));
     }
     const downloadActiveOfferPdf = () => activeOfferForSend && shareOfferPdfViaWhatsApp(activeOfferForSend, "");
-    const sendActiveOfferPdfToWhatsApp = () => activeOfferForSend && shareOfferPdfViaWhatsApp(activeOfferForSend, getCurrentParlor().mobile);
+    const sendActiveOfferPdfToWhatsApp = () => activeOfferForSend && shareOfferPdfViaWhatsApp(activeOfferForSend, "");
 
     function openSendOfferModal(offerId, directSend = false) {
       if (!hasPermission("offersSend")) return showToast("ऑफ़र भेजने का अधिकार नहीं है");
       const p = getCurrentParlor(), offer = (p.offers || []).find((o) => o.id === offerId); if (!offer) return;
       activeOfferForSend = offer; offerSendQueue = []; offerQueueIndex = 0; document.getElementById("offerQueueBar").classList.add("hidden");
       document.getElementById("offerModalPdfTitle").textContent = `📄 ${offer.title}`; document.getElementById("offerModalPdfDesc").textContent = offer.desc || "";
-      if (directSend) { shareOfferPdfViaWhatsApp(offer, p.consumers[0]?.phone || p.mobile); return; }
+      if (directSend) {
+        const directPhone = offer.targetPhone || getSelectedOfferTargetPhone(p, "");
+        shareOfferPdfViaWhatsApp(offer, directPhone);
+        return;
+      }
       document.getElementById("offerConsumerChecklist").innerHTML = p.consumers.map((c, i) => `<label class="check-row"><input type="checkbox" class="offer-con-check" data-index="${i}" onchange="updateSelectedConsumerCount()" /><div><div class="item-title">${escapeHtml(c.name)}</div><div class="item-sub">${escapeHtml(c.phone)}</div></div></label>`).join("");
       updateSelectedConsumerCount(); document.getElementById("sendOfferModal").classList.add("open");
     }
@@ -1547,7 +1606,7 @@
     }
 
     const getCustomerById = (p, id) => (p.consumers || []).find((c) => c.id === id) || null;
-    const getCustomerByName = (p, name) => (p.consumers || []).find((c) => String(c.name).trim() === String(name).trim()) || null;
+    const getCustomerByName = (p, name) => (p.consumers || []).find((c) => String(c.name).trim().toLowerCase() === String(name).trim().toLowerCase()) || null;
     const getCustomerStarStats = (p, name) => { const c = getCustomerByName(p, name), e = Number(c?.starsEarned || 0), r = Number(c?.starsRedeemed || 0); return { earned: e, redeemed: r, available: Math.max(0, e - r) }; };
 
     function renderServiceSearch() {
@@ -1560,8 +1619,8 @@
     function pickCustomerForService(name) { document.getElementById("srvConsumer").value = name; renderServiceSearch(); document.getElementById("srvName")?.focus(); }
 
     function updateServiceCustomerContext() {
-      const p = getCurrentParlor(), cname = document.getElementById("srvConsumer")?.value || "Walk-in Client", st = getCustomerStarStats(p, cname);
-      document.getElementById("srvSelectedCustomerHistory").innerHTML = `<div class="item-title">${escapeHtml(cname)} · <span class="star-yellow">★ Available: ${st.available}</span></div>`;
+      const p = getCurrentParlor(), cname = document.getElementById("srvConsumer")?.value || "Walk-in Client", cust = getCustomerByName(p, cname), st = getCustomerStarStats(p, cname);
+      document.getElementById("srvSelectedCustomerHistory").innerHTML = `<div class="item-title">${escapeHtml(cname)} ${cust?.phone ? "· 📞 " + escapeHtml(cust.phone) : ""} · <span class="star-yellow">★ Available: ${st.available}</span></div>`;
       document.getElementById("srvStarRedeemBox")?.classList.toggle("hidden", st.available <= 0);
       document.getElementById("srvStarRedeemSummary").textContent = `Available Stars: ★ ${st.available}`;
       updateLiveServiceBillPreview();
@@ -1592,7 +1651,7 @@
     function saveServiceAndSendPdf() {
       if (!hasPermission("serviceBilling")) return showToast("No Service Billing Permission");
       const p = getCurrentParlor(), selVal = document.getElementById("srvConsumer").value, cust = getCustomerByName(p, selVal);
-      const cname = cust ? cust.name : selVal, cphone = cust?.phone || "", name = document.getElementById("srvName").value.trim();
+      const cname = cust ? cust.name : selVal, cphone = resolveCustomerSavedPhone(p, cname, cust?.phone || ""), name = document.getElementById("srvName").value.trim();
       const b = calculateCurrentServiceBill(), mode = document.getElementById("srvPayMode").value, promDate = document.getElementById("srvPromiseDate").value;
       const starsAwarded = Math.max(0, Math.floor(Number(document.getElementById("srvStarsAwarded").value) || 0));
       if (!name || b.grossAmt <= 0) return showToast("Enter service name & charge");
@@ -1615,7 +1674,7 @@
     }
 
     function saveConsumerEntry() {
-      const p = getCurrentParlor(), editId = document.getElementById("editingConsumerId").value, name = document.getElementById("conName").value.trim(), phone = document.getElementById("conPhone").value.trim(), note = document.getElementById("conNote").value.trim();
+      const p = getCurrentParlor(), editId = document.getElementById("editingConsumerId").value, name = document.getElementById("conName").value.trim(), phone = normalizeTenDigitPhone(document.getElementById("conPhone").value), note = document.getElementById("conNote").value.trim();
       if (!name || !phone) return showToast("Enter name & mobile");
       if (editId) { const idx = p.consumers.findIndex((c) => c.id === editId); if (idx !== -1) p.consumers[idx] = { ...p.consumers[idx], name, phone, note }; cancelConsumerEdit(); }
       else { p.consumers.unshift({ id: "c-" + Date.now(), name, phone, note, starsEarned: 0, starsRedeemed: 0 }); ["conName", "conPhone", "conNote"].forEach((k) => { document.getElementById(k).value = ""; }); }
@@ -1704,11 +1763,16 @@
 
     function addOffer() {
       if (!hasPermission("offersSend")) return showToast("No Permission");
+      const p = getCurrentParlor();
       const title = document.getElementById("offTitle").value.trim(), desc = document.getElementById("offDesc").value.trim();
+      const selCustId = document.getElementById("offTargetCustomer")?.value || "";
+      const targetCust = selCustId ? getCustomerById(p, selCustId) : (p.consumers?.[0] || null);
+      const targetPhone = normalizeTenDigitPhone(targetCust?.phone || p.mobile);
       if (!title) return showToast("Enter offer title");
-      const obj = { id: "o-" + Date.now(), title, desc }; getCurrentParlor().offers.unshift(obj);
+      const obj = { id: "o-" + Date.now(), title, desc, targetCustomerName: targetCust?.name || "", targetPhone };
+      p.offers.unshift(obj);
       document.getElementById("offTitle").value = ""; document.getElementById("offDesc").value = ""; persistState(true);
-      shareOfferPdfViaWhatsApp(obj, getCurrentParlor().consumers[0]?.phone || getCurrentParlor().mobile);
+      shareOfferPdfViaWhatsApp(obj, targetPhone);
     }
 
     function openParlorModal() {
@@ -1727,7 +1791,6 @@
       persistState(true); closeModal("parlorModal"); showToast("Updated");
     }
 
-    // PIN Income: Primary Admin ID + PIN/Password auth + Auto-Lock on switching options/tabs
     function autoLockPinIncome() {
       incomeUnlocked = false;
       incomeSlotsExpanded = false;
@@ -1800,7 +1863,6 @@
       });
     }
 
-    // Plans & Razorpay (Unchanged)
     function openPlansModal(k = "yearly") { document.getElementById("planSelect").value = k; updatePlanSummary(); document.getElementById("plansModal")?.classList.add("open"); }
     function selectPlanAndPay(k) { document.getElementById("planSelect").value = k; updatePlanSummary(); startRazorpayCheckout(); }
     function updatePlanSummary() {
@@ -1832,7 +1894,10 @@
     const copyApkLink = () => navigator.clipboard?.writeText(appState.appMeta?.apkUrl || APK_DIRECT_URL).then(() => showToast("APK Link Copied"));
     function shareReferralOnWhatsApp() {
       const p = getCurrentParlor();
-      openCustomerWhatsAppDirect("", `✨ *${p.name}* ने *Beauty Parlour Management* ऐप भेजा है!\nCode: *${p.referralCode}*\n📲 APK: ${appState.appMeta?.apkUrl || APK_DIRECT_URL}`);
+      const textMsg = `✨ *${p.name}* ने *Beauty Parlour Management* ऐप भेजा है!\nCode: *${p.referralCode}*\n📲 APK: ${appState.appMeta?.apkUrl || APK_DIRECT_URL}`;
+      const a = document.createElement("a");
+      a.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(textMsg)}`; a.target = "_blank"; a.rel = "noopener noreferrer";
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
     }
 
     function openForgotPasswordModal() {
@@ -2132,6 +2197,15 @@
       if (prev) sel.value = prev;
       renderServiceSearch(); renderAppointmentCustomerSearch();
 
+      const offSel = document.getElementById("offTargetCustomer");
+      if (offSel) {
+        const prevOffCust = offSel.value;
+        offSel.innerHTML = p.consumers.length
+          ? p.consumers.map((c) => `<option value="${c.id}">${escapeHtml(c.name)} (${escapeHtml(c.phone)})</option>`).join("")
+          : `<option value="">-- No Saved Customer --</option>`;
+        if (prevOffCust && p.consumers.some((c) => c.id === prevOffCust)) offSel.value = prevOffCust;
+      }
+
       const clientCard = (c) => `<div class="list-item"><div><div class="item-title">${escapeHtml(c.name)}</div><div class="item-sub">${escapeHtml(c.phone)} ${c.note ? "· " + escapeHtml(c.note) : ""}</div></div><div class="row-btns"><button class="btn btn-primary btn-xs" onclick="openCustomerServiceDetailsModal('${c.id}')">Details</button><a class="btn btn-call btn-xs" href="tel:${escapeHtml(c.phone)}">Call</a><a class="btn btn-whatsapp btn-xs" target="_blank" href="https://api.whatsapp.com/send?phone=${sanitizeWhatsAppPhone(c.phone)}">WhatsApp</a><button class="btn btn-soft btn-xs" onclick="startEditConsumer('${c.id}')">Edit</button>${isAdm ? `<button class="btn btn-danger btn-xs" onclick="deleteConsumerById('${c.id}')">Delete</button>` : ""}</div></div>`;
       document.getElementById("consumersList").innerHTML = p.consumers.map(clientCard).join("") || `<div class="item-sub">No customers.</div>`;
       document.getElementById("homeCustomersCountBadge").textContent = String(p.consumers.length);
@@ -2142,10 +2216,10 @@
       document.getElementById("duePaymentsList").innerHTML = dues.length ? dues.map((s) => `<div class="list-item"><div><div class="item-title">${escapeHtml(s.consumerName)} — Due ₹${s.dueAmount}</div><div class="item-sub">${escapeHtml(s.name)} · ${escapeHtml(s.promiseDate)}</div></div><div class="row-btns"><button class="btn btn-soft btn-xs" onclick="sendReceiptPdfToCustomerWhatsApp('${s.id}')">PDF</button><button class="btn btn-whatsapp btn-xs" onclick="markServiceSettled('${s.id}')">Paid</button></div></div>`).join("") : `<div class="item-sub">No due payments.</div>`;
 
       document.getElementById("homeServicesCountBadge").textContent = String(p.services.length);
-      document.getElementById("servicesList").innerHTML = p.services.length ? p.services.map((s) => `<div class="list-item"><div><div class="item-title">${escapeHtml(s.name)} — ₹${s.amount}</div><div class="item-sub">${escapeHtml(s.consumerName)} · ${escapeHtml(s.date)}</div></div><button class="btn btn-whatsapp btn-xs" onclick="sendReceiptPdfToCustomerWhatsApp('${s.id}')">Send PDF on WhatsApp</button></div>`).join("") : `<div class="item-sub">No services saved.</div>`;
+      document.getElementById("servicesList").innerHTML = p.services.length ? p.services.map((s) => `<div class="list-item"><div><div class="item-title">${escapeHtml(s.name)} — ₹${s.amount}</div><div class="item-sub">${escapeHtml(s.consumerName)} (${escapeHtml(resolveCustomerSavedPhone(p, s.consumerName, s.consumerPhone) || "-")}) · ${escapeHtml(s.date)}</div></div><button class="btn btn-whatsapp btn-xs" onclick="sendReceiptPdfToCustomerWhatsApp('${s.id}')">Send PDF on WhatsApp</button></div>`).join("") : `<div class="item-sub">No services saved.</div>`;
 
       document.getElementById("staffList").innerHTML = p.staff.map((u) => `<div class="list-item"><div><div class="item-title">${escapeHtml(u.name)} <span class="badge badge-trial">${u.role}</span></div><div class="item-sub">ID: ${escapeHtml(u.id)} · PIN: ${escapeHtml(u.pin)}</div></div>${isAdm ? `<div class="row-btns"><button class="btn btn-soft btn-xs" onclick="startEditStaff('${u.id}')">Edit / Reset</button><button class="btn btn-danger btn-xs" onclick="deleteStaffMember('${u.id}')">Delete</button></div>` : ""}</div>`).join("");
-      document.getElementById("offersList").innerHTML = p.offers.map((o) => `<div class="list-item"><div><div class="item-title">${escapeHtml(o.title)}</div><div class="item-sub">${escapeHtml(o.desc || "")}</div></div><div class="row-btns"><button class="btn btn-whatsapp btn-xs" onclick="openSendOfferModal('${o.id}',true)">Send PDF</button><button class="btn btn-soft btn-xs" onclick="openSendOfferModal('${o.id}',false)">Select</button></div></div>`).join("");
+      document.getElementById("offersList").innerHTML = p.offers.map((o) => `<div class="list-item"><div><div class="item-title">${escapeHtml(o.title)}</div><div class="item-sub">${escapeHtml(o.desc || "")}${o.targetPhone ? " · 📞 " + escapeHtml(o.targetPhone) : ""}</div></div><div class="row-btns"><button class="btn btn-whatsapp btn-xs" onclick="openSendOfferModal('${o.id}',true)">Send PDF</button><button class="btn btn-soft btn-xs" onclick="openSendOfferModal('${o.id}',false)">Select</button></div></div>`).join("");
       document.getElementById("appointmentsList").innerHTML = p.appointments.map((a) => `<div class="list-item"><div><div class="item-title">${escapeHtml(a.clientName)} — ${escapeHtml(a.serviceType)}</div><div class="item-sub">${a.date} ${a.time}</div></div></div>`).join("") || `<div class="item-sub">No appointments.</div>`;
     }
 
